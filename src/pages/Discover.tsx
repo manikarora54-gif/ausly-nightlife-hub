@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -30,6 +30,7 @@ const cuisines = ["All", "German", "Italian", "Japanese", "Mexican", "Indian", "
 const ratings = ["Any", "4.5+", "4.0+", "3.5+"];
 
 const mockVenues = [
+  // Restaurants
   {
     id: 1,
     name: "Nobelhart & Schmutzig",
@@ -43,18 +44,6 @@ const mockVenues = [
     tag: "Michelin Star",
   },
   {
-    id: 2,
-    name: "Berghain",
-    type: "bars",
-    cuisine: "Club",
-    location: "Berlin",
-    neighborhood: "Friedrichshain",
-    rating: 4.9,
-    price: "€€",
-    image: "https://images.unsplash.com/photo-1545128485-c400e7702796?w=600&h=400&fit=crop",
-    tag: "Legendary",
-  },
-  {
     id: 3,
     name: "Tantris",
     type: "restaurants",
@@ -65,6 +54,103 @@ const mockVenues = [
     price: "€€€€",
     image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop",
     tag: "2 Michelin Stars",
+  },
+  {
+    id: 6,
+    name: "Katz Orange",
+    type: "restaurants",
+    cuisine: "Farm-to-Table",
+    location: "Berlin",
+    neighborhood: "Mitte",
+    rating: 4.5,
+    price: "€€€",
+    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop",
+    tag: "Sustainable",
+  },
+  {
+    id: 9,
+    name: "Tim Raue",
+    type: "restaurants",
+    cuisine: "Asian Fusion",
+    location: "Berlin",
+    neighborhood: "Kreuzberg",
+    rating: 4.8,
+    price: "€€€€",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop",
+    tag: "2 Michelin Stars",
+  },
+  {
+    id: 10,
+    name: "Schneider Bräuhaus",
+    type: "restaurants",
+    cuisine: "German",
+    location: "Munich",
+    neighborhood: "Altstadt",
+    rating: 4.6,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&h=400&fit=crop",
+    tag: "Traditional",
+  },
+  {
+    id: 11,
+    name: "Fischers Fritz",
+    type: "restaurants",
+    cuisine: "Seafood",
+    location: "Berlin",
+    neighborhood: "Mitte",
+    rating: 4.7,
+    price: "€€€€",
+    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop",
+    tag: "Michelin Star",
+  },
+  {
+    id: 12,
+    name: "Zur Letzten Instanz",
+    type: "restaurants",
+    cuisine: "German",
+    location: "Berlin",
+    neighborhood: "Mitte",
+    rating: 4.4,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop",
+    tag: "Historic",
+  },
+  {
+    id: 13,
+    name: "Vier Jahreszeiten",
+    type: "restaurants",
+    cuisine: "International",
+    location: "Hamburg",
+    neighborhood: "Neustadt",
+    rating: 4.8,
+    price: "€€€€",
+    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop",
+    tag: "Luxury",
+  },
+  {
+    id: 14,
+    name: "Zur Haxe",
+    type: "restaurants",
+    cuisine: "German",
+    location: "Frankfurt",
+    neighborhood: "Altstadt",
+    rating: 4.5,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&h=400&fit=crop",
+    tag: "Local Favorite",
+  },
+  // Bars & Clubs
+  {
+    id: 2,
+    name: "Berghain",
+    type: "bars",
+    cuisine: "Club",
+    location: "Berlin",
+    neighborhood: "Friedrichshain",
+    rating: 4.9,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1545128485-c400e7702796?w=600&h=400&fit=crop",
+    tag: "Legendary",
   },
   {
     id: 4,
@@ -91,17 +177,90 @@ const mockVenues = [
     tag: "River Views",
   },
   {
-    id: 6,
-    name: "Katz Orange",
-    type: "restaurants",
-    cuisine: "Farm-to-Table",
+    id: 15,
+    name: "Tresor",
+    type: "bars",
+    cuisine: "Club",
+    location: "Berlin",
+    neighborhood: "Kreuzberg",
+    rating: 4.7,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&h=400&fit=crop",
+    tag: "Techno Icon",
+  },
+  {
+    id: 16,
+    name: "Skyline Bar 20up",
+    type: "bars",
+    cuisine: "Rooftop Bar",
+    location: "Hamburg",
+    neighborhood: "Neustadt",
+    rating: 4.8,
+    price: "€€€",
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=400&fit=crop",
+    tag: "Best Views",
+  },
+  {
+    id: 17,
+    name: "Bar Tausend",
+    type: "bars",
+    cuisine: "Cocktail Bar",
     location: "Berlin",
     neighborhood: "Mitte",
-    rating: 4.5,
+    rating: 4.6,
     price: "€€€",
-    image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&h=400&fit=crop",
-    tag: "Sustainable",
+    image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=400&fit=crop",
+    tag: "Exclusive",
   },
+  {
+    id: 18,
+    name: "P1 Club",
+    type: "bars",
+    cuisine: "Club",
+    location: "Munich",
+    neighborhood: "Maxvorstadt",
+    rating: 4.7,
+    price: "€€€",
+    image: "https://images.unsplash.com/photo-1545128485-c400e7702796?w=600&h=400&fit=crop",
+    tag: "VIP",
+  },
+  {
+    id: 19,
+    name: "Zum Schneider",
+    type: "bars",
+    cuisine: "Beer Hall",
+    location: "Munich",
+    neighborhood: "Altstadt",
+    rating: 4.5,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&h=400&fit=crop",
+    tag: "Traditional",
+  },
+  {
+    id: 20,
+    name: "Clouds Heaven's Bar",
+    type: "bars",
+    cuisine: "Rooftop Bar",
+    location: "Frankfurt",
+    neighborhood: "Innenstadt",
+    rating: 4.6,
+    price: "€€€",
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=400&fit=crop",
+    tag: "Sky High",
+  },
+  {
+    id: 21,
+    name: "Sisyphos",
+    type: "bars",
+    cuisine: "Club",
+    location: "Berlin",
+    neighborhood: "Friedrichshain",
+    rating: 4.8,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&h=400&fit=crop",
+    tag: "Open Air",
+  },
+  // Events
   {
     id: 7,
     name: "Techno Paradise Festival",
@@ -115,6 +274,55 @@ const mockVenues = [
     tag: "This Weekend",
   },
   {
+    id: 22,
+    name: "Berlin Jazz Festival",
+    type: "events",
+    cuisine: "Jazz",
+    location: "Berlin",
+    neighborhood: "Multiple Venues",
+    rating: 4.7,
+    price: "€€€",
+    image: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=600&h=400&fit=crop",
+    tag: "Multi-Day",
+  },
+  {
+    id: 23,
+    name: "Oktoberfest Afterparty",
+    type: "events",
+    cuisine: "Festival",
+    location: "Munich",
+    neighborhood: "Theresienwiese",
+    rating: 4.9,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&h=400&fit=crop",
+    tag: "Popular",
+  },
+  {
+    id: 24,
+    name: "Hamburg Music Week",
+    type: "events",
+    cuisine: "Music Festival",
+    location: "Hamburg",
+    neighborhood: "Multiple Venues",
+    rating: 4.6,
+    price: "€€€",
+    image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&h=400&fit=crop",
+    tag: "Week Long",
+  },
+  {
+    id: 25,
+    name: "Wine & Dine Night",
+    type: "events",
+    cuisine: "Food & Wine",
+    location: "Frankfurt",
+    neighborhood: "Sachsenhausen",
+    rating: 4.8,
+    price: "€€€€",
+    image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop",
+    tag: "Gourmet",
+  },
+  // Experiences
+  {
     id: 8,
     name: "Wine Tasting Experience",
     type: "experiences",
@@ -126,12 +334,49 @@ const mockVenues = [
     image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop",
     tag: "Expert Led",
   },
+  {
+    id: 26,
+    name: "Berlin Street Art Tour",
+    type: "experiences",
+    cuisine: "Cultural",
+    location: "Berlin",
+    neighborhood: "Kreuzberg",
+    rating: 4.7,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600&h=400&fit=crop",
+    tag: "Walking Tour",
+  },
+  {
+    id: 27,
+    name: "Cocktail Masterclass",
+    type: "experiences",
+    cuisine: "Mixology",
+    location: "Hamburg",
+    neighborhood: "Neustadt",
+    rating: 4.8,
+    price: "€€€",
+    image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=400&fit=crop",
+    tag: "Hands-On",
+  },
+  {
+    id: 28,
+    name: "Brewery Tour & Tasting",
+    type: "experiences",
+    cuisine: "Beer",
+    location: "Munich",
+    neighborhood: "Maxvorstadt",
+    rating: 4.6,
+    price: "€€",
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=600&h=400&fit=crop",
+    tag: "Local Brews",
+  },
 ];
 
 const Discover = () => {
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get("type") || "restaurants";
   const searchQuery = searchParams.get("q") || "";
+  const cityFilter = searchParams.get("city") || "";
   
   const [activeTab, setActiveTab] = useState(initialTab);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -140,14 +385,28 @@ const Discover = () => {
   const [selectedRating, setSelectedRating] = useState("Any");
   const [showFilters, setShowFilters] = useState(false);
 
+  // Update search when URL param changes
+  useEffect(() => {
+    if (searchQuery) {
+      setSearch(searchQuery);
+    }
+    if (cityFilter) {
+      // Auto-filter by city when coming from footer
+      const cityName = cityFilter.charAt(0).toUpperCase() + cityFilter.slice(1);
+      setSearch(cityName);
+    }
+  }, [searchQuery, cityFilter]);
+
   const filteredVenues = mockVenues.filter((venue) => {
     const matchesTab = venue.type === activeTab;
     const matchesSearch = venue.name.toLowerCase().includes(search.toLowerCase()) ||
                          venue.location.toLowerCase().includes(search.toLowerCase()) ||
-                         venue.cuisine.toLowerCase().includes(search.toLowerCase());
+                         venue.cuisine.toLowerCase().includes(search.toLowerCase()) ||
+                         venue.neighborhood.toLowerCase().includes(search.toLowerCase());
     const matchesCuisine = selectedCuisine === "All" || venue.cuisine === selectedCuisine;
+    const matchesCity = !cityFilter || venue.location.toLowerCase() === cityFilter.toLowerCase();
     
-    return matchesTab && matchesSearch && matchesCuisine;
+    return matchesTab && matchesSearch && matchesCuisine && matchesCity;
   });
 
   return (
@@ -285,6 +544,10 @@ const Discover = () => {
                     src={venue.image}
                     alt={venue.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                      // Fallback to a placeholder if image fails to load
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop";
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
                   

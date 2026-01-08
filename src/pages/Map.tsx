@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -183,10 +184,20 @@ const Map = () => {
               </div>
               
               <div className="flex gap-2">
-                <Button variant="neon" size="sm" className="flex-1">
-                  View Details
-                </Button>
-                <Button variant="outline" size="sm">
+                <Link to={`/venue/${selectedVenue.id}`} className="flex-1">
+                  <Button variant="neon" size="sm" className="w-full">
+                    View Details
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    // Open Google Maps with venue location
+                    const query = encodeURIComponent(`${selectedVenue.name} Berlin`);
+                    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+                  }}
+                >
                   Directions
                 </Button>
               </div>

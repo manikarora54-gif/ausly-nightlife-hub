@@ -1,11 +1,22 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Menu, X, MapPin, Search, User } from "lucide-react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navLinks = [
     { href: "/discover", label: "Discover" },
@@ -48,16 +59,24 @@ const Navbar = () => {
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" size="icon">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setSearchOpen(true)}
+            >
               <Search className="w-5 h-5" />
             </Button>
-            <Button variant="outline" size="sm">
-              <User className="w-4 h-4 mr-2" />
-              Sign In
-            </Button>
-            <Button variant="neon" size="sm">
-              Get Started
-            </Button>
+            <Link to="/signin">
+              <Button variant="outline" size="sm">
+                <User className="w-4 h-4 mr-2" />
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button variant="neon" size="sm">
+                Get Started
+              </Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -87,19 +106,79 @@ const Navbar = () => {
                   {link.label}
                 </Link>
               ))}
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => {
+                  setSearchOpen(true);
+                  setIsOpen(false);
+                }}
+              >
+                <Search className="w-4 h-4 mr-2" />
+                Search
+              </Button>
               <div className="flex flex-col gap-2 pt-4 border-t border-border/30">
-                <Button variant="outline" className="w-full">
-                  <User className="w-4 h-4 mr-2" />
-                  Sign In
-                </Button>
-                <Button variant="neon" className="w-full">
-                  Get Started
-                </Button>
+                <Link to="/signin" className="w-full" onClick={() => setIsOpen(false)}>
+                  <Button variant="outline" className="w-full">
+                    <User className="w-4 h-4 mr-2" />
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/signup" className="w-full" onClick={() => setIsOpen(false)}>
+                  <Button variant="neon" className="w-full">
+                    Get Started
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
         )}
       </div>
+
+      {/* Search Dialog */}
+      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Search Venues & Events</DialogTitle>
+            <DialogDescription>
+              Find restaurants, bars, clubs, and events across Germany
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search by name, city, cuisine..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && searchQuery.trim()) {
+                    navigate(`/discover?q=${encodeURIComponent(searchQuery.trim())}`);
+                    setSearchOpen(false);
+                    setSearchQuery("");
+                  }
+                }}
+                className="pl-10"
+                autoFocus
+              />
+            </div>
+            <Button
+              variant="neon"
+              className="w-full"
+              onClick={() => {
+                if (searchQuery.trim()) {
+                  navigate(`/discover?q=${encodeURIComponent(searchQuery.trim())}`);
+                  setSearchOpen(false);
+                  setSearchQuery("");
+                }
+              }}
+            >
+              Search
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 };

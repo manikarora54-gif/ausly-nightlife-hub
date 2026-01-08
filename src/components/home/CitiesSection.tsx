@@ -69,6 +69,10 @@ const CitiesSection = () => {
                 src={city.image}
                 alt={city.name}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                onError={(e) => {
+                  // Fallback to a placeholder if image fails to load
+                  (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1560969184-10fe8719e047?w=600&h=400&fit=crop";
+                }}
               />
 
               {/* Overlay */}

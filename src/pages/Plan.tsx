@@ -305,7 +305,15 @@ const Plan = () => {
 
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-border">
-                  <Button variant="neon" className="flex-1">
+                  <Button 
+                    variant="neon" 
+                    className="flex-1"
+                    onClick={() => {
+                      // Book all venues in itinerary
+                      alert('Redirecting to booking page for all venues in your itinerary...');
+                      // In real app, this would navigate to a booking page with all venues pre-selected
+                    }}
+                  >
                     Book All Venues
                   </Button>
                   <Button variant="outline" className="flex-1" onClick={() => setShowItinerary(false)}>

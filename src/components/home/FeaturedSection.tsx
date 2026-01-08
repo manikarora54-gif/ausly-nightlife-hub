@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const featuredVenues = [
   {
-    id: 1,
+    id: 2,
     name: "Berghain",
     type: "Club",
     location: "Berlin",
@@ -14,27 +14,27 @@ const featuredVenues = [
     tagColor: "bg-secondary",
   },
   {
-    id: 2,
+    id: 3,
     name: "Tantris",
     type: "Fine Dining",
     location: "Munich",
     rating: 4.8,
     image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop",
-    tag: "Michelin Star",
+    tag: "2 Michelin Stars",
     tagColor: "bg-primary",
   },
   {
-    id: 3,
+    id: 8,
     name: "Skyline Bar 20up",
     type: "Rooftop Bar",
     location: "Hamburg",
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=400&fit=crop",
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&h=400&fit=crop",
     tag: "Best Views",
     tagColor: "bg-accent",
   },
   {
-    id: 4,
+    id: 5,
     name: "Watergate",
     type: "Club",
     location: "Berlin",
@@ -42,6 +42,26 @@ const featuredVenues = [
     image: "https://images.unsplash.com/photo-1571204829887-3b8d69e4094d?w=600&h=400&fit=crop",
     tag: "Riverside",
     tagColor: "bg-secondary",
+  },
+  {
+    id: 1,
+    name: "Nobelhart & Schmutzig",
+    type: "Restaurant",
+    location: "Berlin",
+    rating: 4.9,
+    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop",
+    tag: "Michelin Star",
+    tagColor: "bg-primary",
+  },
+  {
+    id: 11,
+    name: "Tim Raue",
+    type: "Restaurant",
+    location: "Berlin",
+    rating: 4.8,
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop",
+    tag: "2 Michelin Stars",
+    tagColor: "bg-primary",
   },
 ];
 
@@ -82,6 +102,10 @@ const FeaturedSection = () => {
                   src={venue.image}
                   alt={venue.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    // Fallback to a placeholder if image fails to load
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent" />
                 

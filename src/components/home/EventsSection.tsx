@@ -5,34 +5,56 @@ import { Link } from "react-router-dom";
 const upcomingEvents = [
   {
     id: 1,
-    name: "Techno Paradise",
+    name: "Techno Paradise Festival",
     venue: "Berghain",
     location: "Berlin",
-    date: "Jan 15",
+    date: "Jan 27",
     time: "23:00",
-    price: "€25",
+    price: "€35",
     image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&h=400&fit=crop",
     category: "Electronic",
   },
   {
     id: 2,
     name: "Jazz Night Live",
-    venue: "B-Flat",
+    venue: "Buck and Breck",
     location: "Berlin",
-    date: "Jan 18",
+    date: "Jan 20",
     time: "20:00",
-    price: "€15",
+    price: "€25",
     image: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=600&h=400&fit=crop",
     category: "Jazz",
   },
   {
     id: 3,
-    name: "Wine & Dine Experience",
+    name: "Wine Tasting Evening",
+    venue: "Nobelhart & Schmutzig",
+    location: "Berlin",
+    date: "Jan 25",
+    time: "19:00",
+    price: "€95",
+    image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop",
+    category: "Food & Wine",
+  },
+  {
+    id: 4,
+    name: "Berlin Jazz Festival",
+    venue: "Multiple Venues",
+    location: "Berlin",
+    date: "Feb 10",
+    time: "18:00",
+    price: "€45",
+    image: "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=600&h=400&fit=crop",
+    category: "Jazz",
+  },
+  {
+    id: 5,
+    name: "Valentine's Wine & Dine",
     venue: "Tantris",
     location: "Munich",
-    date: "Jan 20",
+    date: "Feb 14",
     time: "19:00",
-    price: "€120",
+    price: "€150",
     image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop",
     category: "Food & Wine",
   },
@@ -78,6 +100,10 @@ const EventsSection = () => {
                   src={event.image}
                   alt={event.name}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  onError={(e) => {
+                    // Fallback to a placeholder if image fails to load
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&h=400&fit=crop";
+                  }}
                 />
               </div>
 
@@ -113,10 +139,12 @@ const EventsSection = () => {
                 <span className="font-heading font-bold text-lg text-primary">
                   {event.price}
                 </span>
-                <Button variant="neon" size="sm" className="ml-auto md:ml-0">
-                  <Ticket className="w-4 h-4 mr-1" />
-                  Get Tickets
-                </Button>
+                <Link to={`/event/${event.id}`} className="ml-auto md:ml-0">
+                  <Button variant="neon" size="sm">
+                    <Ticket className="w-4 h-4 mr-1" />
+                    Get Tickets
+                  </Button>
+                </Link>
               </div>
             </Link>
           ))}
