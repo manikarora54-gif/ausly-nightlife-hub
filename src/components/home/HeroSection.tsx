@@ -56,62 +56,71 @@ const HeroSection = () => {
             and let AI plan your unforgettable evening in Germany.
           </p>
 
-          {/* Search Bar */}
-          <form 
-            onSubmit={handleSearch}
-            className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto mb-8 animate-fade-in"
+          {/* Modern Search Container */}
+          <div 
+            className="relative max-w-3xl mx-auto animate-fade-in"
             style={{ animationDelay: "0.3s" }}
           >
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search restaurants, bars, events..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-12 h-14 text-base"
-              />
+            {/* Glow effect behind search */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 via-secondary/50 to-primary/50 rounded-2xl blur-xl opacity-40" />
+            
+            {/* Search Card */}
+            <div className="relative backdrop-blur-xl bg-card/40 border border-white/10 rounded-2xl p-2 shadow-2xl">
+              <form onSubmit={handleSearch} className="flex items-center gap-2">
+                {/* Main Search Input */}
+                <div className="relative flex-1">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="What are you looking for tonight?"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-transparent border-0 pl-12 pr-4 py-4 text-base md:text-lg text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0"
+                  />
+                </div>
+                
+                {/* Divider */}
+                <div className="hidden sm:block w-px h-8 bg-border/50" />
+                
+                {/* City Selector */}
+                <button
+                  type="button"
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <MapPin className="w-4 h-4 text-primary" />
+                  <span className="text-sm font-medium">Berlin</span>
+                </button>
+                
+                {/* Search Button */}
+                <Button type="submit" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl px-6 py-3 h-auto font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 hover:scale-[1.02]">
+                  <Search className="w-4 h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Search</span>
+                </Button>
+              </form>
             </div>
-            <Button type="submit" variant="hero" size="xl">
-              <Search className="w-5 h-5 mr-2" />
-              Explore
-            </Button>
-          </form>
+          </div>
 
-          {/* Quick Filters */}
-          <div className="flex flex-wrap justify-center gap-3 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/discover?type=restaurants")}
-              className="rounded-full"
-            >
-              🍽️ Restaurants
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/discover?type=bars")}
-              className="rounded-full"
-            >
-              🍸 Bars & Clubs
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/discover?type=events")}
-              className="rounded-full"
-            >
-              🎵 Events
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => navigate("/plan")}
-              className="rounded-full"
-            >
-              ✨ Plan My Night
-            </Button>
+          {/* Quick Category Pills */}
+          <div className="flex flex-wrap justify-center gap-2 mt-8 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            {[
+              { label: "Restaurants", icon: "🍽️", path: "/discover?type=restaurants" },
+              { label: "Bars & Clubs", icon: "🍸", path: "/discover?type=bars" },
+              { label: "Live Events", icon: "🎵", path: "/discover?type=events" },
+              { label: "Plan My Night", icon: "✨", path: "/plan", highlight: true },
+            ].map((item) => (
+              <button
+                key={item.label}
+                onClick={() => navigate(item.path)}
+                className={`group flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                  item.highlight
+                    ? "bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:scale-105"
+                    : "bg-white/5 hover:bg-white/10 text-foreground/80 hover:text-foreground border border-white/10 hover:border-white/20"
+                }`}
+              >
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
           </div>
 
           {/* Stats */}
