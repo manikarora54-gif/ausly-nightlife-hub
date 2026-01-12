@@ -14,16 +14,385 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_date: string
+          booking_time: string | null
+          booking_type: string
+          confirmation_code: string | null
+          created_at: string
+          currency: string | null
+          event_id: string | null
+          id: string
+          party_size: number | null
+          payment_intent_id: string | null
+          payment_status: string | null
+          special_requests: string | null
+          status: string
+          total_amount: number | null
+          updated_at: string
+          user_id: string
+          venue_id: string | null
+        }
+        Insert: {
+          booking_date: string
+          booking_time?: string | null
+          booking_type: string
+          confirmation_code?: string | null
+          created_at?: string
+          currency?: string | null
+          event_id?: string | null
+          id?: string
+          party_size?: number | null
+          payment_intent_id?: string | null
+          payment_status?: string | null
+          special_requests?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+          user_id: string
+          venue_id?: string | null
+        }
+        Update: {
+          booking_date?: string
+          booking_time?: string | null
+          booking_type?: string
+          confirmation_code?: string | null
+          created_at?: string
+          currency?: string | null
+          event_id?: string | null
+          id?: string
+          party_size?: number | null
+          payment_intent_id?: string | null
+          payment_status?: string | null
+          special_requests?: string | null
+          status?: string
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          created_at: string
+          description: string | null
+          end_date: string | null
+          event_type: string
+          id: string
+          images: string[] | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          max_capacity: number | null
+          name: string
+          short_description: string | null
+          slug: string
+          start_date: string
+          ticket_currency: string | null
+          ticket_price: number | null
+          tickets_sold: number | null
+          updated_at: string
+          venue_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_type: string
+          id?: string
+          images?: string[] | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          max_capacity?: number | null
+          name: string
+          short_description?: string | null
+          slug: string
+          start_date: string
+          ticket_currency?: string | null
+          ticket_price?: number | null
+          tickets_sold?: number | null
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          images?: string[] | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          max_capacity?: number | null
+          name?: string
+          short_description?: string | null
+          slug?: string
+          start_date?: string
+          ticket_currency?: string | null
+          ticket_price?: number | null
+          tickets_sold?: number | null
+          updated_at?: string
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          phone: string | null
+          preferences: Json | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id: string
+          phone?: string | null
+          preferences?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          phone?: string | null
+          preferences?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          content: string | null
+          created_at: string
+          id: string
+          is_verified: boolean | null
+          rating: number
+          title: string | null
+          updated_at: string
+          user_id: string
+          venue_id: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_verified?: boolean | null
+          rating: number
+          title?: string | null
+          updated_at?: string
+          user_id: string
+          venue_id: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          id?: string
+          is_verified?: boolean | null
+          rating?: number
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_favorites: {
+        Row: {
+          created_at: string
+          event_id: string | null
+          id: string
+          user_id: string
+          venue_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          user_id: string
+          venue_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          user_id?: string
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorites_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_favorites_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      venues: {
+        Row: {
+          address: string
+          average_rating: number | null
+          city: string
+          created_at: string
+          cuisine: string | null
+          description: string | null
+          email: string | null
+          features: string[] | null
+          id: string
+          images: string[] | null
+          is_active: boolean | null
+          is_featured: boolean | null
+          latitude: number | null
+          longitude: number | null
+          name: string
+          opening_hours: Json | null
+          phone: string | null
+          price_range: number | null
+          review_count: number | null
+          short_description: string | null
+          slug: string
+          type: string
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          address: string
+          average_rating?: number | null
+          city?: string
+          created_at?: string
+          cuisine?: string | null
+          description?: string | null
+          email?: string | null
+          features?: string[] | null
+          id?: string
+          images?: string[] | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          opening_hours?: Json | null
+          phone?: string | null
+          price_range?: number | null
+          review_count?: number | null
+          short_description?: string | null
+          slug: string
+          type: string
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          address?: string
+          average_rating?: number | null
+          city?: string
+          created_at?: string
+          cuisine?: string | null
+          description?: string | null
+          email?: string | null
+          features?: string[] | null
+          id?: string
+          images?: string[] | null
+          is_active?: boolean | null
+          is_featured?: boolean | null
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          opening_hours?: Json | null
+          phone?: string | null
+          price_range?: number | null
+          review_count?: number | null
+          short_description?: string | null
+          slug?: string
+          type?: string
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +519,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
