@@ -23,6 +23,14 @@ import AdminRefunds from "./pages/admin/Refunds";
 import AdminSupport from "./pages/admin/Support";
 import AdminContent from "./pages/admin/Content";
 import AdminSettings from "./pages/admin/Settings";
+import VendorLayout from "./components/vendor/VendorLayout";
+import VendorDashboard from "./pages/vendor/Dashboard";
+import VendorListings from "./pages/vendor/Listings";
+import VendorBookings from "./pages/vendor/Bookings";
+import VendorEvents from "./pages/vendor/Events";
+import VendorAnalytics from "./pages/vendor/Analytics";
+import VendorMessages from "./pages/vendor/Messages";
+import VendorSettings from "./pages/vendor/Settings";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +53,16 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
+          {/* Vendor Routes */}
+          <Route path="/vendor" element={<VendorLayout />}>
+            <Route index element={<VendorDashboard />} />
+            <Route path="listings" element={<VendorListings />} />
+            <Route path="bookings" element={<VendorBookings />} />
+            <Route path="events" element={<VendorEvents />} />
+            <Route path="analytics" element={<VendorAnalytics />} />
+            <Route path="messages" element={<VendorMessages />} />
+            <Route path="settings" element={<VendorSettings />} />
+          </Route>
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
