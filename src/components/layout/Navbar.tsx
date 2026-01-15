@@ -9,7 +9,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Menu, X, MapPin, Search, User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Menu, X, MapPin, Search, User, LogOut, Settings, Heart, Calendar } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +25,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  const { user, loading, signOut } = useAuth();
 
   const navLinks = [
     { href: "/discover", label: "Discover" },
@@ -25,6 +34,11 @@ const Navbar = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/30">
@@ -66,17 +80,67 @@ const Navbar = () => {
             >
               <Search className="w-5 h-5" />
             </Button>
-            <Link to="/signin">
-              <Button variant="outline" size="sm">
-                <User className="w-4 h-4 mr-2" />
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button variant="neon" size="sm">
-                Get Started
-              </Button>
-            </Link>
+            
+            {loading ? (
+              <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+            ) : user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      <User className="w-4 h-4 text-primary" />
+                    </div>
+                    <span className="hidden lg:inline max-w-24 truncate">
+                      {user.email?.split('@')[0]}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-2 py-1.5">
+                    <p className="text-sm font-medium">{user.user_metadata?.display_name || 'User'}</p>
+                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/discover" className="flex items-center gap-2 cursor-pointer">
+                      <Heart className="w-4 h-4" />
+                      My Favorites
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/discover" className="flex items-center gap-2 cursor-pointer">
+                      <Calendar className="w-4 h-4" />
+                      My Bookings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/vendor" className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="w-4 h-4" />
+                      Vendor Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link to="/signin">
+                  <Button variant="outline" size="sm">
+                    <User className="w-4 h-4 mr-2" />
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button variant="neon" size="sm">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -118,17 +182,45 @@ const Navbar = () => {
                 Search
               </Button>
               <div className="flex flex-col gap-2 pt-4 border-t border-border/30">
-                <Link to="/signin" className="w-full" onClick={() => setIsOpen(false)}>
-                  <Button variant="outline" className="w-full">
-                    <User className="w-4 h-4 mr-2" />
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/signup" className="w-full" onClick={() => setIsOpen(false)}>
-                  <Button variant="neon" className="w-full">
-                    Get Started
-                  </Button>
-                </Link>
+                {user ? (
+                  <>
+                    <div className="px-2 py-2">
+                      <p className="text-sm font-medium">{user.user_metadata?.display_name || 'User'}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                    <Link to="/vendor" className="w-full" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full justify-start">
+                        <Settings className="w-4 h-4 mr-2" />
+                        Vendor Dashboard
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="outline" 
+                      className="w-full justify-start text-destructive"
+                      onClick={() => {
+                        handleSignOut();
+                        setIsOpen(false);
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link to="/signin" className="w-full" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full">
+                        <User className="w-4 h-4 mr-2" />
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link to="/signup" className="w-full" onClick={() => setIsOpen(false)}>
+                      <Button variant="neon" className="w-full">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
