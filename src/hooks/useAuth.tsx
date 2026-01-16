@@ -1,17 +1,19 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+
+type AccountType = "customer" | "vendor";
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  signUp: (email: string, password: string, displayName: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, displayName: string, accountType?: AccountType) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
+  isVendor: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,7 +44,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, displayName: string) => {
+  const signUp = async (email: string, password: string, displayName: string, accountType: AccountType = "customer") => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
@@ -53,6 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           emailRedirectTo: redirectUrl,
           data: {
             display_name: displayName,
+            account_type: accountType,
           }
         }
       });
@@ -63,7 +66,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       toast({
         title: "Account created!",
-        description: "Welcome to Ausly. You can now explore the platform.",
+        description: accountType === "vendor" 
+          ? "Welcome to Ausly! You can now set up your venue." 
+          : "Welcome to Ausly. You can now explore the platform.",
       });
 
       return { error: null };
@@ -131,8 +136,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const isVendor = () => {
+    return user?.user_metadata?.account_type === "vendor";
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, resetPassword }}>
+    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, resetPassword, isVendor }}>
       {children}
     </AuthContext.Provider>
   );

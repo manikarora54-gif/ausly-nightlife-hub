@@ -4,25 +4,30 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Lock, User, ArrowRight, Sparkles } from "lucide-react";
+import { Mail, Lock, User, ArrowRight, Sparkles, Store, Users } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { z } from "zod";
+import { cn } from "@/lib/utils";
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
   confirmPassword: z.string(),
+  accountType: z.enum(["customer", "vendor"]),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
+
+type AccountType = "customer" | "vendor";
 
 const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [accountType, setAccountType] = useState<AccountType>("customer");
   const [isLoading, setIsLoading] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [errors, setErrors] = useState<{ 
@@ -39,7 +44,7 @@ const SignUp = () => {
     setErrors({});
 
     // Validate input
-    const result = signUpSchema.safeParse({ name, email, password, confirmPassword });
+    const result = signUpSchema.safeParse({ name, email, password, confirmPassword, accountType });
     if (!result.success) {
       const fieldErrors: typeof errors = {};
       result.error.errors.forEach((err) => {
@@ -51,7 +56,7 @@ const SignUp = () => {
     }
 
     setIsLoading(true);
-    const { error } = await signUp(email, password, name);
+    const { error } = await signUp(email, password, name, accountType);
     setIsLoading(false);
 
     if (error) {
@@ -61,7 +66,12 @@ const SignUp = () => {
         setErrors({ email: error.message });
       }
     } else {
-      navigate("/");
+      // Redirect based on account type
+      if (accountType === "vendor") {
+        navigate("/vendor");
+      } else {
+        navigate("/");
+      }
     }
   };
 
@@ -90,16 +100,66 @@ const SignUp = () => {
 
             {/* Form */}
             <div className="glass-card p-6 md:p-8 space-y-6">
+              {/* Account Type Selection */}
+              <div className="space-y-3">
+                <label className="text-sm font-medium">I want to</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setAccountType("customer")}
+                    className={cn(
+                      "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-300",
+                      accountType === "customer"
+                        ? "border-primary bg-primary/10 shadow-lg shadow-primary/20"
+                        : "border-border hover:border-primary/50 hover:bg-primary/5"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-12 h-12 rounded-full flex items-center justify-center transition-colors",
+                      accountType === "customer" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Users className="w-6 h-6" />
+                    </div>
+                    <span className="font-medium text-sm">Explore Venues</span>
+                    <span className="text-xs text-muted-foreground text-center">
+                      Discover & book experiences
+                    </span>
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={() => setAccountType("vendor")}
+                    className={cn(
+                      "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-300",
+                      accountType === "vendor"
+                        ? "border-secondary bg-secondary/10 shadow-lg shadow-secondary/20"
+                        : "border-border hover:border-secondary/50 hover:bg-secondary/5"
+                    )}
+                  >
+                    <div className={cn(
+                      "w-12 h-12 rounded-full flex items-center justify-center transition-colors",
+                      accountType === "vendor" ? "bg-secondary text-secondary-foreground" : "bg-muted text-muted-foreground"
+                    )}>
+                      <Store className="w-6 h-6" />
+                    </div>
+                    <span className="font-medium text-sm">List My Venue</span>
+                    <span className="text-xs text-muted-foreground text-center">
+                      Manage & grow your business
+                    </span>
+                  </button>
+                </div>
+              </div>
+
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
                     <User className="w-4 h-4 text-primary" />
-                    Full Name
+                    {accountType === "vendor" ? "Business Name" : "Full Name"}
                   </label>
                   <Input
                     id="name"
                     type="text"
-                    placeholder="John Doe"
+                    placeholder={accountType === "vendor" ? "Your venue or business name" : "John Doe"}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className={errors.name ? "border-destructive" : ""}
@@ -204,7 +264,7 @@ const SignUp = () => {
                     "Creating account..."
                   ) : (
                     <>
-                      Create Account
+                      {accountType === "vendor" ? "Create Vendor Account" : "Create Account"}
                       <ArrowRight className="w-5 h-5" />
                     </>
                   )}
