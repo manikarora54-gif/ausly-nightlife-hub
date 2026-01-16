@@ -25,7 +25,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, isVendor } = useAuth();
 
   const navLinks = [
     { href: "/discover", label: "Discover" },
@@ -113,12 +113,14 @@ const Navbar = () => {
                       My Bookings
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/vendor" className="flex items-center gap-2 cursor-pointer">
-                      <Settings className="w-4 h-4" />
-                      Vendor Dashboard
-                    </Link>
-                  </DropdownMenuItem>
+                  {isVendor() && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/vendor" className="flex items-center gap-2 cursor-pointer">
+                        <Settings className="w-4 h-4" />
+                        Vendor Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
                     <LogOut className="w-4 h-4 mr-2" />
@@ -188,12 +190,14 @@ const Navbar = () => {
                       <p className="text-sm font-medium">{user.user_metadata?.display_name || 'User'}</p>
                       <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
-                    <Link to="/vendor" className="w-full" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full justify-start">
-                        <Settings className="w-4 h-4 mr-2" />
-                        Vendor Dashboard
-                      </Button>
-                    </Link>
+                    {isVendor() && (
+                      <Link to="/vendor" className="w-full" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full justify-start">
+                          <Settings className="w-4 h-4 mr-2" />
+                          Vendor Dashboard
+                        </Button>
+                      </Link>
+                    )}
                     <Button 
                       variant="outline" 
                       className="w-full justify-start text-destructive"
