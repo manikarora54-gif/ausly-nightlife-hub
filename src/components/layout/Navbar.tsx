@@ -32,6 +32,7 @@ const Navbar = () => {
     { href: "/discover", label: "Discover" },
     { href: "/map", label: "Map" },
     { href: "/plan", label: "Plan Your Night" },
+    { href: "/movies", label: "Movies" },
   ];
 
   const isActive = (path: string) => location.pathname === path;

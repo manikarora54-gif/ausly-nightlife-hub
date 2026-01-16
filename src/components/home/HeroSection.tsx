@@ -106,6 +106,7 @@ const HeroSection = () => {
               { label: "Restaurants", icon: "🍽️", path: "/discover?type=restaurants" },
               { label: "Bars & Clubs", icon: "🍸", path: "/discover?type=bars" },
               { label: "Live Events", icon: "🎵", path: "/discover?type=events" },
+              { label: "Movies", icon: "🎬", path: "/movies" },
               { label: "Plan My Night", icon: "✨", path: "/plan", highlight: true },
             ].map((item) => (
               <button
