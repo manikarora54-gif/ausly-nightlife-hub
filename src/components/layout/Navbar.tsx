@@ -16,8 +16,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, X, MapPin, Search, User, LogOut, Settings, Heart, Calendar } from "lucide-react";
+import { Menu, X, Search, User, LogOut, Settings, Heart, Calendar } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import logo from "@/assets/ausly-logo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,13 +44,13 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/30">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16"> 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-neon flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-primary-foreground" />
+            <div className="w-8 h-8 rounded-lg bg-gradient-neon flex items-center justify-center overflow-hidden">
+              <img src={logo} alt="Ausly logo" className="w-7 h-7 object-contain" />
             </div>
-            <span className="text-xl font-heading font-bold gradient-text">
+            <span className="text-xl font-heading font-bold gradient-text"> 
               Ausly
             </span>
           </Link>
@@ -129,7 +130,7 @@ const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <>
+              <> 
                 <Link to="/signin">
                   <Button variant="outline" size="sm">
                     <User className="w-4 h-4 mr-2" />
@@ -185,7 +186,7 @@ const Navbar = () => {
               </Button>
               <div className="flex flex-col gap-2 pt-4 border-t border-border/30">
                 {user ? (
-                  <>
+                  <> 
                     <div className="px-2 py-2">
                       <p className="text-sm font-medium">{user.user_metadata?.display_name || 'User'}</p>
                       <p className="text-xs text-muted-foreground truncate">{user.email}</p>
@@ -211,7 +212,7 @@ const Navbar = () => {
                     </Button>
                   </>
                 ) : (
-                  <>
+                  <> 
                     <Link to="/signin" className="w-full" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full">
                         <User className="w-4 h-4 mr-2" />
