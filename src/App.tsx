@@ -17,6 +17,11 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/admin/AdminLayout";
+import Movies from "./pages/Movies";
+import Movie from "./pages/Movie";
+import Booking from "./pages/Booking";
+import MovieSearch from "./pages/MovieSearch";
+import Cinemas from "./pages/Cinemas";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminBookings from "./pages/admin/Bookings";
 import AdminPayments from "./pages/admin/Payments";
@@ -75,6 +80,11 @@ const App = () => (
               <Route path="content" element={<AdminContent />} />
               <Route path="settings" element={<AdminSettings />} />
             </Route>
+            <Route path="/movies" element={<Movies />} />
+            <Route path="/movies/search" element={<MovieSearch />} />
+            <Route path="/cinemas" element={<Cinemas />} />
+            <Route path="/movie/:id" element={<Movie />} />
+            <Route path="/booking/:showtimeId" element={<Booking />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
