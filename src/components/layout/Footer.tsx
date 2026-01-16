@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { MapPin, Instagram, Twitter, Facebook, Mail } from "lucide-react";
+import { Instagram, Twitter, Facebook, Mail } from "lucide-react";
+import logo from "@/assets/ausly-logo.png";
 
 const Footer = () => {
   return (
@@ -9,8 +10,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-neon flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-primary-foreground" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-neon flex items-center justify-center overflow-hidden">
+                <img src={logo} alt="Ausly logo" className="w-6 h-6 object-contain" />
               </div>
               <span className="text-xl font-heading font-bold gradient-text">
                 Ausly
