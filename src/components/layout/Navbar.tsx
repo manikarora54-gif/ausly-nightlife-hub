@@ -29,13 +29,24 @@ const Navbar = () => {
   const { user, loading, signOut, isVendor } = useAuth();
 
   const navLinks = [
-    { href: "/discover", label: "Discover" },
+    { href: "/discover?type=restaurants", label: "Restaurants" },
+    { href: "/discover?type=bars", label: "Bars & Clubs" },
+    { href: "/discover?type=events", label: "Events" },
+    { href: "/discover?type=experiences", label: "Experiences" },
     { href: "/map", label: "Map" },
-    { href: "/plan", label: "Plan Your Night" },
     { href: "/movies", label: "Movies" },
   ];
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActiveLink = (path: string) => {
+    if (path.includes("?type=")) {
+      const type = new URLSearchParams(path.split("?")[1]).get("type");
+      const currentType = new URLSearchParams(location.search).get("type");
+      return location.pathname === "/discover" && currentType === type;
+    }
+    return location.pathname === path;
+  };
+
+  
 
   const handleSignOut = async () => {
     await signOut();
@@ -63,7 +74,7 @@ const Navbar = () => {
                 key={link.href}
                 to={link.href}
                 className={`text-sm font-medium transition-all duration-300 hover:text-primary ${
-                  isActive(link.href)
+                  isActiveLink(link.href)
                     ? "text-primary neon-text-primary"
                     : "text-muted-foreground"
                 }`}
@@ -165,7 +176,7 @@ const Navbar = () => {
                   key={link.href}
                   to={link.href}
                   className={`text-sm font-medium py-2 transition-colors ${
-                    isActive(link.href)
+                    isActiveLink(link.href)
                       ? "text-primary"
                       : "text-muted-foreground"
                   }`}
