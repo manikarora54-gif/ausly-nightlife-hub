@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -46,9 +47,16 @@ const Map = () => {
       <Navbar />
       
       <main className="pt-16 h-screen flex flex-col">
-        {/* Search Bar */}
+        {/* Breadcrumbs & Search Bar */}
         <div className="p-4 glass-card border-b border-border/30">
           <div className="container mx-auto">
+            <Breadcrumbs 
+              items={[
+                { label: "Home", href: "/" },
+                { label: "Map" },
+              ]}
+              showBack={false}
+            />
             <div className="flex flex-col md:flex-row gap-3">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />

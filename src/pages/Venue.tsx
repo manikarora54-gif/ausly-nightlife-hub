@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { 
   Star, 
@@ -9,8 +10,7 @@ import {
   Phone, 
   Globe, 
   Heart, 
-  Share2, 
-  ChevronLeft,
+  Share2,
   Calendar,
   Users,
   DollarSign
@@ -198,12 +198,15 @@ const Venue = () => {
       <Navbar />
       
       <main className="pt-20">
-        {/* Back Button */}
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/discover" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors">
-            <ChevronLeft className="w-4 h-4 mr-1" />
-            Back to Discover
-          </Link>
+        {/* Breadcrumbs */}
+        <div className="container mx-auto px-4">
+          <Breadcrumbs 
+            items={[
+              { label: "Home", href: "/" },
+              { label: "Discover", href: "/discover" },
+              { label: venue.name },
+            ]}
+          />
         </div>
 
         {/* Hero Images */}

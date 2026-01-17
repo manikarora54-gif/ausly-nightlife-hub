@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Minus, Plus, CreditCard, ArrowLeft } from "lucide-react";
+import { Minus, Plus, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const mockShowtimeDetails: Record<string, {
@@ -46,15 +47,15 @@ const Booking = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 py-8 max-w-2xl">
-        <Button
-          variant="ghost"
-          className="mb-6"
-          onClick={() => navigate(-1)}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
+      <main className="container mx-auto px-4 pt-20 pb-8 max-w-2xl">
+        <Breadcrumbs 
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Movies", href: "/movies" },
+            { label: showtime.movieTitle, href: "/movie/1" },
+            { label: "Booking" },
+          ]}
+        />
 
         <h1 className="text-3xl font-bold mb-8">Complete Your Booking</h1>
 

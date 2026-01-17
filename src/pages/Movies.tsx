@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Star, Clock, Calendar } from "lucide-react";
+import { Search, Star, Clock } from "lucide-react";
 
 const mockMovies = [
   {
@@ -57,7 +57,14 @@ const Movies = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 pt-20 pb-8">
+        <Breadcrumbs 
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Movies" },
+          ]}
+        />
+        
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">Now Showing</h1>
           <div className="relative max-w-md">

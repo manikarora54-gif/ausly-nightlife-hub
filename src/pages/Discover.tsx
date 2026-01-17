@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -11,20 +12,16 @@ import {
   Filter, 
   Grid3X3, 
   List,
-  Utensils,
-  Wine,
-  Music,
-  Sparkles,
   ChevronDown
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const tabs = [
-  { id: "restaurants", label: "Restaurants", icon: Utensils },
-  { id: "bars", label: "Bars & Clubs", icon: Wine },
-  { id: "events", label: "Events", icon: Music },
-  { id: "experiences", label: "Experiences", icon: Sparkles },
-];
+const categoryLabels: Record<string, string> = {
+  restaurants: "Restaurants",
+  bars: "Bars & Clubs",
+  events: "Events",
+  experiences: "Experiences",
+};
 
 const cuisines = ["All", "German", "Italian", "Japanese", "Mexican", "Indian", "Mediterranean", "Asian Fusion"];
 const ratings = ["Any", "4.5+", "4.0+", "3.5+"];
@@ -374,11 +371,10 @@ const mockVenues = [
 
 const Discover = () => {
   const [searchParams] = useSearchParams();
-  const initialTab = searchParams.get("type") || "restaurants";
+  const activeType = searchParams.get("type") || "restaurants";
   const searchQuery = searchParams.get("q") || "";
   const cityFilter = searchParams.get("city") || "";
   
-  const [activeTab, setActiveTab] = useState(initialTab);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [search, setSearch] = useState(searchQuery);
   const [selectedCuisine, setSelectedCuisine] = useState("All");
@@ -398,7 +394,7 @@ const Discover = () => {
   }, [searchQuery, cityFilter]);
 
   const filteredVenues = mockVenues.filter((venue) => {
-    const matchesTab = venue.type === activeTab;
+    const matchesTab = venue.type === activeType;
     const matchesSearch = venue.name.toLowerCase().includes(search.toLowerCase()) ||
                          venue.location.toLowerCase().includes(search.toLowerCase()) ||
                          venue.cuisine.toLowerCase().includes(search.toLowerCase()) ||
@@ -409,36 +405,21 @@ const Discover = () => {
     return matchesTab && matchesSearch && matchesCuisine && matchesCity;
   });
 
+  const currentCategory = categoryLabels[activeType] || "Discover";
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="pt-24 pb-16">
+      <main className="pt-20 pb-16">
         <div className="container mx-auto px-4">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-heading font-bold mb-2">
-              Discover <span className="gradient-text">Experiences</span>
-            </h1>
-            <p className="text-muted-foreground">
-              Find the perfect spot for your next night out
-            </p>
-          </div>
-
-          {/* Tabs */}
-          <div className="flex gap-2 overflow-x-auto pb-4 mb-6 scrollbar-hide">
-            {tabs.map((tab) => (
-              <Button
-                key={tab.id}
-                variant={activeTab === tab.id ? "default" : "outline"}
-                onClick={() => setActiveTab(tab.id)}
-                className="flex-shrink-0"
-              >
-                <tab.icon className="w-4 h-4 mr-2" />
-                {tab.label}
-              </Button>
-            ))}
-          </div>
+          {/* Breadcrumbs */}
+          <Breadcrumbs 
+            items={[
+              { label: "Home", href: "/" },
+              { label: currentCategory },
+            ]}
+          />
 
           {/* Search & Filters */}
           <div className="glass-card p-4 mb-8">

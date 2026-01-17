@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -66,7 +67,7 @@ const Movie = () => {
       <Navbar />
       
       {/* Hero backdrop */}
-      <div className="relative h-[40vh] overflow-hidden">
+      <div className="relative h-[40vh] overflow-hidden mt-16">
         <img
           src={movie.backdrop}
           alt={movie.title}
@@ -76,7 +77,16 @@ const Movie = () => {
       </div>
 
       <main className="container mx-auto px-4 -mt-32 relative z-10">
-        <div className="grid md:grid-cols-[300px,1fr] gap-8">
+        {/* Breadcrumbs */}
+        <Breadcrumbs 
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Movies", href: "/movies" },
+            { label: movie.title },
+          ]}
+        />
+        
+        <div className="grid md:grid-cols-[300px,1fr] gap-8 mt-4">
           {/* Poster */}
           <div className="hidden md:block">
             <img
