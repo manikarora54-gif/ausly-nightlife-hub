@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Venue from "./pages/Venue";
@@ -60,8 +61,8 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
-            {/* Vendor Routes */}
-            <Route path="/vendor" element={<VendorLayout />}>
+            {/* Protected Vendor Routes */}
+            <Route path="/vendor" element={<ProtectedRoute><VendorLayout /></ProtectedRoute>}>
               <Route index element={<VendorDashboard />} />
               <Route path="listings" element={<VendorListings />} />
               <Route path="bookings" element={<VendorBookings />} />
@@ -70,8 +71,8 @@ const App = () => (
               <Route path="messages" element={<VendorMessages />} />
               <Route path="settings" element={<VendorSettings />} />
             </Route>
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* Protected Admin Routes */}
+            <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
               <Route path="bookings" element={<AdminBookings />} />
               <Route path="payments" element={<AdminPayments />} />
@@ -84,7 +85,9 @@ const App = () => (
             <Route path="/movies/search" element={<MovieSearch />} />
             <Route path="/cinemas" element={<Cinemas />} />
             <Route path="/movie/:id" element={<Movie />} />
-            <Route path="/booking/:showtimeId" element={<Booking />} />
+            {/* Protected Booking Route */}
+            <Route path="/booking/:showtimeId" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
+            <Route path="/booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
