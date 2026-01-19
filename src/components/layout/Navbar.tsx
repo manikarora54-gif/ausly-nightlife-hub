@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, User, LogOut, Settings, Heart, Calendar } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import logo from "@/assets/ausly-logo.png";
+import logo from "@/assets/ausly-logo.svg";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,13 +58,8 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16"> 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-neon flex items-center justify-center overflow-hidden">
-              <img src={logo} alt="Ausly logo" className="w-7 h-7 object-contain" />
-            </div>
-            <span className="text-xl font-heading font-bold gradient-text"> 
-              Ausly
-            </span>
+          <Link to="/" className="flex items-center group">
+            <img src={logo} alt="Ausly" className="h-8 object-contain" />
           </Link>
 
           {/* Desktop Navigation */}

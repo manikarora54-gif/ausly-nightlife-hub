@@ -1,13 +1,11 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
-import ProblemSection from "@/components/home/ProblemSection";
-import SolutionSection from "@/components/home/SolutionSection";
+import WhatsHappeningSection from "@/components/home/WhatsHappeningSection";
+import CategoriesSection from "@/components/home/CategoriesSection";
 import HowItWorksSection from "@/components/home/HowItWorksSection";
-import AudienceSection from "@/components/home/AudienceSection";
-import ComparisonSection from "@/components/home/ComparisonSection";
-import GermanyMapSection from "@/components/home/GermanyMapSection";
-import VisionSection from "@/components/home/VisionSection";
+import WhyAuslySection from "@/components/home/WhyAuslySection";
+import ForBusinessSection from "@/components/home/ForBusinessSection";
 import FinalCTASection from "@/components/home/FinalCTASection";
 
 const Index = () => {
@@ -16,13 +14,11 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <ProblemSection />
-        <SolutionSection />
+        <WhatsHappeningSection />
+        <CategoriesSection />
         <HowItWorksSection />
-        <AudienceSection />
-        <ComparisonSection />
-        <GermanyMapSection />
-        <VisionSection />
+        <WhyAuslySection />
+        <ForBusinessSection />
         <FinalCTASection />
       </main>
       <Footer />
