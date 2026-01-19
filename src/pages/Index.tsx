@@ -1,10 +1,14 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
-import FeaturedSection from "@/components/home/FeaturedSection";
-import EventsSection from "@/components/home/EventsSection";
-import PlanNightSection from "@/components/home/PlanNightSection";
-import CitiesSection from "@/components/home/CitiesSection";
+import ProblemSection from "@/components/home/ProblemSection";
+import SolutionSection from "@/components/home/SolutionSection";
+import HowItWorksSection from "@/components/home/HowItWorksSection";
+import AudienceSection from "@/components/home/AudienceSection";
+import ComparisonSection from "@/components/home/ComparisonSection";
+import GermanyMapSection from "@/components/home/GermanyMapSection";
+import VisionSection from "@/components/home/VisionSection";
+import FinalCTASection from "@/components/home/FinalCTASection";
 
 const Index = () => {
   return (
@@ -12,10 +16,14 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <FeaturedSection />
-        <EventsSection />
-        <PlanNightSection />
-        <CitiesSection />
+        <ProblemSection />
+        <SolutionSection />
+        <HowItWorksSection />
+        <AudienceSection />
+        <ComparisonSection />
+        <GermanyMapSection />
+        <VisionSection />
+        <FinalCTASection />
       </main>
       <Footer />
     </div>
