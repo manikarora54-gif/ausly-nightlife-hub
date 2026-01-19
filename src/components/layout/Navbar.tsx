@@ -2,41 +2,42 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Menu, X, Search, User, LogOut, Settings, Heart, Calendar } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import logo from "@/assets/ausly-logo.svg";
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, loading, signOut, isVendor } = useAuth();
-
-  const navLinks = [
-    { href: "/discover?type=restaurants", label: "Restaurants" },
-    { href: "/discover?type=bars", label: "Bars & Clubs" },
-    { href: "/discover?type=events", label: "Events" },
-    { href: "/discover?type=experiences", label: "Experiences" },
-    { href: "/map", label: "Map" },
-    { href: "/movies", label: "Movies" },
-  ];
-
+  const {
+    user,
+    loading,
+    signOut,
+    isVendor
+  } = useAuth();
+  const navLinks = [{
+    href: "/discover?type=restaurants",
+    label: "Restaurants"
+  }, {
+    href: "/discover?type=bars",
+    label: "Bars & Clubs"
+  }, {
+    href: "/discover?type=events",
+    label: "Events"
+  }, {
+    href: "/discover?type=experiences",
+    label: "Experiences"
+  }, {
+    href: "/map",
+    label: "Map"
+  }, {
+    href: "/movies",
+    label: "Movies"
+  }];
   const isActiveLink = (path: string) => {
     if (path.includes("?type=")) {
       const type = new URLSearchParams(path.split("?")[1]).get("type");
@@ -45,54 +46,32 @@ const Navbar = () => {
     }
     return location.pathname === path;
   };
-
-  
-
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
   };
-
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/30">
+  return <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/30">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16"> 
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <img src={logo} alt="Ausly" className="h-8 object-contain" />
+            <img alt="Ausly" className="h-8 object-contain" src="/lovable-uploads/dc11da7a-957a-4515-ab21-865b6279554b.png" />
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`text-sm font-medium transition-all duration-300 hover:text-primary ${
-                  isActiveLink(link.href)
-                    ? "text-primary neon-text-primary"
-                    : "text-muted-foreground"
-                }`}
-              >
+            {navLinks.map(link => <Link key={link.href} to={link.href} className={`text-sm font-medium transition-all duration-300 hover:text-primary ${isActiveLink(link.href) ? "text-primary neon-text-primary" : "text-muted-foreground"}`}>
                 {link.label}
-              </Link>
-            ))}
+              </Link>)}
           </div>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => setSearchOpen(true)}
-            >
+            <Button variant="ghost" size="icon" onClick={() => setSearchOpen(true)}>
               <Search className="w-5 h-5" />
             </Button>
             
-            {loading ? (
-              <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
-            ) : user ? (
-              <DropdownMenu>
+            {loading ? <div className="w-8 h-8 rounded-full bg-muted animate-pulse" /> : user ? <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="gap-2">
                     <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
@@ -121,23 +100,19 @@ const Navbar = () => {
                       My Bookings
                     </Link>
                   </DropdownMenuItem>
-                  {isVendor() && (
-                    <DropdownMenuItem asChild>
+                  {isVendor() && <DropdownMenuItem asChild>
                       <Link to="/vendor" className="flex items-center gap-2 cursor-pointer">
                         <Settings className="w-4 h-4" />
                         Vendor Dashboard
                       </Link>
-                    </DropdownMenuItem>
-                  )}
+                    </DropdownMenuItem>}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
                     <LogOut className="w-4 h-4 mr-2" />
                     Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <> 
+              </DropdownMenu> : <> 
                 <Link to="/signin">
                   <Button variant="outline" size="sm">
                     <User className="w-4 h-4 mr-2" />
@@ -149,77 +124,48 @@ const Navbar = () => {
                     Get Started
                   </Button>
                 </Link>
-              </>
-            )}
+              </>}
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-foreground"
-            onClick={() => setIsOpen(!isOpen)}
-          >
+          <button className="md:hidden p-2 text-foreground" onClick={() => setIsOpen(!isOpen)}>
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden py-4 border-t border-border/30 animate-fade-in">
+        {isOpen && <div className="md:hidden py-4 border-t border-border/30 animate-fade-in">
             <div className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={`text-sm font-medium py-2 transition-colors ${
-                    isActiveLink(link.href)
-                      ? "text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                  onClick={() => setIsOpen(false)}
-                >
+              {navLinks.map(link => <Link key={link.href} to={link.href} className={`text-sm font-medium py-2 transition-colors ${isActiveLink(link.href) ? "text-primary" : "text-muted-foreground"}`} onClick={() => setIsOpen(false)}>
                   {link.label}
-                </Link>
-              ))}
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-                onClick={() => {
-                  setSearchOpen(true);
-                  setIsOpen(false);
-                }}
-              >
+                </Link>)}
+              <Button variant="outline" className="w-full justify-start" onClick={() => {
+            setSearchOpen(true);
+            setIsOpen(false);
+          }}>
                 <Search className="w-4 h-4 mr-2" />
                 Search
               </Button>
               <div className="flex flex-col gap-2 pt-4 border-t border-border/30">
-                {user ? (
-                  <> 
+                {user ? <> 
                     <div className="px-2 py-2">
                       <p className="text-sm font-medium">{user.user_metadata?.display_name || 'User'}</p>
                       <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
-                    {isVendor() && (
-                      <Link to="/vendor" className="w-full" onClick={() => setIsOpen(false)}>
+                    {isVendor() && <Link to="/vendor" className="w-full" onClick={() => setIsOpen(false)}>
                         <Button variant="outline" className="w-full justify-start">
                           <Settings className="w-4 h-4 mr-2" />
                           Vendor Dashboard
                         </Button>
-                      </Link>
-                    )}
-                    <Button 
-                      variant="outline" 
-                      className="w-full justify-start text-destructive"
-                      onClick={() => {
-                        handleSignOut();
-                        setIsOpen(false);
-                      }}
-                    >
+                      </Link>}
+                    <Button variant="outline" className="w-full justify-start text-destructive" onClick={() => {
+                handleSignOut();
+                setIsOpen(false);
+              }}>
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
                     </Button>
-                  </>
-                ) : (
-                  <> 
+                  </> : <> 
                     <Link to="/signin" className="w-full" onClick={() => setIsOpen(false)}>
                       <Button variant="outline" className="w-full">
                         <User className="w-4 h-4 mr-2" />
@@ -231,12 +177,10 @@ const Navbar = () => {
                         Get Started
                       </Button>
                     </Link>
-                  </>
-                )}
+                  </>}
               </div>
             </div>
-          </div>
-        )}
+          </div>}
       </div>
 
       {/* Search Dialog */}
@@ -251,40 +195,26 @@ const Navbar = () => {
           <div className="space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search by name, city, cuisine..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && searchQuery.trim()) {
-                    navigate(`/discover?q=${encodeURIComponent(searchQuery.trim())}`);
-                    setSearchOpen(false);
-                    setSearchQuery("");
-                  }
-                }}
-                className="pl-10"
-                autoFocus
-              />
+              <Input type="text" placeholder="Search by name, city, cuisine..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyDown={e => {
+              if (e.key === "Enter" && searchQuery.trim()) {
+                navigate(`/discover?q=${encodeURIComponent(searchQuery.trim())}`);
+                setSearchOpen(false);
+                setSearchQuery("");
+              }
+            }} className="pl-10" autoFocus />
             </div>
-            <Button
-              variant="neon"
-              className="w-full"
-              onClick={() => {
-                if (searchQuery.trim()) {
-                  navigate(`/discover?q=${encodeURIComponent(searchQuery.trim())}`);
-                  setSearchOpen(false);
-                  setSearchQuery("");
-                }
-              }}
-            >
+            <Button variant="neon" className="w-full" onClick={() => {
+            if (searchQuery.trim()) {
+              navigate(`/discover?q=${encodeURIComponent(searchQuery.trim())}`);
+              setSearchOpen(false);
+              setSearchQuery("");
+            }
+          }}>
               Search
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-    </nav>
-  );
+    </nav>;
 };
-
 export default Navbar;
