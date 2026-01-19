@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MapPin, ChevronDown, Sparkles } from "lucide-react";
+import { MapPin, ChevronDown, Search, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import logo from "@/assets/ausly-logo-neon.png";
+import logo from "@/assets/ausly-logo.svg";
 
 const cities = [
   "Berlin", "Hamburg", "München", "Köln", "Frankfurt", 
-  "Stuttgart", "Düsseldorf", "Leipzig", "Dresden", "Hannover"
+  "Stuttgart", "Leipzig", "Düsseldorf", "Dresden", "Hannover"
 ];
 
 const HeroSection = () => {
@@ -19,109 +19,118 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">
       {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse-glow" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "1s" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[150px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/15 rounded-full blur-[120px] animate-pulse-glow" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/15 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: "1s" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[200px]" />
       </div>
 
-      {/* Grid Pattern Overlay */}
+      {/* Grid Pattern */}
       <div 
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px),
-                           linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)`,
-          backgroundSize: "50px 50px",
+          backgroundImage: `linear-gradient(hsl(var(--primary) / 0.5) 1px, transparent 1px),
+                           linear-gradient(90deg, hsl(var(--primary) / 0.5) 1px, transparent 1px)`,
+          backgroundSize: "60px 60px",
         }}
       />
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Logo */}
-          <div className="flex justify-center mb-8 animate-fade-in">
-            <div className="relative">
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary/30 via-secondary/30 to-primary/30 rounded-full blur-xl opacity-60" />
-              <img 
-                src={logo} 
-                alt="Ausly" 
-                className="relative w-32 h-32 md:w-40 md:h-40 object-contain drop-shadow-2xl"
-              />
-            </div>
+          <div className="flex justify-center mb-6 animate-fade-in">
+            <img 
+              src={logo} 
+              alt="Ausly" 
+              className="w-48 md:w-56 h-auto object-contain"
+            />
           </div>
 
-          {/* Main Headline - German */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-4 animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            Deine Stadt.{" "}
-            <span className="gradient-text">Deine Nacht.</span>
+          {/* Tagline */}
+          <p className="text-lg md:text-xl text-primary font-semibold mb-4 animate-fade-in tracking-wide" style={{ animationDelay: "0.1s" }}>
+            Deine Stadt. Dein Tag.
+          </p>
+
+          {/* Main Headline */}
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 animate-fade-in leading-tight" style={{ animationDelay: "0.15s" }}>
+            Discover and book what's happening in your city — <span className="gradient-text">anytime.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
-            Entdecke Clubs, Partys und Events heute Nacht — deutschlandweit.
+          <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            Events, movies, restaurants, culture, and nightlife — all in one place, across Germany.
           </p>
 
           {/* City Selector */}
           <div 
-            className="relative max-w-md mx-auto mb-8 animate-fade-in"
-            style={{ animationDelay: "0.3s" }}
+            className="relative max-w-sm mx-auto mb-8 animate-fade-in"
+            style={{ animationDelay: "0.25s" }}
           >
-            <div className="relative">
-              <button
-                onClick={() => setIsCityOpen(!isCityOpen)}
-                className="w-full flex items-center justify-between gap-3 px-6 py-4 rounded-2xl glass-card border border-primary/30 hover:border-primary/50 transition-all group"
-              >
-                <div className="flex items-center gap-3">
-                  <MapPin className="w-5 h-5 text-primary" />
-                  <span className="text-lg font-medium text-foreground">{selectedCity}</span>
-                </div>
-                <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${isCityOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {isCityOpen && (
-                <div className="absolute top-full left-0 right-0 mt-2 py-2 glass-card border border-border/50 rounded-xl z-50 max-h-64 overflow-y-auto">
-                  {cities.map((city) => (
-                    <button
-                      key={city}
-                      onClick={() => {
-                        setSelectedCity(city);
-                        setIsCityOpen(false);
-                      }}
-                      className={`w-full text-left px-6 py-3 hover:bg-primary/10 transition-colors ${
-                        selectedCity === city ? 'text-primary bg-primary/5' : 'text-foreground'
-                      }`}
-                    >
-                      {city}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <button
+              onClick={() => setIsCityOpen(!isCityOpen)}
+              className="w-full flex items-center justify-between gap-3 px-6 py-4 rounded-2xl glass-card border border-primary/30 hover:border-primary/50 transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <MapPin className="w-5 h-5 text-primary" />
+                <span className="text-lg font-medium text-foreground">{selectedCity}</span>
+              </div>
+              <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${isCityOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {isCityOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 py-2 glass-card border border-border/50 rounded-xl z-50 max-h-64 overflow-y-auto">
+                {cities.map((city) => (
+                  <button
+                    key={city}
+                    onClick={() => {
+                      setSelectedCity(city);
+                      setIsCityOpen(false);
+                    }}
+                    className={`w-full text-left px-6 py-3 hover:bg-primary/10 transition-colors ${
+                      selectedCity === city ? 'text-primary bg-primary/5' : 'text-foreground'
+                    }`}
+                  >
+                    {city}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* CTA Button */}
-          <div className="animate-fade-in" style={{ animationDelay: "0.4s" }}>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
             <Button 
               onClick={handleExplore}
               size="lg" 
-              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground rounded-xl px-10 py-6 h-auto text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 hover:scale-[1.02]"
+              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground rounded-xl px-8 py-6 h-auto text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 hover:scale-[1.02] w-full sm:w-auto"
             >
-              <Sparkles className="w-5 h-5 mr-2" />
-              Heute in {selectedCity}
+              <Search className="w-5 h-5 mr-2" />
+              Explore my city
+            </Button>
+            
+            <Button 
+              onClick={() => navigate("/contact")}
+              variant="outline"
+              size="lg" 
+              className="rounded-xl px-8 py-6 h-auto text-lg font-semibold border-2 border-muted-foreground/30 hover:border-primary hover:bg-primary/10 w-full sm:w-auto"
+            >
+              <Building2 className="w-5 h-5 mr-2" />
+              List your place or event
             </Button>
           </div>
 
           {/* City Pills */}
-          <div className="flex flex-wrap justify-center gap-2 mt-8 animate-fade-in" style={{ animationDelay: "0.5s" }}>
-            {["Berlin", "Hamburg", "München", "Köln", "Frankfurt"].map((city) => (
+          <div className="flex flex-wrap justify-center gap-2 mt-10 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+            {["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Leipzig", "Stuttgart"].map((city) => (
               <button
                 key={city}
                 onClick={() => {
                   setSelectedCity(city);
                   navigate(`/discover?city=${city.toLowerCase()}`);
                 }}
-                className="px-4 py-2 rounded-full text-sm font-medium bg-white/5 hover:bg-white/10 text-foreground/80 hover:text-foreground border border-white/10 hover:border-white/20 transition-all"
+                className="px-4 py-2 rounded-full text-sm font-medium bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border border-border/50 hover:border-primary/30 transition-all"
               >
                 {city}
               </button>

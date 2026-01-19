@@ -20,7 +20,7 @@ export const useEvents = (filters?: {
     queryFn: async () => {
       let query = supabase
         .from("events")
-        .select("*")
+        .select("*, venues(*)")
         .eq("is_active", true)
         .order("start_date", { ascending: true });
 
