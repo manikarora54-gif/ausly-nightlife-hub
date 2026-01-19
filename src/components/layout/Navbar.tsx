@@ -55,7 +55,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16"> 
           {/* Logo */}
           <Link to="/" className="flex items-center group">
-            <img alt="Ausly" className="h-8 object-contain" src="/lovable-uploads/dc11da7a-957a-4515-ab21-865b6279554b.png" />
+            <img alt="Ausly" className="h-8 border-0 object-cover" src="/lovable-uploads/543a5916-7c50-45ff-aca7-9c29e172bd58.png" />
           </Link>
 
           {/* Desktop Navigation */}
