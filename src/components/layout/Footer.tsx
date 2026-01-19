@@ -5,10 +5,8 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
 import logo from "@/assets/ausly-logo-neon.png";
-
 const Footer = () => {
   const [email, setEmail] = useState("");
-
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
@@ -16,9 +14,7 @@ const Footer = () => {
       setEmail("");
     }
   };
-
-  return (
-    <footer className="bg-card/50 border-t border-border/30 mt-20">
+  return <footer className="bg-card/50 border-t border-border/30 mt-20">
       <div className="container mx-auto px-4 py-12">
         {/* Newsletter Section */}
         <div className="max-w-xl mx-auto text-center mb-12 pb-12 border-b border-border/30">
@@ -29,13 +25,7 @@ const Footer = () => {
             Erhalte Early Access zu neuen Features und Cities
           </p>
           <form onSubmit={handleSubscribe} className="flex gap-2 max-w-md mx-auto">
-            <Input
-              type="email"
-              placeholder="deine@email.de"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-background/50 border-border/50"
-            />
+            <Input type="email" placeholder="deine@email.de" value={email} onChange={e => setEmail(e.target.value)} className="bg-background/50 border-border/50" />
             <Button type="submit" className="bg-primary hover:bg-primary/90">
               Anmelden
             </Button>
@@ -47,7 +37,7 @@ const Footer = () => {
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg overflow-hidden">
-                <img src={logo} alt="Ausly logo" className="w-full h-full object-contain" />
+                <img alt="Ausly logo" className="w-full h-full object-contain" src="/lovable-uploads/b68341e4-5228-4a64-bab0-c914749d52eb.png" />
               </div>
               <span className="text-xl font-heading font-bold gradient-text">
                 Ausly
@@ -57,22 +47,10 @@ const Footer = () => {
               Dein Nachtleben-Guide für ganz Deutschland. Entdecke Clubs, Events und unvergessliche Erlebnisse.
             </p>
             <div className="flex gap-4">
-              <a 
-                href="https://instagram.com/ausly" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Instagram"
-              >
+              <a href="https://instagram.com/ausly" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a 
-                href="https://twitter.com/ausly" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-colors"
-                aria-label="Twitter"
-              >
+              <a href="https://twitter.com/ausly" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
@@ -173,8 +151,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
