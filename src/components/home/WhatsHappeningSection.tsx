@@ -1,4 +1,4 @@
-import { Calendar, Clock, MapPin, Ticket, Utensils, Film, Music } from "lucide-react";
+import { Calendar, Clock, MapPin, Utensils, Film, Music } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
@@ -33,9 +33,20 @@ const getCTAText = (type: string) => {
   }
 };
 
-const WhatsHappeningSection = () => {
-  const { data: events = [], isLoading: eventsLoading } = useEvents({ upcoming: true, limit: 4 });
-  const { data: venues = [], isLoading: venuesLoading } = useVenues({ limit: 4 });
+interface WhatsHappeningSectionProps {
+  selectedCity: string;
+}
+
+const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => {
+  const { data: events = [], isLoading: eventsLoading } = useEvents({ 
+    upcoming: true, 
+    limit: 4,
+    city: selectedCity 
+  });
+  const { data: venues = [], isLoading: venuesLoading } = useVenues({ 
+    limit: 4,
+    city: selectedCity 
+  });
 
   const isLoading = eventsLoading || venuesLoading;
 
@@ -48,7 +59,7 @@ const WhatsHappeningSection = () => {
       category: event.event_type,
       time: event.start_date ? format(new Date(event.start_date), "HH:mm") : "Today",
       location: event.venues?.name || "Various locations",
-      city: event.venues?.city || "Berlin",
+      city: event.venues?.city || selectedCity,
       image: event.images?.[0] || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop",
       price: event.ticket_price ? `€${event.ticket_price}` : "Free",
       link: `/event/${event.slug || event.id}`,
@@ -67,6 +78,8 @@ const WhatsHappeningSection = () => {
     })),
   ].slice(0, 8);
 
+  const hasNoData = !isLoading && happeningNow.length === 0;
+
   return (
     <section className="py-20 relative overflow-hidden">
       <div className="container mx-auto px-4">
@@ -77,10 +90,10 @@ const WhatsHappeningSection = () => {
             Live Now
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-4">
-            What's happening <span className="gradient-text">today</span>
+            What's happening in <span className="gradient-text">{selectedCity}</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Discover events, restaurants, movies, and activities happening right now in your city
+            Discover events, restaurants, movies, and activities happening right now in {selectedCity}
           </p>
         </div>
 
@@ -97,6 +110,20 @@ const WhatsHappeningSection = () => {
                 </div>
               </div>
             ))}
+          </div>
+        ) : hasNoData ? (
+          /* Empty State */
+          <div className="text-center py-16">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-muted/50 flex items-center justify-center">
+              <MapPin className="w-12 h-12 text-muted-foreground" />
+            </div>
+            <h3 className="text-xl font-heading font-semibold mb-2">No listings in {selectedCity} yet</h3>
+            <p className="text-muted-foreground max-w-md mx-auto mb-6">
+              We're expanding to new cities across Germany. Check back soon or explore other cities!
+            </p>
+            <Button variant="outline" asChild>
+              <Link to="/discover">Explore all cities</Link>
+            </Button>
           </div>
         ) : (
           /* Content Grid */
@@ -161,13 +188,15 @@ const WhatsHappeningSection = () => {
         )}
 
         {/* View All Link */}
-        <div className="text-center mt-10">
-          <Button variant="outline" size="lg" asChild>
-            <Link to="/discover">
-              View all happening today
-            </Link>
-          </Button>
-        </div>
+        {!hasNoData && (
+          <div className="text-center mt-10">
+            <Button variant="outline" size="lg" asChild>
+              <Link to={`/discover?city=${selectedCity.toLowerCase()}`}>
+                View all in {selectedCity}
+              </Link>
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

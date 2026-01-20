@@ -2,7 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Search, Building2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const FinalCTASection = () => {
+interface FinalCTASectionProps {
+  selectedCity: string;
+}
+
+const FinalCTASection = ({ selectedCity }: FinalCTASectionProps) => {
   const navigate = useNavigate();
 
   return (
@@ -17,7 +21,7 @@ const FinalCTASection = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold mb-4">
-            Your city,{" "}
+            {selectedCity},{" "}
             <span className="gradient-text">happening now.</span>
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground mb-10">
@@ -26,12 +30,12 @@ const FinalCTASection = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button 
-              onClick={() => navigate("/discover")}
+              onClick={() => navigate(`/discover?city=${selectedCity.toLowerCase()}`)}
               size="lg" 
               className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground rounded-xl px-8 py-6 h-auto text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 hover:scale-[1.02] w-full sm:w-auto"
             >
               <Search className="w-5 h-5 mr-2" />
-              Explore my city
+              Explore {selectedCity}
             </Button>
             
             <Button 
