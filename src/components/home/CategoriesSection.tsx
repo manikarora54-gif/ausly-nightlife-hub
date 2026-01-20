@@ -1,6 +1,10 @@
 import { Calendar, Film, Utensils, Music, Theater, Dumbbell, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
+interface CategoriesSectionProps {
+  selectedCity: string;
+}
+
 const categories = [
   {
     id: "events",
@@ -9,7 +13,7 @@ const categories = [
     icon: Calendar,
     color: "primary",
     image: "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=600&h=400&fit=crop",
-    link: "/discover?type=events",
+    type: "events",
   },
   {
     id: "movies",
@@ -27,7 +31,7 @@ const categories = [
     icon: Utensils,
     color: "accent",
     image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop",
-    link: "/discover?type=restaurant",
+    type: "restaurant",
   },
   {
     id: "nightlife",
@@ -36,7 +40,7 @@ const categories = [
     icon: Music,
     color: "primary",
     image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&h=400&fit=crop",
-    link: "/discover?type=club",
+    type: "club",
   },
   {
     id: "culture",
@@ -45,7 +49,7 @@ const categories = [
     icon: Theater,
     color: "secondary",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
-    link: "/discover?type=culture",
+    type: "culture",
   },
   {
     id: "sports",
@@ -53,8 +57,8 @@ const categories = [
     description: "Fitness, sports events, and outdoor",
     icon: Dumbbell,
     color: "accent",
-    image: "https://images.unsplash.com/photo-1461896836934- voices-c17b55c?w=600&h=400&fit=crop",
-    link: "/discover?type=sports",
+    image: "https://images.unsplash.com/photo-1461896836934-c17b55c?w=600&h=400&fit=crop",
+    type: "sports",
   },
 ];
 
@@ -71,7 +75,12 @@ const getColorClasses = (color: string) => {
   }
 };
 
-const CategoriesSection = () => {
+const CategoriesSection = ({ selectedCity }: CategoriesSectionProps) => {
+  const getCategoryLink = (category: typeof categories[0]) => {
+    if (category.link) return category.link;
+    return `/discover?type=${category.type}&city=${selectedCity.toLowerCase()}`;
+  };
+
   return (
     <section className="py-20 relative overflow-hidden bg-card/30">
       <div className="container mx-auto px-4">
@@ -81,7 +90,7 @@ const CategoriesSection = () => {
             Explore by <span className="gradient-text">category</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Find exactly what you're looking for, from morning coffee to late-night clubs
+            Find exactly what you're looking for in {selectedCity}, from morning coffee to late-night clubs
           </p>
         </div>
 
@@ -90,7 +99,7 @@ const CategoriesSection = () => {
           {categories.map((category) => (
             <Link
               key={category.id}
-              to={category.link}
+              to={getCategoryLink(category)}
               className="group relative overflow-hidden rounded-2xl glass-card border border-border/50 hover:border-primary/30 transition-all duration-300"
             >
               {/* Background Image */}

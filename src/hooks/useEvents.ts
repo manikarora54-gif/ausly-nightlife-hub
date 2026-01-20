@@ -14,6 +14,7 @@ export const useEvents = (filters?: {
   upcoming?: boolean;
   search?: string;
   limit?: number;
+  city?: string;
 }) => {
   return useQuery({
     queryKey: ["events", filters],
@@ -44,6 +45,11 @@ export const useEvents = (filters?: {
         query = query.or(
           `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
         );
+      }
+
+      if (filters?.city) {
+        // Filter events by venue city
+        query = query.eq("venues.city", filters.city);
       }
 
       if (filters?.limit) {

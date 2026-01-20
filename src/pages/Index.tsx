@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
@@ -9,17 +10,19 @@ import ForBusinessSection from "@/components/home/ForBusinessSection";
 import FinalCTASection from "@/components/home/FinalCTASection";
 
 const Index = () => {
+  const [selectedCity, setSelectedCity] = useState("Berlin");
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <main>
-        <HeroSection />
-        <WhatsHappeningSection />
-        <CategoriesSection />
+        <HeroSection selectedCity={selectedCity} onCityChange={setSelectedCity} />
+        <WhatsHappeningSection selectedCity={selectedCity} />
+        <CategoriesSection selectedCity={selectedCity} />
         <HowItWorksSection />
         <WhyAuslySection />
         <ForBusinessSection />
-        <FinalCTASection />
+        <FinalCTASection selectedCity={selectedCity} />
       </main>
       <Footer />
     </div>
