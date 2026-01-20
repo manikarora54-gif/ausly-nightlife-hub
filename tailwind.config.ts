@@ -66,6 +66,11 @@ export default {
           pink: "hsl(320 100% 60%)",
           lime: "hsl(120 100% 50%)",
         },
+        brand: {
+          cyan: "hsl(var(--cyan))",
+          emerald: "hsl(var(--emerald))",
+          rose: "hsl(var(--rose))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
