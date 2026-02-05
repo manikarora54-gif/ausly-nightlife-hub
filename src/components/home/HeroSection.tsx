@@ -1,9 +1,23 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { MapPin, ChevronDown, Search, Building2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { MapPin, ChevronDown, Sparkles, Calendar, Film, Utensils, Music, Compass } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 
-const cities = ["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Stuttgart", "Leipzig", "Düsseldorf", "Dresden", "Hannover"];
+const cities = [
+  { name: "Berlin", image: "https://images.unsplash.com/photo-1560969184-10fe8719e047?w=400&h=300&fit=crop", count: "2.4k+" },
+  { name: "Hamburg", image: "https://images.unsplash.com/photo-1562930622-0ce10c97bd73?w=400&h=300&fit=crop", count: "1.8k+" },
+  { name: "München", image: "https://images.unsplash.com/photo-1595867818082-083862f3d630?w=400&h=300&fit=crop", count: "2.1k+" },
+  { name: "Köln", image: "https://images.unsplash.com/photo-1515443961218-a51367888e4b?w=400&h=300&fit=crop", count: "1.2k+" },
+  { name: "Frankfurt", image: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&h=300&fit=crop", count: "980+" },
+  { name: "Leipzig", image: "https://images.unsplash.com/photo-1599138801168-b58f4c41e5eb?w=400&h=300&fit=crop", count: "750+" },
+];
+
+const quickActions = [
+  { icon: Calendar, label: "Events", type: "events", color: "primary" },
+  { icon: Film, label: "Movies", type: "movies", color: "secondary" },
+  { icon: Utensils, label: "Dining", type: "restaurant", color: "accent" },
+  { icon: Music, label: "Nightlife", type: "club", color: "primary" },
+];
 
 interface HeroSectionProps {
   selectedCity: string;
@@ -11,178 +25,109 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
-  const [isCityOpen, setIsCityOpen] = useState(false);
   const navigate = useNavigate();
-
-  const handleExplore = () => {
-    navigate(`/discover?city=${selectedCity.toLowerCase()}`);
-  };
 
   const handleCitySelect = (city: string) => {
     onCityChange(city);
-    setIsCityOpen(false);
   };
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (isCityOpen) {
-        setIsCityOpen(false);
-      }
-    };
-    
-    if (isCityOpen) {
-      document.addEventListener("click", handleClickOutside);
-    }
-    
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, [isCityOpen]);
-
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden pt-20 pb-10">
       {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/15 rounded-full blur-[120px] animate-pulse-glow" />
-        <div
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/15 rounded-full blur-[120px] animate-pulse-glow"
-          style={{ animationDelay: "1s" }}
-        />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[200px]" />
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-[150px]" />
       </div>
 
-      {/* Grid Pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `linear-gradient(hsl(var(--primary) / 0.5) 1px, transparent 1px),
-                           linear-gradient(90deg, hsl(var(--primary) / 0.5) 1px, transparent 1px)`,
-          backgroundSize: "60px 60px",
-        }}
-      />
-
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Logo */}
-          <div className="flex justify-center mb-6 animate-fade-in">
-            <img
-              alt="Ausly"
-              className="w-48 md:w-56 h-auto object-contain"
-              src="/lovable-uploads/15fe4c77-181d-4051-8a25-e28af9a632f7.png"
-            />
-          </div>
-
-          {/* Tagline */}
-          <p
-            className="text-lg md:text-xl text-primary font-semibold mb-4 animate-fade-in tracking-wide"
-            style={{ animationDelay: "0.1s" }}
-          >
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4" />
             Deine Stadt. Dein Tag.
-          </p>
-
-          {/* Main Headline */}
-          <h1
-            className="text-3xl md:text-5xl lg:text-6xl font-heading font-bold mb-4 animate-fade-in leading-tight"
-            style={{ animationDelay: "0.15s" }}
-          >
-            Discover and book what's happening in your city —{" "}
-            <span className="gradient-text">anytime.</span>
+          </div>
+          
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold mb-4 leading-tight">
+            What's happening in{" "}
+            <span className="gradient-text">{selectedCity}</span>?
           </h1>
-
-          {/* Subheadline */}
-          <p
-            className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in"
-            style={{ animationDelay: "0.2s" }}
-          >
-            Events, movies, restaurants, culture, and nightlife — all in one place, across Germany.
+          
+          <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+            Discover events, restaurants, movies & nightlife — all in one place
           </p>
+        </div>
 
-          {/* City Selector */}
-          <div
-            className="relative max-w-sm mx-auto mb-8 animate-fade-in"
-            style={{ animationDelay: "0.25s" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setIsCityOpen(!isCityOpen)}
-              className="w-full flex items-center justify-between gap-3 px-6 py-4 rounded-2xl glass-card border border-primary/30 hover:border-primary/50 transition-all"
+        {/* Quick Action Cards */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {quickActions.map((action) => (
+            <Link
+              key={action.type}
+              to={action.type === "movies" ? "/movies" : `/discover?type=${action.type}&city=${selectedCity.toLowerCase()}`}
+              className="group flex items-center gap-3 px-6 py-3 rounded-2xl glass-card border border-border/50 hover:border-primary/50 transition-all hover:scale-105"
             >
-              <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-primary" />
-                <span className="text-lg font-medium text-foreground">{selectedCity}</span>
+              <div className={`w-10 h-10 rounded-xl bg-${action.color}/10 flex items-center justify-center`}>
+                <action.icon className={`w-5 h-5 text-${action.color}`} />
               </div>
-              <ChevronDown
-                className={`w-5 h-5 text-muted-foreground transition-transform ${isCityOpen ? "rotate-180" : ""}`}
-              />
-            </button>
+              <span className="font-semibold text-foreground group-hover:text-primary transition-colors">
+                {action.label}
+              </span>
+            </Link>
+          ))}
+        </div>
 
-            {isCityOpen && (
-              <div className="absolute top-full left-0 right-0 mt-2 py-2 glass-card border border-border/50 rounded-xl z-50 max-h-64 overflow-y-auto">
-                {cities.map((city) => (
-                  <button
-                    key={city}
-                    onClick={() => handleCitySelect(city)}
-                    className={`w-full text-left px-6 py-3 hover:bg-primary/10 transition-colors ${
-                      selectedCity === city ? "text-primary bg-primary/5" : "text-foreground"
-                    }`}
-                  >
-                    {city}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* CTA Buttons */}
-          <div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in"
-            style={{ animationDelay: "0.3s" }}
-          >
-            <Button
-              onClick={handleExplore}
-              size="lg"
-              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 text-primary-foreground rounded-xl px-8 py-6 h-auto text-lg font-bold shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40 hover:scale-[1.02] w-full sm:w-auto"
-            >
-              <Search className="w-5 h-5 mr-2" />
-              Explore my city
-            </Button>
-
-            <Button
-              onClick={() => navigate("/contact")}
-              variant="outline"
-              size="lg"
-              className="rounded-xl px-8 py-6 h-auto text-lg font-semibold border-2 border-muted-foreground/30 hover:border-primary hover:bg-primary/10 w-full sm:w-auto"
-            >
-              <Building2 className="w-5 h-5 mr-2" />
-              List your place or event
+        {/* City Cards Grid */}
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-heading font-semibold">
+              <Compass className="w-5 h-5 inline mr-2 text-primary" />
+              Explore Cities
+            </h2>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/discover")}>
+              View all →
             </Button>
           </div>
-
-          {/* City Pills */}
-          <div
-            className="flex flex-wrap justify-center gap-2 mt-10 animate-fade-in"
-            style={{ animationDelay: "0.4s" }}
-          >
-            {["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Leipzig", "Stuttgart"].map((city) => (
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {cities.map((city) => (
               <button
-                key={city}
-                onClick={() => handleCitySelect(city)}
-                className={`px-4 py-2 rounded-full text-sm font-medium border transition-all ${
-                  selectedCity === city
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-muted/50 hover:bg-muted text-muted-foreground hover:text-foreground border-border/50 hover:border-primary/30"
+                key={city.name}
+                onClick={() => handleCitySelect(city.name)}
+                className={`group relative overflow-hidden rounded-2xl aspect-[4/3] transition-all hover:scale-105 ${
+                  selectedCity === city.name ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""
                 }`}
               >
-                {city}
+                <img
+                  src={city.image}
+                  alt={city.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3">
+                  <h3 className="font-heading font-bold text-foreground text-lg">{city.name}</h3>
+                  <p className="text-xs text-muted-foreground">{city.count} listings</p>
+                </div>
+                {selectedCity === city.name && (
+                  <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                    <MapPin className="w-3 h-3 text-primary-foreground" />
+                  </div>
+                )}
               </button>
             ))}
           </div>
         </div>
-      </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex justify-center pt-2">
-          <div className="w-1 h-3 rounded-full bg-primary animate-pulse" />
+        {/* CTA */}
+        <div className="text-center">
+          <Button
+            onClick={() => navigate(`/discover?city=${selectedCity.toLowerCase()}`)}
+            size="lg"
+            className="bg-gradient-to-r from-primary to-secondary text-primary-foreground rounded-xl px-10 py-6 h-auto text-lg font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:scale-[1.02] transition-all"
+          >
+            Explore {selectedCity}
+          </Button>
         </div>
       </div>
     </section>
