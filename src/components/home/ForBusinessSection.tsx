@@ -1,116 +1,46 @@
-import { Utensils, Film, Calendar, Building2, ArrowRight, TrendingUp, Users, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-
-const businessTypes = [
-  {
-    icon: Utensils,
-    name: "Restaurants & Cafés",
-    benefit: "Fill more tables with direct reservations",
-  },
-  {
-    icon: Film,
-    name: "Cinemas",
-    benefit: "Sell tickets and showcase your program",
-  },
-  {
-    icon: Calendar,
-    name: "Event Organizers",
-    benefit: "Reach the right audience for your events",
-  },
-  {
-    icon: Building2,
-    name: "Venues & Clubs",
-    benefit: "Increase visibility in your city",
-  },
-];
+import { Building2, TrendingUp, Users, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const benefits = [
-  {
-    icon: TrendingUp,
-    title: "Increase visibility",
-    description: "Get discovered by people actively looking for things to do",
-  },
-  {
-    icon: Users,
-    title: "Reach your audience",
-    description: "Connect with locals, tourists, students, and expats",
-  },
-  {
-    icon: BarChart3,
-    title: "Analytics & insights",
-    description: "Understand your audience and optimize your listings",
-  },
+  { icon: Users, label: "Reach thousands" },
+  { icon: TrendingUp, label: "Grow bookings" },
+  { icon: Star, label: "Build reputation" },
 ];
 
 const ForBusinessSection = () => {
-  const navigate = useNavigate();
-
   return (
-    <section className="py-20 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[150px]" />
-      </div>
-
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Content */}
-            <div>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-sm font-medium mb-6">
+    <section className="py-16 relative overflow-hidden">
+      <div className="container mx-auto px-4">
+        <div className="max-w-4xl mx-auto glass-card rounded-3xl p-8 md:p-12 border border-border/50">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            {/* Left side */}
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-sm font-medium mb-4">
                 <Building2 className="w-4 h-4" />
-                For Businesses
-              </span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-heading font-bold mb-4">
-                Grow your business with{" "}
-                <span className="text-secondary">Ausly</span>
+                For Business
+              </div>
+              <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4">
+                List your venue or event
               </h2>
-              <p className="text-muted-foreground text-lg mb-8">
-                Join hundreds of restaurants, cinemas, event organizers, and venues 
-                already using Ausly to reach new customers.
-              </p>
-
-              {/* Benefits */}
-              <div className="space-y-4 mb-8">
-                {benefits.map((benefit) => (
-                  <div key={benefit.title} className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <benefit.icon className="w-5 h-5 text-secondary" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">{benefit.title}</h3>
-                      <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                    </div>
+              <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <benefit.icon className="w-4 h-4 text-primary" />
+                    {benefit.label}
                   </div>
                 ))}
               </div>
-
-              <Button 
-                onClick={() => navigate("/contact")}
-                size="lg"
-                className="bg-gradient-to-r from-secondary to-primary hover:opacity-90 text-primary-foreground rounded-xl px-8"
-              >
-                List your place or event
-                <ArrowRight className="w-4 h-4 ml-2" />
+              <Button asChild variant="secondary" size="lg" className="rounded-xl">
+                <Link to="/contact">Get started free →</Link>
               </Button>
             </div>
-
-            {/* Right: Business Types Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {businessTypes.map((type, index) => (
-                <div 
-                  key={type.name}
-                  className="glass-card p-5 rounded-xl border border-border/50 hover:border-secondary/30 transition-all animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4">
-                    <type.icon className="w-6 h-6 text-secondary" />
-                  </div>
-                  <h3 className="font-heading font-semibold mb-1">{type.name}</h3>
-                  <p className="text-sm text-muted-foreground">{type.benefit}</p>
-                </div>
-              ))}
+            
+            {/* Right side - visual */}
+            <div className="flex-shrink-0">
+              <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-secondary/20 to-primary/20 flex items-center justify-center">
+                <Building2 className="w-16 h-16 text-secondary" />
+              </div>
             </div>
           </div>
         </div>
