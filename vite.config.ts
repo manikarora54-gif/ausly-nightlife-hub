@@ -14,8 +14,17 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
+    alias: [
+      // Override generated backend client to avoid blank screens when env injection fails
+      {
+        find: "@/integrations/supabase/client",
+        replacement: path.resolve(__dirname, "./src/integrations/backend/client.ts"),
+      },
+      {
+        find: "@",
+        replacement: path.resolve(__dirname, "./src"),
+      },
+    ],
   },
 }));
+
