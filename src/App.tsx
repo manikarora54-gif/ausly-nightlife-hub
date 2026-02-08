@@ -35,6 +35,7 @@ import AdminSettings from "./pages/admin/Settings";
 import VendorLayout from "./components/vendor/VendorLayout";
 import VendorDashboard from "./pages/vendor/Dashboard";
 import VendorListings from "./pages/vendor/Listings";
+import NewListing from "./pages/vendor/NewListing";
 import VendorBookings from "./pages/vendor/Bookings";
 import VendorEvents from "./pages/vendor/Events";
 import VendorAnalytics from "./pages/vendor/Analytics";
@@ -68,6 +69,7 @@ const App = () => (
             <Route path="/vendor" element={<RoleProtectedRoute requiredRole="vendor"><VendorLayout /></RoleProtectedRoute>}>
               <Route index element={<VendorDashboard />} />
               <Route path="listings" element={<VendorListings />} />
+              <Route path="listings/new" element={<NewListing />} />
               <Route path="bookings" element={<VendorBookings />} />
               <Route path="events" element={<VendorEvents />} />
               <Route path="analytics" element={<VendorAnalytics />} />
