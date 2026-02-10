@@ -7,6 +7,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import RoleProtectedRoute from "@/components/auth/RoleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
+import AiPlannerChat from "@/components/chat/AiPlannerChat";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Venue from "./pages/Venue";
@@ -96,6 +97,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <AiPlannerChat />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
