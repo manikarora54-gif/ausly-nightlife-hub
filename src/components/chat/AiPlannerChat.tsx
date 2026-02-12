@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sparkles, Send, X, MessageCircle, Loader2, Bot, User } from "lucide-react";
+import { Sparkles, Send, X, MessageCircle, Loader2, Bot, User, Save } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useSaveItinerary } from "@/hooks/useItineraries";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -76,6 +79,30 @@ export default function AiPlannerChat() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const saveItinerary = useSaveItinerary();
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const handleSave = async () => {
+    const lastAssistant = [...messages].reverse().find(m => m.role === "assistant");
+    if (!lastAssistant || !user) return;
+    try {
+      // Extract city from conversation
+      const cityMatch = lastAssistant.content.match(/(?:Berlin|Munich|Hamburg|Frankfurt|Cologne|Düsseldorf)/i);
+      const city = cityMatch ? cityMatch[0] : "Germany";
+      const titleMatch = lastAssistant.content.match(/^#\s*(.+)/m);
+      const title = titleMatch ? titleMatch[1].slice(0, 80) : `Itinerary - ${city}`;
+      await saveItinerary.mutateAsync({
+        title,
+        city,
+        content: lastAssistant.content,
+        stops: [],
+      });
+      toast({ title: "Itinerary saved! ✨", description: "View it in your profile." });
+    } catch {
+      toast({ title: "Error saving", description: "Please try again.", variant: "destructive" });
+    }
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -142,6 +169,11 @@ export default function AiPlannerChat() {
           <h3 className="font-heading font-semibold text-sm">Ausly AI Planner</h3>
           <p className="text-xs text-muted-foreground">Plan your perfect night out</p>
         </div>
+        {messages.length > 0 && user && (
+          <button onClick={handleSave} className="p-1.5 rounded-lg hover:bg-muted transition-colors" title="Save itinerary">
+            <Save className="w-4 h-4 text-primary" />
+          </button>
+        )}
         <button onClick={() => setIsOpen(false)} className="p-1 rounded-lg hover:bg-muted transition-colors">
           <X className="w-4 h-4" />
         </button>

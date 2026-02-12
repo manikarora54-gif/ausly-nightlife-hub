@@ -134,15 +134,21 @@ const Navbar = () => {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
-                    <Link to="/discover" className="flex items-center gap-3">
-                      <Heart className="w-4 h-4 text-brand-rose" />
-                      My Favorites
+                    <Link to="/profile" className="flex items-center gap-3">
+                      <User className="w-4 h-4 text-brand-rose" />
+                      My Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
-                    <Link to="/discover" className="flex items-center gap-3">
+                    <Link to="/profile?tab=bookings" className="flex items-center gap-3">
                       <Calendar className="w-4 h-4 text-primary" />
                       My Bookings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
+                    <Link to="/profile?tab=itineraries" className="flex items-center gap-3">
+                      <Sparkles className="w-4 h-4 text-primary" />
+                      My Itineraries
                     </Link>
                   </DropdownMenuItem>
                   {isVendor() && (
