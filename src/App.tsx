@@ -26,6 +26,8 @@ import Movie from "./pages/Movie";
 import Booking from "./pages/Booking";
 import MovieSearch from "./pages/MovieSearch";
 import Cinemas from "./pages/Cinemas";
+import Profile from "./pages/Profile";
+import Itinerary from "./pages/Itinerary";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminBookings from "./pages/admin/Bookings";
 import AdminPayments from "./pages/admin/Payments";
@@ -94,6 +96,9 @@ const App = () => (
             {/* Protected Booking Route */}
             <Route path="/booking/:showtimeId" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
             <Route path="/booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
+            {/* Protected Profile & Itinerary Routes */}
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/itinerary/:id" element={<ProtectedRoute><Itinerary /></ProtectedRoute>} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
