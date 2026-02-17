@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const featuredVenues = [
   {
     id: 2,
+    slug: "berghain",
     name: "Berghain",
     type: "Club",
     location: "Berlin",
@@ -15,6 +16,7 @@ const featuredVenues = [
   },
   {
     id: 3,
+    slug: "tantris",
     name: "Tantris",
     type: "Fine Dining",
     location: "Munich",
@@ -25,6 +27,7 @@ const featuredVenues = [
   },
   {
     id: 8,
+    slug: "skyline-bar-20up",
     name: "Skyline Bar 20up",
     type: "Rooftop Bar",
     location: "Hamburg",
@@ -35,6 +38,7 @@ const featuredVenues = [
   },
   {
     id: 5,
+    slug: "watergate",
     name: "Watergate",
     type: "Club",
     location: "Berlin",
@@ -45,6 +49,7 @@ const featuredVenues = [
   },
   {
     id: 1,
+    slug: "nobelhart-schmutzig",
     name: "Nobelhart & Schmutzig",
     type: "Restaurant",
     location: "Berlin",
@@ -55,6 +60,7 @@ const featuredVenues = [
   },
   {
     id: 11,
+    slug: "tim-raue",
     name: "Tim Raue",
     type: "Restaurant",
     location: "Berlin",
@@ -92,7 +98,7 @@ const FeaturedSection = () => {
           {featuredVenues.map((venue, index) => (
             <Link
               key={venue.id}
-              to={`/venue/${venue.id}`}
+              to={`/venue/${venue.slug}`}
               className="group glass-card overflow-hidden hover-glow animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
