@@ -26,13 +26,13 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { href: "/discover?type=restaurants", label: "Restaurants", icon: "🍽️" },
-    { href: "/discover?type=bars", label: "Bars & Clubs", icon: "🍸" },
-    { href: "/discover?type=events", label: "Events", icon: "🎉" },
-    { href: "/discover?type=experiences", label: "Experiences", icon: "✨" },
-    { href: "/map", label: "Map", icon: "📍" },
-    { href: "/movies", label: "Movies", icon: "🎬" },
-  ];
+  { href: "/discover?type=restaurants", label: "Restaurants", icon: "🍽️" },
+  { href: "/discover?type=bars", label: "Bars & Clubs", icon: "🍸" },
+  { href: "/discover?type=events", label: "Events", icon: "🎉" },
+  { href: "/discover?type=experiences", label: "Experiences", icon: "✨" },
+  { href: "/map", label: "Map", icon: "📍" },
+  { href: "/movies", label: "Movies", icon: "🎬" }];
+
 
   const isActiveLink = (path: string) => {
     if (path.includes("?type=")) {
@@ -58,10 +58,10 @@ const Navbar = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled 
-        ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-background/5" 
-        : "bg-transparent"
-    }`}>
+    scrolled ?
+    "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-background/5" :
+    "bg-transparent"}`
+    }>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
@@ -81,22 +81,22 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center">
             <div className="flex items-center gap-1 bg-muted/50 backdrop-blur-sm rounded-full px-2 py-1.5">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 ${
-                    isActiveLink(link.href)
-                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                  }`}
-                >
+              {navLinks.map((link) =>
+              <Link
+                key={link.href}
+                to={link.href}
+                className={`relative px-4 py-2 text-sm font-medium rounded-full transition-all duration-300 ${
+                isActiveLink(link.href) ?
+                "bg-primary text-primary-foreground shadow-lg shadow-primary/25" :
+                "text-muted-foreground hover:text-foreground hover:bg-muted"}`
+                }>
+
                   <span className="flex items-center gap-2">
-                    <span className="text-base">{link.icon}</span>
+                    
                     {link.label}
                   </span>
                 </Link>
-              ))}
+              )}
             </div>
           </div>
 
@@ -107,16 +107,16 @@ const Navbar = () => {
               variant="ghost"
               size="icon"
               onClick={() => setSearchOpen(true)}
-              className="rounded-full hover:bg-muted"
-            >
+              className="rounded-full hover:bg-muted">
+
               <Search className="w-5 h-5" />
             </Button>
 
             {/* Auth Section */}
-            {loading ? (
-              <div className="w-10 h-10 rounded-full bg-muted animate-pulse" />
-            ) : user ? (
-              <DropdownMenu>
+            {loading ?
+            <div className="w-10 h-10 rounded-full bg-muted animate-pulse" /> :
+            user ?
+            <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="gap-2 rounded-full hover:bg-muted pl-2 pr-4">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-brand-cyan flex items-center justify-center">
@@ -151,26 +151,26 @@ const Navbar = () => {
                       My Itineraries
                     </Link>
                   </DropdownMenuItem>
-                  {isVendor() && (
-                    <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
+                  {isVendor() &&
+                <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
                       <Link to="/vendor" className="flex items-center gap-3">
                         <Settings className="w-4 h-4 text-muted-foreground" />
                         Vendor Dashboard
                       </Link>
                     </DropdownMenuItem>
-                  )}
+                }
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={handleSignOut}
-                    className="text-destructive cursor-pointer rounded-lg"
-                  >
+                  onClick={handleSignOut}
+                  className="text-destructive cursor-pointer rounded-lg">
+
                     <LogOut className="w-4 h-4 mr-3" />
                     Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="flex items-center gap-2">
+              </DropdownMenu> :
+
+            <div className="flex items-center gap-2">
                 <Link to="/signin">
                   <Button variant="ghost" size="sm" className="rounded-full">
                     Sign In
@@ -183,7 +183,7 @@ const Navbar = () => {
                   </Button>
                 </Link>
               </div>
-            )}
+            }
           </div>
 
           {/* Mobile Menu */}
@@ -192,8 +192,8 @@ const Navbar = () => {
               variant="ghost"
               size="icon"
               onClick={() => setSearchOpen(true)}
-              className="rounded-full"
-            >
+              className="rounded-full">
+
               <Search className="w-5 h-5" />
             </Button>
             
@@ -221,28 +221,28 @@ const Navbar = () => {
                   {/* Mobile Nav Links */}
                   <div className="flex-1 overflow-auto py-4">
                     <div className="px-4 space-y-1">
-                      {navLinks.map((link) => (
-                        <Link
-                          key={link.href}
-                          to={link.href}
-                          onClick={() => setMobileOpen(false)}
-                          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                            isActiveLink(link.href)
-                              ? "bg-primary text-primary-foreground"
-                              : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                          }`}
-                        >
+                      {navLinks.map((link) =>
+                      <Link
+                        key={link.href}
+                        to={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                        isActiveLink(link.href) ?
+                        "bg-primary text-primary-foreground" :
+                        "text-muted-foreground hover:text-foreground hover:bg-muted"}`
+                        }>
+
                           <span className="text-xl">{link.icon}</span>
                           <span className="font-medium">{link.label}</span>
                         </Link>
-                      ))}
+                      )}
                     </div>
                   </div>
 
                   {/* Mobile Auth Section */}
                   <div className="p-4 border-t border-border space-y-3">
-                    {user ? (
-                      <>
+                    {user ?
+                    <>
                         <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-muted">
                           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-brand-cyan flex items-center justify-center">
                             <User className="w-5 h-5 text-primary-foreground" />
@@ -252,28 +252,28 @@ const Navbar = () => {
                             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                           </div>
                         </div>
-                        {isVendor() && (
-                          <Link to="/vendor" className="block" onClick={() => setMobileOpen(false)}>
+                        {isVendor() &&
+                      <Link to="/vendor" className="block" onClick={() => setMobileOpen(false)}>
                             <Button variant="outline" className="w-full justify-start rounded-xl">
                               <Settings className="w-4 h-4 mr-3" />
                               Vendor Dashboard
                             </Button>
                           </Link>
-                        )}
+                      }
                         <Button
-                          variant="ghost"
-                          className="w-full justify-start rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => {
-                            handleSignOut();
-                            setMobileOpen(false);
-                          }}
-                        >
+                        variant="ghost"
+                        className="w-full justify-start rounded-xl text-destructive hover:text-destructive hover:bg-destructive/10"
+                        onClick={() => {
+                          handleSignOut();
+                          setMobileOpen(false);
+                        }}>
+
                           <LogOut className="w-4 h-4 mr-3" />
                           Sign Out
                         </Button>
-                      </>
-                    ) : (
-                      <>
+                      </> :
+
+                    <>
                         <Link to="/signin" className="block" onClick={() => setMobileOpen(false)}>
                           <Button variant="outline" className="w-full rounded-xl">
                             Sign In
@@ -286,7 +286,7 @@ const Navbar = () => {
                           </Button>
                         </Link>
                       </>
-                    )}
+                    }
                   </div>
                 </div>
               </SheetContent>
@@ -319,20 +319,20 @@ const Navbar = () => {
                   if (e.key === "Enter") handleSearch();
                 }}
                 className="pl-12 h-12 rounded-xl text-base"
-                autoFocus
-              />
+                autoFocus />
+
             </div>
             <Button
               onClick={handleSearch}
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-brand-cyan hover:opacity-90"
-            >
+              className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-brand-cyan hover:opacity-90">
+
               Search
             </Button>
           </div>
         </DialogContent>
       </Dialog>
-    </nav>
-  );
+    </nav>);
+
 };
 
 export default Navbar;
