@@ -18,11 +18,11 @@ import {
 } from "lucide-react";
 
 const mockPins = [
-  { id: 1, name: "Berghain", type: "bar", lat: 52.511, lng: 13.441, rating: 4.9 },
-  { id: 2, name: "Nobelhart & Schmutzig", type: "restaurant", lat: 52.508, lng: 13.387, rating: 4.9 },
-  { id: 3, name: "Watergate", type: "bar", lat: 52.501, lng: 13.443, rating: 4.6 },
-  { id: 4, name: "Katz Orange", type: "restaurant", lat: 52.527, lng: 13.401, rating: 4.5 },
-  { id: 5, name: "Buck and Breck", type: "bar", lat: 52.530, lng: 13.397, rating: 4.7 },
+  { id: 1, slug: "berghain", name: "Berghain", type: "bar", lat: 52.511, lng: 13.441, rating: 4.9 },
+  { id: 2, slug: "nobelhart-schmutzig", name: "Nobelhart & Schmutzig", type: "restaurant", lat: 52.508, lng: 13.387, rating: 4.9 },
+  { id: 3, slug: "watergate", name: "Watergate", type: "bar", lat: 52.501, lng: 13.443, rating: 4.6 },
+  { id: 4, slug: "katz-orange", name: "Katz Orange", type: "restaurant", lat: 52.527, lng: 13.401, rating: 4.5 },
+  { id: 5, slug: "buck-and-breck", name: "Buck and Breck", type: "bar", lat: 52.530, lng: 13.397, rating: 4.7 },
 ];
 
 const Map = () => {
@@ -192,7 +192,7 @@ const Map = () => {
               </div>
               
               <div className="flex gap-2">
-                <Link to={`/venue/${selectedVenue.id}`} className="flex-1">
+                <Link to={`/venue/${selectedVenue.slug}`} className="flex-1">
                   <Button variant="neon" size="sm" className="w-full">
                     View Details
                   </Button>

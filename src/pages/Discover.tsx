@@ -513,7 +513,7 @@ const Discover = () => {
             {filteredVenues.map((venue, index) => (
               <Link
                 key={venue.id}
-                to={`/venue/${venue.id}`}
+                to={`/venue/${venue.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`}
                 className={`group glass-card overflow-hidden hover-glow animate-fade-in ${
                   viewMode === "list" ? "flex flex-row" : ""
                 }`}
