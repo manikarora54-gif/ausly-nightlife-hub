@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,45 +8,50 @@ import {
   Search, 
   MapPin, 
   Star, 
-  Filter,
   X,
   Navigation,
   Utensils,
   Wine,
-  Music
+  Music,
+  Loader2
 } from "lucide-react";
-
-const mockPins = [
-  { id: 1, slug: "berghain", name: "Berghain", type: "bar", lat: 52.511, lng: 13.441, rating: 4.9 },
-  { id: 2, slug: "nobelhart-schmutzig", name: "Nobelhart & Schmutzig", type: "restaurant", lat: 52.508, lng: 13.387, rating: 4.9 },
-  { id: 3, slug: "watergate", name: "Watergate", type: "bar", lat: 52.501, lng: 13.443, rating: 4.6 },
-  { id: 4, slug: "katz-orange", name: "Katz Orange", type: "restaurant", lat: 52.527, lng: 13.401, rating: 4.5 },
-  { id: 5, slug: "buck-and-breck", name: "Buck and Breck", type: "bar", lat: 52.530, lng: 13.397, rating: 4.7 },
-];
+import { useVenues, Venue } from "@/hooks/useVenues";
 
 const Map = () => {
-  const [selectedVenue, setSelectedVenue] = useState<typeof mockPins[0] | null>(null);
+  const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+
+  const { data: venues = [], isLoading } = useVenues({ search: search || undefined, limit: 30 });
 
   const filters = [
     { id: "all", label: "All", icon: MapPin },
     { id: "restaurant", label: "Restaurants", icon: Utensils },
     { id: "bar", label: "Bars & Clubs", icon: Wine },
-    { id: "event", label: "Events", icon: Music },
+    { id: "live_music", label: "Live Music", icon: Music },
   ];
 
-  const filteredPins = mockPins.filter((pin) => {
+  const filteredVenues = venues.filter((v) => {
     if (activeFilter === "all") return true;
-    return pin.type === activeFilter;
+    const type = v.type.toLowerCase();
+    if (activeFilter === "restaurant") return type === "restaurant" || type === "cafe";
+    if (activeFilter === "bar") return type === "bar" || type === "club" || type === "beer garden";
+    if (activeFilter === "live_music") return type === "live_music" || type === "live music";
+    return type === activeFilter;
   });
+
+  const getIcon = (type: string) => {
+    const t = type.toLowerCase();
+    if (t === "restaurant" || t === "cafe") return Utensils;
+    if (t === "live_music" || t === "live music") return Music;
+    return Wine;
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
       <main className="pt-16 h-screen flex flex-col">
-        {/* Breadcrumbs & Search Bar */}
         <div className="p-4 glass-card border-b border-border/30">
           <div className="container mx-auto">
             <Breadcrumbs 
@@ -87,9 +91,7 @@ const Map = () => {
           </div>
         </div>
 
-        {/* Map Container */}
         <div className="flex-1 relative">
-          {/* Placeholder Map */}
           <div 
             className="w-full h-full"
             style={{
@@ -100,7 +102,6 @@ const Map = () => {
               `,
             }}
           >
-            {/* Grid overlay */}
             <div 
               className="absolute inset-0 opacity-10"
               style={{
@@ -112,50 +113,51 @@ const Map = () => {
               }}
             />
 
-            {/* Map Pins */}
-            {filteredPins.map((pin, index) => (
-              <button
-                key={pin.id}
-                onClick={() => setSelectedVenue(pin)}
-                className={`absolute transform -translate-x-1/2 -translate-y-1/2 group animate-fade-in`}
-                style={{
-                  left: `${20 + (index * 15)}%`,
-                  top: `${30 + (index * 10)}%`,
-                  animationDelay: `${index * 0.1}s`,
-                }}
-              >
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                  selectedVenue?.id === pin.id 
-                    ? "bg-primary scale-125 shadow-[0_0_20px_hsl(var(--primary)/0.5)]" 
-                    : "bg-card hover:bg-primary/80 hover:scale-110"
-                } border-2 border-primary/50`}>
-                  {pin.type === "restaurant" ? (
-                    <Utensils className="w-4 h-4" />
-                  ) : (
-                    <Wine className="w-4 h-4" />
-                  )}
-                </div>
-                
-                {/* Tooltip */}
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <div className="glass-card px-3 py-2 rounded-lg text-sm whitespace-nowrap">
-                    <div className="font-semibold">{pin.name}</div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                      {pin.rating}
+            {isLoading ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              filteredVenues.slice(0, 20).map((venue, index) => {
+                const Icon = getIcon(venue.type);
+                return (
+                  <button
+                    key={venue.id}
+                    onClick={() => setSelectedVenue(venue)}
+                    className="absolute transform -translate-x-1/2 -translate-y-1/2 group animate-fade-in"
+                    style={{
+                      left: `${10 + ((index * 37) % 80)}%`,
+                      top: `${15 + ((index * 23) % 65)}%`,
+                      animationDelay: `${index * 0.05}s`,
+                    }}
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
+                      selectedVenue?.id === venue.id 
+                        ? "bg-primary scale-125 shadow-[0_0_20px_hsl(var(--primary)/0.5)]" 
+                        : "bg-card hover:bg-primary/80 hover:scale-110"
+                    } border-2 border-primary/50`}>
+                      <Icon className="w-4 h-4" />
                     </div>
-                  </div>
-                </div>
-              </button>
-            ))}
+                    
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <div className="glass-card px-3 py-2 rounded-lg text-sm whitespace-nowrap">
+                        <div className="font-semibold">{venue.name}</div>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                          {Number(venue.average_rating || 0).toFixed(1)}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })
+            )}
 
-            {/* Center Location Button */}
             <button className="absolute bottom-6 right-6 w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
               <Navigation className="w-5 h-5 text-primary-foreground" />
             </button>
           </div>
 
-          {/* Selected Venue Card */}
           {selectedVenue && (
             <div className="absolute bottom-6 left-6 right-6 md:left-6 md:right-auto md:w-80 glass-card p-4 animate-fade-in">
               <button
@@ -166,15 +168,6 @@ const Map = () => {
               </button>
               
               <div className="flex items-center gap-2 mb-2">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  selectedVenue.type === "restaurant" ? "bg-primary/20" : "bg-secondary/20"
-                }`}>
-                  {selectedVenue.type === "restaurant" ? (
-                    <Utensils className={`w-4 h-4 ${selectedVenue.type === "restaurant" ? "text-primary" : "text-secondary"}`} />
-                  ) : (
-                    <Wine className="w-4 h-4 text-secondary" />
-                  )}
-                </div>
                 <span className="text-xs font-medium text-muted-foreground capitalize">
                   {selectedVenue.type}
                 </span>
@@ -185,10 +178,10 @@ const Map = () => {
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  <span className="font-medium">{selectedVenue.rating}</span>
+                  <span className="font-medium">{Number(selectedVenue.average_rating || 0).toFixed(1)}</span>
                 </div>
                 <span className="text-muted-foreground">•</span>
-                <span className="text-sm text-muted-foreground">Berlin</span>
+                <span className="text-sm text-muted-foreground">{selectedVenue.city}</span>
               </div>
               
               <div className="flex gap-2">
@@ -201,8 +194,7 @@ const Map = () => {
                   variant="outline" 
                   size="sm"
                   onClick={() => {
-                    // Open Google Maps with venue location
-                    const query = encodeURIComponent(`${selectedVenue.name} Berlin`);
+                    const query = encodeURIComponent(`${selectedVenue.name} ${selectedVenue.city}`);
                     window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
                   }}
                 >
@@ -212,9 +204,8 @@ const Map = () => {
             </div>
           )}
 
-          {/* No API Key Notice */}
           <div className="absolute top-4 left-1/2 -translate-x-1/2 glass-card px-4 py-2 text-sm text-muted-foreground">
-            <span>📍 Interactive map preview • Add Mapbox API key for full functionality</span>
+            <span>📍 Interactive map preview • {filteredVenues.length} venues</span>
           </div>
         </div>
       </main>
