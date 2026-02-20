@@ -79,7 +79,7 @@ export const useEvent = (idOrSlug: string) => {
         query = query.eq("slug", idOrSlug);
       }
       
-      const { data, error } = await query.single();
+      const { data, error } = await query.maybeSingle();
 
       if (error) throw error;
       return data;
