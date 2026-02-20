@@ -23,6 +23,7 @@ import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/admin/AdminLayout";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
+import Event from "./pages/Event";
 import Booking from "./pages/Booking";
 import MovieSearch from "./pages/MovieSearch";
 import Cinemas from "./pages/Cinemas";
@@ -59,7 +60,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/discover" element={<Discover />} />
             <Route path="/venue/:id" element={<Venue />} />
-            <Route path="/event/:id" element={<Venue />} />
+            <Route path="/event/:id" element={<Event />} />
             <Route path="/plan" element={<Plan />} />
             <Route path="/map" element={<Map />} />
             <Route path="/signin" element={<SignIn />} />
