@@ -2,8 +2,8 @@ import { useState } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSection from "@/components/home/HeroSection";
-import WhatsHappeningSection from "@/components/home/WhatsHappeningSection";
 import CategoriesSection from "@/components/home/CategoriesSection";
+import WhatsHappeningSection from "@/components/home/WhatsHappeningSection";
 import HowItWorksSection from "@/components/home/HowItWorksSection";
 import WhyAuslySection from "@/components/home/WhyAuslySection";
 import ForBusinessSection from "@/components/home/ForBusinessSection";
@@ -17,8 +17,8 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection selectedCity={selectedCity} onCityChange={setSelectedCity} />
-        <WhatsHappeningSection selectedCity={selectedCity} />
         <CategoriesSection selectedCity={selectedCity} />
+        <WhatsHappeningSection selectedCity={selectedCity} />
         <HowItWorksSection />
         <WhyAuslySection />
         <ForBusinessSection />
