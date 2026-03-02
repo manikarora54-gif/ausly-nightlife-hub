@@ -1,49 +1,65 @@
-import { MapPin, Sparkles, Ticket } from "lucide-react";
+import { MapPin, Sparkles, Ticket, ArrowRight } from "lucide-react";
 
 const steps = [
   {
     icon: MapPin,
+    step: "01",
     title: "Pick your city",
-    description: "Berlin, Munich, Hamburg & more"
+    description: "Choose from Berlin, Munich, Hamburg, Cologne, Frankfurt & more across Germany.",
   },
   {
     icon: Sparkles,
-    title: "Discover",
-    description: "Find events, dining & nightlife"
+    step: "02",
+    title: "Discover & explore",
+    description: "Browse events, restaurants, nightlife, movies — or let AI plan your perfect night.",
   },
   {
     icon: Ticket,
-    title: "Book & Go",
-    description: "Reserve instantly"
-  }
+    step: "03",
+    title: "Book & go",
+    description: "Reserve tables, buy tickets, and get directions — all in one tap.",
+  },
 ];
 
 const HowItWorksSection = () => {
   return (
-    <section className="py-16 relative overflow-hidden">
+    <section className="py-20 relative overflow-hidden bg-card/30">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-12">
-            {steps.map((step, index) => (
-              <div key={index} className="flex items-center gap-4 group">
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <step.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center">
-                    {index + 1}
-                  </span>
+        <div className="text-center mb-14">
+          <h2 className="text-2xl md:text-4xl font-heading font-bold mb-3">
+            How <span className="gradient-text">Ausly</span> works
+          </h2>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            From choosing your city to booking your night — it takes less than a minute.
+          </p>
+        </div>
+
+        <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-6 md:gap-8">
+          {steps.map((step, index) => (
+            <div key={index} className="relative group">
+              <div className="glass-card rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all h-full text-center md:text-left">
+                <div className="text-4xl font-heading font-bold text-primary/20 mb-4">
+                  {step.step}
                 </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-foreground">{step.title}</h3>
-                  <p className="text-sm text-muted-foreground">{step.description}</p>
+                <div className="w-14 h-14 mx-auto md:mx-0 mb-5 rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <step.icon className="w-7 h-7 text-primary" />
                 </div>
-                {index < steps.length - 1 && (
-                  <div className="hidden md:block w-12 h-px bg-gradient-to-r from-primary/50 to-transparent" />
-                )}
+                <h3 className="font-heading font-bold text-lg text-foreground mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {step.description}
+                </p>
               </div>
-            ))}
-          </div>
+
+              {/* Connector arrow (desktop) */}
+              {index < steps.length - 1 && (
+                <div className="hidden md:flex absolute top-1/2 -right-4 translate-x-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background border border-border items-center justify-center">
+                  <ArrowRight className="w-4 h-4 text-primary" />
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>
