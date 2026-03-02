@@ -69,10 +69,10 @@ async function streamChat({
 }
 
 const quickStarters = [
-  "Plan a romantic evening in Berlin 💕",
-  "Best weekend itinerary for Munich 🍺",
-  "Fun night out with friends in Hamburg 🎶",
-  "Foodie adventure in Cologne 🍽️",
+  "What are the best rooftop bars in Berlin this weekend? 🌃",
+  "Plan a budget-friendly date night in Munich under €50 💕",
+  "Where can I find live jazz in Hamburg tonight? 🎷",
+  "Best late-night food spots in Cologne after midnight 🍜",
 ];
 
 export default function AiPlannerChat() {
