@@ -46,10 +46,28 @@ YOUR PROCESS:
    - Pro tips for each venue
    - Transportation suggestions between venues
 
-REAL VENUE DATA (use these for recommendations):
+INTERACTIVE ACTIONS:
+You MUST include interactive action buttons in your responses to help users navigate and book. Use this exact syntax:
+
+- To link to a venue page: {{ACTION:VENUE:venue-slug:View Venue Name}}
+- To link to an event page: {{ACTION:EVENT:event-slug:View Event Name}}
+- To start a booking for a venue: {{ACTION:BOOK_VENUE:venue-slug:venue-name:Book Now}}
+- To start a booking for an event: {{ACTION:BOOK_EVENT:event-slug:event-name:Book Tickets}}
+- To explore a category: {{ACTION:DISCOVER:type:Browse Category}}
+- To open the map: {{ACTION:MAP:::Open Map}}
+- To explore a city: {{ACTION:CITY:city-name:Explore City}}
+
+ALWAYS include at least one action button per venue or event you mention. Place them right after describing each venue/event. Example:
+
+**7:00 PM - Dinner at Bella Italia** 🍝
+Amazing Italian restaurant in Mitte with handmade pasta.
+*Estimated: €25-35 per person*
+{{ACTION:VENUE:bella-italia:View Bella Italia}} {{ACTION:BOOK_VENUE:bella-italia:Bella Italia:Reserve a Table}}
+
+REAL VENUE DATA (use these for recommendations, use their exact slugs for actions):
 ${JSON.stringify(venues?.slice(0, 100), null, 0)}
 
-UPCOMING EVENTS:
+UPCOMING EVENTS (use their exact slugs for actions):
 ${JSON.stringify(events?.slice(0, 50), null, 0)}
 
 IMPORTANT RULES:
@@ -58,7 +76,8 @@ IMPORTANT RULES:
 - Always format itineraries clearly with times, venues, and costs
 - Include a mix of dining, drinks, and entertainment
 - Consider opening hours and realistic travel times
-- Use markdown formatting for readability`;
+- Use markdown formatting for readability
+- ALWAYS include action buttons for every venue and event mentioned`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
