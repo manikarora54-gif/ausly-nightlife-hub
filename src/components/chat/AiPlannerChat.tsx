@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sparkles, Send, X, MessageCircle, Loader2, Bot, User, Save } from "lucide-react";
+import { Sparkles, Send, X, Loader2, Bot, User, Save } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useSaveItinerary } from "@/hooks/useItineraries";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import ChatActionButton from "./ChatActionButton";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -68,11 +69,58 @@ async function streamChat({
   onDone();
 }
 
+// Parse action markers from AI response and split into text segments and action buttons
+const ACTION_REGEX = /\{\{ACTION:([A-Z_]+):([^:]*):([^:]*):?([^}]*)\}\}/g;
+
+function renderMessageWithActions(content: string) {
+  const parts: Array<{ type: "text"; value: string } | { type: "action"; actionType: string; param1: string; param2: string; label: string }> = [];
+  let lastIndex = 0;
+
+  let match;
+  const regex = new RegExp(ACTION_REGEX.source, "g");
+  while ((match = regex.exec(content)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push({ type: "text", value: content.slice(lastIndex, match.index) });
+    }
+    parts.push({
+      type: "action",
+      actionType: match[1],
+      param1: match[2],
+      param2: match[3],
+      label: match[4] || match[3] || "View",
+    });
+    lastIndex = regex.lastIndex;
+  }
+  if (lastIndex < content.length) {
+    parts.push({ type: "text", value: content.slice(lastIndex) });
+  }
+
+  return (
+    <div className="space-y-1">
+      {parts.map((part, i) =>
+        part.type === "text" ? (
+          <div key={i} className="prose prose-sm prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-base [&_h2]:text-sm [&_h3]:text-sm [&_h1]:font-heading [&_h2]:font-heading [&_h3]:font-heading [&_li]:text-xs">
+            <ReactMarkdown>{part.value}</ReactMarkdown>
+          </div>
+        ) : (
+          <ChatActionButton
+            key={i}
+            type={part.actionType}
+            param1={part.param1}
+            param2={part.param2}
+            label={part.label}
+          />
+        )
+      )}
+    </div>
+  );
+}
+
 const quickStarters = [
-  "What are the best rooftop bars in Berlin this weekend? 🌃",
-  "Plan a budget-friendly date night in Munich under €50 💕",
-  "Where can I find live jazz in Hamburg tonight? 🎷",
-  "Best late-night food spots in Cologne after midnight 🍜",
+  "Find me a rooftop bar in Berlin for tonight 🌃",
+  "Plan a budget date night in Munich under €50 💕",
+  "What events are happening this weekend? 🎉",
+  "Best restaurants near me for a group dinner 🍽️",
 ];
 
 export default function AiPlannerChat() {
@@ -89,7 +137,6 @@ export default function AiPlannerChat() {
     const lastAssistant = [...messages].reverse().find(m => m.role === "assistant");
     if (!lastAssistant || !user) return;
     try {
-      // Extract city from conversation
       const cityMatch = lastAssistant.content.match(/(?:Berlin|Munich|Hamburg|Frankfurt|Cologne|Düsseldorf)/i);
       const city = cityMatch ? cityMatch[0] : "Germany";
       const titleMatch = lastAssistant.content.match(/^#\s*(.+)/m);
@@ -97,7 +144,7 @@ export default function AiPlannerChat() {
       await saveItinerary.mutateAsync({
         title,
         city,
-        content: lastAssistant.content,
+        content: lastAssistant.content.replace(ACTION_REGEX, ""),
         stops: [],
       });
       toast({ title: "Itinerary saved! ✨", description: "View it in your profile." });
@@ -169,7 +216,7 @@ export default function AiPlannerChat() {
         </div>
         <div className="flex-1">
           <h3 className="font-heading font-semibold text-sm">Ausly AI Planner</h3>
-          <p className="text-xs text-muted-foreground">Plan your perfect night out</p>
+          <p className="text-xs text-muted-foreground">Plan, discover & book instantly</p>
         </div>
         {messages.length > 0 && user && (
           <button onClick={handleSave} className="p-1.5 rounded-lg hover:bg-muted transition-colors" title="Save itinerary">
@@ -190,7 +237,7 @@ export default function AiPlannerChat() {
                 <Bot className="w-3.5 h-3.5 text-primary" />
               </div>
               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
-                <p>Hey! 👋 I'm your AI nightlife planner. Tell me what you're in the mood for, and I'll create the perfect itinerary with real venues, estimated costs, and pro tips!</p>
+                <p>Hey! 👋 I'm your AI nightlife planner. I can help you discover venues, plan itineraries, and even <strong>book directly</strong> — just tell me what you're in the mood for!</p>
               </div>
             </div>
             <div className="space-y-2 pl-9">
@@ -218,13 +265,7 @@ export default function AiPlannerChat() {
                   ? "bg-primary text-primary-foreground rounded-tr-sm"
                   : "glass-card rounded-tl-sm"
               }`}>
-                {msg.role === "assistant" ? (
-                  <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-2 [&_ul]:mb-2 [&_ol]:mb-2 [&_h1]:text-base [&_h2]:text-sm [&_h3]:text-sm [&_h1]:font-heading [&_h2]:font-heading [&_h3]:font-heading [&_li]:text-xs">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
-                  </div>
-                ) : (
-                  <p>{msg.content}</p>
-                )}
+                {msg.role === "assistant" ? renderMessageWithActions(msg.content) : <p>{msg.content}</p>}
               </div>
             </div>
           ))
