@@ -16,11 +16,13 @@ const CHAT_URL = `${SUPABASE_URL}/functions/v1/ai-planner`;
 
 async function streamChat({
   messages,
+  isAuthenticated,
   onDelta,
   onDone,
   onError,
 }: {
   messages: Msg[];
+  isAuthenticated: boolean;
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (err: string) => void;
@@ -30,6 +32,7 @@ async function streamChat({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${SUPABASE_KEY}`,
+      "x-user-authenticated": isAuthenticated ? "true" : "false",
     },
     body: JSON.stringify({ messages }),
   });
@@ -182,6 +185,7 @@ export default function AiPlannerChat() {
     try {
       await streamChat({
         messages: newMessages,
+        isAuthenticated: !!user,
         onDelta: upsert,
         onDone: () => setIsLoading(false),
         onError: (err) => {
