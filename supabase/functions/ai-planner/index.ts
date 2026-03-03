@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-user-authenticated, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -24,9 +24,11 @@ serve(async (req) => {
       supabase.from("events").select("name, event_type, start_date, end_date, ticket_price, short_description, venues(name, city)").eq("is_active", true).gte("start_date", new Date().toISOString()).limit(100),
     ]);
 
-    const systemPrompt = `You are Ausly AI, a friendly and enthusiastic nightlife & entertainment planner for cities across Germany. You help people plan their perfect day, evening, or weekend.
+    // Check if user is authenticated
+    const authHeader = req.headers.get("x-user-authenticated");
+    const isAuthenticated = authHeader === "true";
 
-YOUR PERSONALITY:
+    const systemPrompt = `You are Ausly AI, a friendly and enthusiastic nightlife & entertainment planner for cities across Germany. You help people plan their perfect day, evening, or weekend.
 - Warm, fun, and knowledgeable about German nightlife and culture
 - Use emojis sparingly but effectively 🎉
 - Give personalized recommendations based on user preferences
@@ -77,7 +79,14 @@ IMPORTANT RULES:
 - Include a mix of dining, drinks, and entertainment
 - Consider opening hours and realistic travel times
 - Use markdown formatting for readability
-- ALWAYS include action buttons for every venue and event mentioned`;
+- ALWAYS include action buttons for every venue and event mentioned
+
+AUTHENTICATION RULES:
+${isAuthenticated ? `- The user IS signed in. You can offer booking actions freely using {{ACTION:BOOK_VENUE:...}} and {{ACTION:BOOK_EVENT:...}} buttons.` : `- The user is NOT signed in. They can browse and discover venues/events, but CANNOT book.
+- When they ask to book or reserve anything, kindly tell them they need to sign in or create an account first.
+- Include a sign-in button: {{ACTION:SIGNIN:::Sign In}} or sign-up button: {{ACTION:SIGNUP:::Create Account}}
+- Do NOT include any BOOK_VENUE or BOOK_EVENT action buttons for unauthenticated users.
+- You can still show VENUE and EVENT view buttons so they can explore.`}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
