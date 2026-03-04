@@ -20,8 +20,8 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     const [{ data: venues }, { data: events }] = await Promise.all([
-      supabase.from("venues").select("name, type, cuisine, city, address, price_range, average_rating, features, short_description").eq("is_active", true).limit(200),
-      supabase.from("events").select("name, event_type, start_date, end_date, ticket_price, short_description, venues(name, city)").eq("is_active", true).gte("start_date", new Date().toISOString()).limit(100),
+      supabase.from("venues").select("slug, name, type, cuisine, city, address, price_range, average_rating, features, short_description").eq("is_active", true).limit(200),
+      supabase.from("events").select("slug, name, event_type, start_date, end_date, ticket_price, short_description, venues(name, city)").eq("is_active", true).gte("start_date", new Date().toISOString()).limit(100),
     ]);
 
     // Check if user is authenticated
@@ -66,10 +66,10 @@ Amazing Italian restaurant in Mitte with handmade pasta.
 *Estimated: €25-35 per person*
 {{ACTION:VENUE:bella-italia:View Bella Italia}} {{ACTION:BOOK_VENUE:bella-italia:Bella Italia:Reserve a Table}}
 
-REAL VENUE DATA (use these for recommendations, use their exact slugs for actions):
+REAL VENUE DATA (IMPORTANT: each venue has a "slug" field - you MUST use the exact slug value from the data for action buttons):
 ${JSON.stringify(venues?.slice(0, 100), null, 0)}
 
-UPCOMING EVENTS (use their exact slugs for actions):
+UPCOMING EVENTS (IMPORTANT: each event has a "slug" field - you MUST use the exact slug value from the data for action buttons):
 ${JSON.stringify(events?.slice(0, 50), null, 0)}
 
 IMPORTANT RULES:

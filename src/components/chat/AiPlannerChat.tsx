@@ -119,6 +119,21 @@ function renderMessageWithActions(content: string) {
   );
 }
 
+const CHAT_STORAGE_KEY = "ausly-ai-chat-history";
+
+function loadChatHistory(): Msg[] {
+  try {
+    const stored = sessionStorage.getItem(CHAT_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch { return []; }
+}
+
+function saveChatHistory(messages: Msg[]) {
+  try {
+    sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(messages));
+  } catch { /* quota exceeded */ }
+}
+
 const quickStarters = [
   "Find me a rooftop bar in Berlin for tonight 🌃",
   "Plan a budget date night in Munich under €50 💕",
@@ -128,7 +143,7 @@ const quickStarters = [
 
 export default function AiPlannerChat() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([]);
+  const [messages, setMessages] = useState<Msg[]>(loadChatHistory);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -155,6 +170,11 @@ export default function AiPlannerChat() {
       toast({ title: "Error saving", description: "Please try again.", variant: "destructive" });
     }
   };
+
+  // Persist chat history to sessionStorage
+  useEffect(() => {
+    saveChatHistory(messages);
+  }, [messages]);
 
   useEffect(() => {
     if (scrollRef.current) {
