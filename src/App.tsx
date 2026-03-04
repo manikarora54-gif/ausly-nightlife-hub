@@ -19,6 +19,7 @@ import HelpCenter from "./pages/HelpCenter";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import AdminLayout from "./components/admin/AdminLayout";
 import Movies from "./pages/Movies";
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             {/* Protected Vendor Routes */}
             <Route path="/vendor" element={<RoleProtectedRoute requiredRole="vendor"><VendorLayout /></RoleProtectedRoute>}>
               <Route index element={<VendorDashboard />} />
