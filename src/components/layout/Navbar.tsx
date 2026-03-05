@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Search, User, LogOut, Settings, Heart, Calendar, MapPin, Sparkles } from "lucide-react";
+import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import SearchWithSuggestions from "@/components/search/SearchWithSuggestions";
 
 const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -307,27 +307,15 @@ const Navbar = () => {
               Find restaurants, bars, events, and experiences across Germany
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 pt-2">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search by name, city, cuisine..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSearch();
-                }}
-                className="pl-12 h-12 rounded-xl text-base"
-                autoFocus />
-
-            </div>
-            <Button
-              onClick={handleSearch}
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-brand-cyan hover:opacity-90">
-
-              Search
-            </Button>
+          <div className="pt-2">
+            <SearchWithSuggestions
+              showButton={false}
+              placeholder="Search by name, city, cuisine..."
+              onSearch={(q) => {
+                navigate(`/discover?q=${encodeURIComponent(q)}`);
+                setSearchOpen(false);
+              }}
+            />
           </div>
         </DialogContent>
       </Dialog>
