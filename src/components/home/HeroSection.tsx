@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { MapPin, Sparkles, ArrowRight, Search } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { MapPin, Sparkles } from "lucide-react";
+import SearchWithSuggestions from "@/components/search/SearchWithSuggestions";
 
 const cities = [
   { name: "Berlin", image: "https://images.unsplash.com/photo-1560969184-10fe8719e047?w=400&h=300&fit=crop" },
@@ -18,17 +16,6 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const handleSearch = () => {
-    if (searchQuery.trim()) {
-      navigate(`/discover?search=${encodeURIComponent(searchQuery)}&city=${selectedCity.toLowerCase()}`);
-    } else {
-      navigate(`/discover?city=${selectedCity.toLowerCase()}`);
-    }
-  };
-
   return (
     <section className="relative min-h-[85vh] flex flex-col justify-center overflow-hidden pt-20 pb-10">
       {/* Background */}
@@ -58,26 +45,7 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
 
           {/* Search Bar */}
           <div className="max-w-xl mx-auto mb-14 animate-fade-in">
-            <div className="flex items-center gap-2 p-1.5 rounded-2xl glass-card border border-border/50">
-              <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search restaurants, events, clubs..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="w-full pl-12 pr-4 py-3 bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none text-sm md:text-base"
-                />
-              </div>
-              <Button
-                onClick={handleSearch}
-                className="rounded-xl px-6 py-3 h-auto bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
-              >
-                Explore
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
+            <SearchWithSuggestions defaultCity={selectedCity} />
           </div>
         </div>
 
