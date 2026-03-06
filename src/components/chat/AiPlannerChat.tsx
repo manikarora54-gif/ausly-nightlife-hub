@@ -16,24 +16,25 @@ const CHAT_URL = `${SUPABASE_URL}/functions/v1/ai-planner`;
 
 async function streamChat({
   messages,
-  isAuthenticated,
+  accessToken,
   onDelta,
   onDone,
   onError,
 }: {
   messages: Msg[];
-  isAuthenticated: boolean;
+  accessToken: string | null;
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (err: string) => void;
 }) {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${accessToken || SUPABASE_KEY}`,
+  };
+
   const resp = await fetch(CHAT_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${SUPABASE_KEY}`,
-      "x-user-authenticated": isAuthenticated ? "true" : "false",
-    },
+    headers,
     body: JSON.stringify({ messages }),
   });
 
@@ -203,9 +204,13 @@ export default function AiPlannerChat() {
     };
 
     try {
+      // Get the user's session token for proper server-side auth
+      const { data: { session } } = await (await import("@/integrations/supabase/client")).supabase.auth.getSession();
+      const accessToken = session?.access_token || null;
+
       await streamChat({
         messages: newMessages,
-        isAuthenticated: !!user,
+        accessToken,
         onDelta: upsert,
         onDone: () => setIsLoading(false),
         onError: (err) => {

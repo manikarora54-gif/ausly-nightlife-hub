@@ -351,6 +351,7 @@ export type Database = {
           longitude: number | null
           name: string
           opening_hours: Json | null
+          owner_id: string | null
           phone: string | null
           price_range: number | null
           review_count: number | null
@@ -377,6 +378,7 @@ export type Database = {
           longitude?: number | null
           name: string
           opening_hours?: Json | null
+          owner_id?: string | null
           phone?: string | null
           price_range?: number | null
           review_count?: number | null
@@ -403,6 +405,7 @@ export type Database = {
           longitude?: number | null
           name?: string
           opening_hours?: Json | null
+          owner_id?: string | null
           phone?: string | null
           price_range?: number | null
           review_count?: number | null
