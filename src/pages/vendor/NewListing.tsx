@@ -75,6 +75,18 @@ const NewListing = () => {
     try {
       const slug = `${slugify(form.name)}-${slugify(form.city)}`;
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Not authenticated",
+          description: "You must be logged in to create a listing.",
+          variant: "destructive",
+        });
+        setSaving(false);
+        return;
+      }
+
       // Check if slug already exists
       const { data: existing } = await supabase
         .from("venues")
@@ -103,6 +115,7 @@ const NewListing = () => {
         phone: form.phone || null,
         email: form.email || null,
         website: form.website || null,
+        owner_id: user.id,
       });
 
       if (error) throw error;

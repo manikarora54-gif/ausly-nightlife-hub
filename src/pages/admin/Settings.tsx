@@ -179,12 +179,10 @@ const Settings = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="stripe-key">Stripe API Key</Label>
-                <Input id="stripe-key" type="password" placeholder="sk_live_..." />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="paypal-client">PayPal Client ID</Label>
-                <Input id="paypal-client" type="password" placeholder="Client ID" />
+                <Label>Payment Integration Status</Label>
+                <p className="text-sm text-muted-foreground">
+                  Payment credentials are managed securely via environment variables and are not configurable through the UI.
+                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="refund-policy">Refund Policy</Label>
