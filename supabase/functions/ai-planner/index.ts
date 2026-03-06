@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-user-authenticated, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -14,19 +14,30 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // Fetch real venue and event data for context
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+
+    // Authenticate user via JWT instead of spoofable header
+    let isAuthenticated = false;
+    const authHeader = req.headers.get("Authorization");
+
+    if (authHeader?.startsWith("Bearer ")) {
+      const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const token = authHeader.replace("Bearer ", "");
+      const { data, error } = await supabaseAuth.auth.getClaims(token);
+      isAuthenticated = !error && !!data?.claims?.sub;
+    }
+
+    // Use service role only for reading public venue/event data
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const [{ data: venues }, { data: events }] = await Promise.all([
       supabase.from("venues").select("slug, name, type, cuisine, city, address, price_range, average_rating, features, short_description").eq("is_active", true).limit(200),
       supabase.from("events").select("slug, name, event_type, start_date, end_date, ticket_price, short_description, venues(name, city)").eq("is_active", true).gte("start_date", new Date().toISOString()).limit(100),
     ]);
-
-    // Check if user is authenticated
-    const authHeader = req.headers.get("x-user-authenticated");
-    const isAuthenticated = authHeader === "true";
 
     const systemPrompt = `You are Ausly AI, a friendly and enthusiastic nightlife & entertainment planner for cities across Germany. You help people plan their perfect day, evening, or weekend.
 - Warm, fun, and knowledgeable about German nightlife and culture

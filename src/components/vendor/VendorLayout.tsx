@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useLocation, Outlet, useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -16,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 const menuItems = [
   { href: "/vendor", label: "Dashboard", icon: LayoutDashboard },
@@ -30,73 +29,16 @@ const menuItems = [
 
 const VendorLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [vendorProfile, setVendorProfile] = useState<any>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
-  useEffect(() => {
-    checkVendorAccess();
-  }, []);
-
-  const checkVendorAccess = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        navigate("/signin");
-        return;
-      }
-
-      // Check if user has vendor or admin role
-      const { data: roles } = await supabase
-        .from("user_roles")
-        .select("role")
-        .eq("user_id", user.id);
-
-      // Cast roles to check for vendor access (vendor role will be added via migration)
-      const hasVendorAccess = roles?.some(r => 
-        (r.role as string) === "vendor" || r.role === "admin"
-      );
-      
-      if (!hasVendorAccess) {
-        toast({
-          title: "Access Denied",
-          description: "You need vendor access to view this page.",
-          variant: "destructive",
-        });
-        navigate("/");
-        return;
-      }
-
-      // For now, create a mock vendor profile since table may not exist yet
-      const profile = {
-        business_name: "My Business",
-        is_verified: false,
-        user_id: user.id,
-      };
-
-      setVendorProfile(profile);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error checking vendor access:", error);
-      navigate("/");
-    }
-  };
+  // RoleProtectedRoute already validates vendor/admin access before rendering this component.
+  // No duplicate role check needed here.
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-pulse text-primary">Loading...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -162,14 +104,8 @@ const VendorLayout = () => {
               })}
             </nav>
 
-            {/* Vendor Info & Logout */}
+            {/* Logout */}
             <div className="p-4 border-t border-border/30 space-y-3">
-              {vendorProfile && (
-                <div className="px-4 py-2 text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground">{vendorProfile.business_name}</p>
-                  <p className="text-xs">{vendorProfile.is_verified ? "✓ Verified" : "Pending verification"}</p>
-                </div>
-              )}
               <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -194,7 +130,7 @@ const VendorLayout = () => {
         {/* Main Content */}
         <main className="flex-1 lg:ml-0 pt-16 lg:pt-0">
           <div className="p-4 lg:p-8">
-            <Outlet context={{ vendorProfile }} />
+            <Outlet />
           </div>
         </main>
       </div>
