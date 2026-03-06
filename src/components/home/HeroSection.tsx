@@ -17,7 +17,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
   return (
-    <section className="relative min-h-[85vh] flex flex-col justify-center overflow-hidden pt-20 pb-10">
+    <section className="relative min-h-[85vh] flex flex-col justify-center overflow-x-hidden pt-20 pb-10">
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[180px]" />
@@ -26,7 +26,7 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Main Content */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="relative z-30 text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8 animate-fade-in">
             <Sparkles className="w-4 h-4" />
             Deine Stadt. Dein Tag.
@@ -50,7 +50,7 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
         </div>
 
         {/* City Selector */}
-        <div className="max-w-4xl mx-auto">
+        <div className="relative z-10 max-w-4xl mx-auto">
           <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
             {cities.map((city) => (
               <button

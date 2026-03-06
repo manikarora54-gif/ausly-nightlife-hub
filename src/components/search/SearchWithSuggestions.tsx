@@ -171,7 +171,7 @@ export default function SearchWithSuggestions({
   const showDropdown = isOpen && (query.length >= 2 || recentSearches.length > 0);
 
   return (
-    <div ref={wrapperRef} className={`relative z-50 ${className}`}>
+    <div ref={wrapperRef} className={`relative z-[120] isolate ${className}`}>
       <div className="flex items-center gap-2 p-1.5 rounded-2xl glass-card border border-border/50">
         <div className="flex-1 relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -202,7 +202,7 @@ export default function SearchWithSuggestions({
 
       {/* Dropdown */}
        {showDropdown && (
-         <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl z-[9999] overflow-hidden max-h-80 overflow-y-auto">
+         <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl z-[130] overflow-hidden max-h-80 overflow-y-auto">
           {/* Recent searches when no query */}
           {query.length < 2 && recentSearches.length > 0 && (
             <div className="p-3">
