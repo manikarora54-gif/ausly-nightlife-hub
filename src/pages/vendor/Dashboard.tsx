@@ -24,7 +24,7 @@ interface DashboardStats {
 }
 
 const VendorDashboard = () => {
-  const { vendorProfile } = useOutletContext<{ vendorProfile: any }>();
+  const { user } = useAuth();
   const [stats, setStats] = useState<DashboardStats>({
     totalListings: 0,
     totalBookings: 0,
