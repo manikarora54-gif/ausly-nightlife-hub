@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { MapPin, Ticket, Eye, Compass, Map, LogIn, UserPlus } from "lucide-react";
+import { MapPin, Ticket, Eye, Compass, Map, LogIn, UserPlus, Clock } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface ActionButtonProps {
   type: string;
@@ -10,20 +11,21 @@ interface ActionButtonProps {
 
 export default function ChatActionButton({ type, param1, param2, label }: ActionButtonProps) {
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const isBooking = type.startsWith("BOOK");
 
   const handleClick = () => {
+    if (isBooking) {
+      toast({ title: "Coming Soon", description: "Booking will be available soon. For now, explore and discover!" });
+      return;
+    }
     switch (type) {
       case "VENUE":
         navigate(`/venue/${param1}`);
         break;
       case "EVENT":
         navigate(`/event/${param1}`);
-        break;
-      case "BOOK_VENUE":
-        navigate(`/booking?bookingType=venue&venueName=${encodeURIComponent(param2)}&venueId=${param1}`);
-        break;
-      case "BOOK_EVENT":
-        navigate(`/booking?bookingType=event&eventName=${encodeURIComponent(param2)}&eventId=${param1}`);
         break;
       case "DISCOVER":
         navigate(`/discover?type=${param1}`);
@@ -52,7 +54,7 @@ export default function ChatActionButton({ type, param1, param2, label }: Action
       case "VENUE": return <Eye className="w-3 h-3" />;
       case "EVENT": return <Eye className="w-3 h-3" />;
       case "BOOK_VENUE":
-      case "BOOK_EVENT": return <Ticket className="w-3 h-3" />;
+      case "BOOK_EVENT": return <Clock className="w-3 h-3" />;
       case "DISCOVER": return <Compass className="w-3 h-3" />;
       case "MAP": return <Map className="w-3 h-3" />;
       case "CITY": return <MapPin className="w-3 h-3" />;
@@ -62,19 +64,19 @@ export default function ChatActionButton({ type, param1, param2, label }: Action
     }
   })();
 
-  const isBooking = type.startsWith("BOOK");
-
   return (
     <button
       onClick={handleClick}
       className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors mr-1 mb-1 ${
-        isBooking || isAuth
+        isBooking
+          ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
+          : isAuth
           ? "bg-primary text-primary-foreground hover:bg-primary/90"
           : "bg-muted hover:bg-muted/80 text-foreground border border-border"
       }`}
     >
       {icon}
-      {label}
+      {isBooking ? "Coming Soon" : label}
     </button>
   );
 }

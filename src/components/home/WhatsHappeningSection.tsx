@@ -21,16 +21,8 @@ const getIcon = (type: string) => {
   }
 };
 
-const getCTAText = (type: string) => {
-  switch (type) {
-    case "restaurant":
-    case "cafe":
-      return "Reserve table";
-    case "cinema":
-      return "Get tickets";
-    default:
-      return "Book now";
-  }
+const getCTAText = () => {
+  return "View details";
 };
 
 interface WhatsHappeningSectionProps {
