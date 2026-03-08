@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `Extract currently showing movies from search results. Return JSON array with: name (string), description (string, 1-2 sentences), genre (string), rating (number 1-10 or null), image_url (string or null). Only real movies currently in theaters. Return ONLY valid JSON array.`
+              content: `Extract currently showing movies from search results. Return JSON array with: name (string), description (string, 1-2 sentences), genre (string, MUST be exactly one of: Action, Comedy, Drama, Sci-Fi, Horror, Romance, Animation, Thriller, Documentary, Adventure, Fantasy, Musical, Mystery, Western, Family — pick the single best match), rating (number 1-10 or null), image_url (string or null). Only real movies currently in theaters. Return ONLY valid JSON array.`
             },
             {
               role: 'user',
@@ -116,6 +116,7 @@ Deno.serve(async (req) => {
           description: movie.description || movie.name,
           short_description: movie.description?.substring(0, 150) || null,
           event_type: 'movie',
+          genre: movie.genre || null,
           start_date: new Date().toISOString(),
           is_active: true,
           images: movie.image_url ? [movie.image_url] : [],
