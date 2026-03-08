@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Search, Film, Clapperboard, Drama, Swords, Laugh, Heart, Ghost, Rocket, Baby, Sparkles } from "lucide-react";
+import { Search, Film, Clapperboard, Theater, Swords, Laugh, Heart, Ghost, Rocket, Baby, Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const GENRE_KEYWORDS: Record<string, string[]> = {
