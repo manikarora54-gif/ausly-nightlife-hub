@@ -6,6 +6,7 @@ import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { z } from "zod";
 import { lovable } from "@/integrations/lovable/index";
+import SEOHead from "@/components/seo/SEOHead";
 
 const signInSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
