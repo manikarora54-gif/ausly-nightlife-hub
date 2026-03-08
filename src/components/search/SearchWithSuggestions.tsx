@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Search, MapPin, Calendar, ArrowRight, Clock, Sparkles } from "lucide-react";
+import { Search, MapPin, Calendar, ArrowRight, Clock, Sparkles, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,9 @@ interface SearchResult {
   category: string;
   city?: string;
   image?: string;
+  rating?: number;
   matchReason?: string;
+  _score: number;
 }
 
 interface SearchWithSuggestionsProps {
@@ -43,7 +45,6 @@ function saveRecentSearch(query: string) {
 
 // Intent keywords → discover filters
 const INTENT_MAP: Record<string, { type?: string; category?: string; label: string }> = {
-  // Dining
   eat: { type: "restaurant", label: "Restaurants" },
   eating: { type: "restaurant", label: "Restaurants" },
   food: { type: "restaurant", label: "Restaurants" },
@@ -55,7 +56,6 @@ const INTENT_MAP: Record<string, { type?: string; category?: string; label: stri
   breakfast: { type: "restaurant", label: "Restaurants" },
   cafe: { type: "cafe", label: "Cafés" },
   coffee: { type: "cafe", label: "Cafés" },
-  // Nightlife
   club: { type: "club", label: "Clubs" },
   clubs: { type: "club", label: "Clubs" },
   nightlife: { type: "club", label: "Nightlife" },
@@ -68,7 +68,6 @@ const INTENT_MAP: Record<string, { type?: string; category?: string; label: stri
   cocktails: { type: "bar", label: "Cocktail bars" },
   cocktail: { type: "bar", label: "Cocktail bars" },
   speakeasy: { type: "bar", label: "Speakeasy bars" },
-  // Events
   events: { category: "events", label: "Events" },
   event: { category: "events", label: "Events" },
   concert: { category: "events", label: "Concerts" },
@@ -77,12 +76,10 @@ const INTENT_MAP: Record<string, { type?: string; category?: string; label: stri
   festivals: { category: "events", label: "Festivals" },
   live: { category: "events", label: "Live music" },
   music: { type: "live_music", label: "Live music venues" },
-  // Culture
   museum: { type: "culture", label: "Museums" },
   museums: { type: "culture", label: "Museums" },
   gallery: { type: "culture", label: "Galleries" },
   culture: { type: "culture", label: "Culture" },
-  // Other
   cinema: { type: "cinema", label: "Cinemas" },
   movie: { type: "cinema", label: "Cinemas" },
   movies: { type: "cinema", label: "Cinemas" },
@@ -134,9 +131,8 @@ function parseQuery(raw: string): ParsedIntent {
   let intentLabel: string | undefined;
   const remaining: string[] = [];
 
-  // Also check multi-word phrases
   const phrase = words.join(" ");
-  
+
   // Check for "in <city>" pattern
   const inCityMatch = phrase.match(/\bin\s+(berlin|hamburg|munich|münchen|munchen|cologne|köln|koln|frankfurt|düsseldorf|dusseldorf|leipzig|stuttgart)\b/i);
   if (inCityMatch) {
@@ -144,16 +140,13 @@ function parseQuery(raw: string): ParsedIntent {
   }
 
   for (const word of words) {
-    // Skip "in" preposition
-    if (word === "in" || word === "the" || word === "a" || word === "an" || word === "for" || word === "near" || word === "around") continue;
-    
-    // Check city
+    if (["in", "the", "a", "an", "for", "near", "around", "best", "top", "good"].includes(word)) continue;
+
     if (!city && CITY_ALIASES[word]) {
       city = CITY_ALIASES[word];
       continue;
     }
 
-    // Check intent
     if (!venueType && !category && INTENT_MAP[word]) {
       const intent = INTENT_MAP[word];
       venueType = intent.type;
@@ -162,7 +155,6 @@ function parseQuery(raw: string): ParsedIntent {
       continue;
     }
 
-    // Check cuisine
     if (!cuisine && CUISINE_KEYWORDS.includes(word)) {
       cuisine = word;
       continue;
@@ -172,6 +164,36 @@ function parseQuery(raw: string): ParsedIntent {
   }
 
   return { venueType, category, city, cuisine, remainingTerms: remaining, intentLabel };
+}
+
+// Score a result against the search query for relevance ranking
+function scoreResult(name: string, fullQuery: string, searchTerms: string[]): number {
+  const nameLower = name.toLowerCase();
+  const queryLower = fullQuery.toLowerCase();
+  let score = 0;
+
+  // Exact match
+  if (nameLower === queryLower) return 200;
+  // Starts with full query
+  if (nameLower.startsWith(queryLower)) score += 80;
+  // Contains full query as substring
+  else if (nameLower.includes(queryLower)) score += 50;
+
+  // Individual word matching
+  for (const term of searchTerms) {
+    if (term.length < 2) continue;
+    if (nameLower.includes(term)) {
+      // Word at start of name or after space (word boundary)
+      const idx = nameLower.indexOf(term);
+      if (idx === 0 || nameLower[idx - 1] === " ") {
+        score += 25;
+      } else {
+        score += 15;
+      }
+    }
+  }
+
+  return score;
 }
 
 export default function SearchWithSuggestions({
@@ -215,7 +237,7 @@ export default function SearchWithSuggestions({
     const parsed = parseQuery(term);
     const searchCity = parsed.city || defaultCity;
 
-    // Build a smart suggestion link for intent-based queries
+    // Build smart suggestion
     if (parsed.intentLabel) {
       const params = new URLSearchParams();
       if (parsed.venueType) params.set("type", parsed.venueType);
@@ -231,92 +253,100 @@ export default function SearchWithSuggestions({
     }
 
     try {
-      // Build venue query with multi-field search
-      let venueQuery = supabase
-        .from("venues")
-        .select("id, slug, name, type, city, cuisine, images, short_description")
-        .eq("is_active", true)
-        .limit(8);
-
-      let eventQuery = supabase
-        .from("events")
-        .select("id, slug, name, event_type, images, short_description")
-        .eq("is_active", true)
-        .limit(5);
-
-      // Apply city filter
-      if (parsed.city) {
-        venueQuery = venueQuery.ilike("city", `%${parsed.city}%`);
-      }
-
-      // Apply type filter
-      if (parsed.venueType) {
-        venueQuery = venueQuery.ilike("type", `%${parsed.venueType}%`);
-      }
-
-      // Apply cuisine filter
-      if (parsed.cuisine) {
-        venueQuery = venueQuery.ilike("cuisine", `%${parsed.cuisine}%`);
-      }
-
-      // For name search: use remaining terms + the full query for broader matching
-      const nameTerms = parsed.remainingTerms.length > 0 ? parsed.remainingTerms : term.split(/\s+/);
-
-      // Search venues — use OR across name, cuisine, short_description, type
-      // Build individual word searches for better matching
-      const venueSearchTerms = nameTerms.filter(t => t.length >= 2);
-      
-      if (venueSearchTerms.length > 0 && !parsed.venueType && !parsed.cuisine) {
-        // Search with OR across multiple fields using each word
-        const orFilters = venueSearchTerms.map(t => 
-          `name.ilike.%${t}%,cuisine.ilike.%${t}%,short_description.ilike.%${t}%,type.ilike.%${t}%`
-        ).join(",");
-        venueQuery = venueQuery.or(orFilters);
-      }
-
-      if (venueSearchTerms.length > 0 && !parsed.category) {
-        const orFilters = venueSearchTerms.map(t =>
-          `name.ilike.%${t}%,event_type.ilike.%${t}%,short_description.ilike.%${t}%`
-        ).join(",");
-        eventQuery = eventQuery.or(orFilters);
-      }
-
-      // If searching for events category, skip venue-only queries
       const shouldSearchVenues = parsed.category !== "events";
       const shouldSearchEvents = !parsed.venueType || parsed.category === "events";
 
+      // Determine what to use as name search terms
+      const allTerms = term.toLowerCase().trim().split(/\s+/).filter(t => t.length >= 2);
+      const nameTerms = parsed.remainingTerms.filter(t => t.length >= 2);
+      // If we consumed all words into intents/city, still search with the cuisine or full query
+      const searchTerms = nameTerms.length > 0 ? nameTerms : (parsed.cuisine ? [parsed.cuisine] : allTerms);
+
+      // --- VENUES ---
       let venueResults: any[] = [];
-      let eventResults: any[] = [];
+      if (shouldSearchVenues) {
+        let venueQuery = supabase
+          .from("venues")
+          .select("id, slug, name, type, city, cuisine, images, short_description, average_rating, is_featured")
+          .eq("is_active", true)
+          .limit(12);
 
-      const [venueRes, eventRes] = await Promise.all([
-        shouldSearchVenues ? venueQuery : Promise.resolve({ data: [] }),
-        shouldSearchEvents ? eventQuery : Promise.resolve({ data: [] }),
-      ]);
-
-      venueResults = (venueRes as any)?.data || [];
-      eventResults = (eventRes as any)?.data || [];
-
-      // Score and sort results by relevance
-      const scoredVenues: SearchResult[] = venueResults.map((v: any) => {
-        let score = 0;
-        const nameLower = v.name.toLowerCase();
-        const termLower = term.toLowerCase();
-        
-        // Exact name match
-        if (nameLower === termLower) score += 100;
-        // Name starts with query
-        else if (nameLower.startsWith(termLower)) score += 50;
-        // Name contains full query
-        else if (nameLower.includes(termLower)) score += 30;
-        // Individual words match
-        else {
-          for (const w of venueSearchTerms) {
-            if (nameLower.includes(w)) score += 15;
-          }
+        if (parsed.city) {
+          venueQuery = venueQuery.ilike("city", `%${parsed.city}%`);
         }
-        
-        // Boost featured venues
-        if (v.is_featured) score += 5;
+
+        // Build a proper OR filter: each term creates matches across fields, combined with commas (OR)
+        if (parsed.venueType && parsed.cuisine) {
+          venueQuery = venueQuery
+            .ilike("type", `%${parsed.venueType}%`)
+            .ilike("cuisine", `%${parsed.cuisine}%`);
+        } else if (parsed.venueType) {
+          venueQuery = venueQuery.ilike("type", `%${parsed.venueType}%`);
+          // Also search name if we have remaining terms
+          if (searchTerms.length > 0 && searchTerms.some(t => !CUISINE_KEYWORDS.includes(t))) {
+            const orParts = searchTerms.map(t => `name.ilike.%${t}%`);
+            // Don't filter further if terms are intent words
+            if (orParts.length > 0) {
+              venueQuery = venueQuery.or(orParts.join(","));
+            }
+          }
+        } else if (parsed.cuisine) {
+          venueQuery = venueQuery.or(
+            `cuisine.ilike.%${parsed.cuisine}%,name.ilike.%${parsed.cuisine}%,short_description.ilike.%${parsed.cuisine}%`
+          );
+        } else if (searchTerms.length > 0) {
+          // General search: each term must match at least one field
+          // Use a broad OR across all fields for each term
+          const orParts: string[] = [];
+          for (const t of searchTerms) {
+            orParts.push(`name.ilike.%${t}%`);
+            orParts.push(`cuisine.ilike.%${t}%`);
+            orParts.push(`short_description.ilike.%${t}%`);
+            orParts.push(`type.ilike.%${t}%`);
+            orParts.push(`city.ilike.%${t}%`);
+          }
+          venueQuery = venueQuery.or(orParts.join(","));
+        }
+
+        const { data } = await venueQuery;
+        venueResults = data || [];
+      }
+
+      // --- EVENTS ---
+      let eventResults: any[] = [];
+      if (shouldSearchEvents) {
+        let eventQuery = supabase
+          .from("events")
+          .select("id, slug, name, event_type, images, short_description, venue_id")
+          .eq("is_active", true)
+          .limit(8);
+
+        if (searchTerms.length > 0) {
+          const orParts: string[] = [];
+          for (const t of searchTerms) {
+            orParts.push(`name.ilike.%${t}%`);
+            orParts.push(`event_type.ilike.%${t}%`);
+            orParts.push(`short_description.ilike.%${t}%`);
+          }
+          eventQuery = eventQuery.or(orParts.join(","));
+        }
+
+        const { data } = await eventQuery;
+        eventResults = data || [];
+      }
+
+      // Score venues
+      const scoredVenues: SearchResult[] = venueResults.map((v: any) => {
+        let score = scoreResult(v.name, term, searchTerms);
+
+        // Boost by rating
+        if (v.average_rating) score += v.average_rating * 2;
+        // Boost featured
+        if (v.is_featured) score += 10;
+        // Boost cuisine match
+        if (parsed.cuisine && v.cuisine?.toLowerCase().includes(parsed.cuisine)) score += 20;
+        // Boost city match with defaultCity
+        if (defaultCity && v.city === defaultCity) score += 5;
 
         return {
           id: v.id,
@@ -326,19 +356,17 @@ export default function SearchWithSuggestions({
           category: v.type,
           city: v.city,
           image: v.images?.[0],
-          matchReason: parsed.cuisine ? v.cuisine : undefined,
+          rating: v.average_rating,
+          matchReason: parsed.cuisine && v.cuisine ? v.cuisine : undefined,
           _score: score,
         };
       });
 
+      // Score events
       const scoredEvents: SearchResult[] = eventResults.map((e: any) => {
-        let score = 0;
-        const nameLower = e.name.toLowerCase();
-        const termLower = term.toLowerCase();
-        
-        if (nameLower === termLower) score += 100;
-        else if (nameLower.startsWith(termLower)) score += 50;
-        else if (nameLower.includes(termLower)) score += 30;
+        let score = scoreResult(e.name, term, searchTerms);
+        // Events slightly lower priority unless explicitly searched
+        if (!parsed.category) score -= 5;
 
         return {
           id: e.id,
@@ -351,11 +379,16 @@ export default function SearchWithSuggestions({
         };
       });
 
-      // Combine, sort by score, take top 8
+      // Combine, deduplicate by id, sort by score, take top 8
+      const seen = new Set<string>();
       const all = [...scoredVenues, ...scoredEvents]
-        .sort((a: any, b: any) => (b._score || 0) - (a._score || 0))
-        .slice(0, 8)
-        .map(({ _score, ...rest }: any) => rest);
+        .filter(r => {
+          if (seen.has(r.id)) return false;
+          seen.add(r.id);
+          return r._score > 0;
+        })
+        .sort((a, b) => b._score - a._score)
+        .slice(0, 8);
 
       setResults(all);
     } catch {
@@ -366,7 +399,7 @@ export default function SearchWithSuggestions({
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => searchDB(query), 250);
+    debounceRef.current = setTimeout(() => searchDB(query), 200);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [query, searchDB]);
 
@@ -374,44 +407,37 @@ export default function SearchWithSuggestions({
     saveRecentSearch(result.name);
     setIsOpen(false);
     setQuery("");
-    if (result.type === "venue") {
-      navigate(`/venue/${result.slug}`);
-    } else {
-      navigate(`/event/${result.slug}`);
-    }
+    navigate(result.type === "venue" ? `/venue/${result.slug}` : `/event/${result.slug}`);
   };
 
   const handleSearch = () => {
-    if (query.trim()) {
-      saveRecentSearch(query.trim());
-      setIsOpen(false);
-      
-      // Use parsed intent for smarter navigation
-      const parsed = parseQuery(query.trim());
-      const params = new URLSearchParams();
-      
-      if (parsed.venueType) params.set("type", parsed.venueType);
-      if (parsed.category === "events") params.set("type", "events");
-      
-      const searchCity = parsed.city || defaultCity;
-      if (searchCity) params.set("city", searchCity.toLowerCase());
-      
-      // Put remaining terms + cuisine as search
-      const searchTerms = [...parsed.remainingTerms];
-      if (parsed.cuisine) searchTerms.push(parsed.cuisine);
-      if (searchTerms.length > 0) {
-        params.set("search", searchTerms.join(" "));
-      } else if (!parsed.venueType && !parsed.category) {
-        params.set("search", query.trim());
-      }
+    if (!query.trim()) return;
+    saveRecentSearch(query.trim());
+    setIsOpen(false);
 
-      if (onSearch) {
-        onSearch(query.trim());
-      } else {
-        navigate(`/discover?${params.toString()}`);
-      }
-      setQuery("");
+    const parsed = parseQuery(query.trim());
+    const params = new URLSearchParams();
+
+    if (parsed.venueType) params.set("type", parsed.venueType);
+    if (parsed.category === "events") params.set("type", "events");
+
+    const searchCity = parsed.city || defaultCity;
+    if (searchCity) params.set("city", searchCity.toLowerCase());
+
+    const searchTerms = [...parsed.remainingTerms];
+    if (parsed.cuisine) searchTerms.push(parsed.cuisine);
+    if (searchTerms.length > 0) {
+      params.set("search", searchTerms.join(" "));
+    } else if (!parsed.venueType && !parsed.category) {
+      params.set("search", query.trim());
     }
+
+    if (onSearch) {
+      onSearch(query.trim());
+    } else {
+      navigate(`/discover?${params.toString()}`);
+    }
+    setQuery("");
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -471,20 +497,21 @@ export default function SearchWithSuggestions({
       </div>
 
       {/* Dropdown */}
-       {showDropdown && (
-         <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl z-[130] overflow-hidden max-h-96 overflow-y-auto">
+      {showDropdown && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-xl z-[130] overflow-hidden max-h-[420px] overflow-y-auto">
           {/* Recent searches when no query */}
           {query.length < 2 && recentSearches.length > 0 && (
             <div className="p-3">
               <p className="text-xs text-muted-foreground font-medium px-2 mb-2 flex items-center gap-1">
-                <Clock className="w-3 h-3" /> Recent
+                <Clock className="w-3 h-3" /> Recent searches
               </p>
               {recentSearches.map((s, i) => (
                 <button
                   key={i}
                   onClick={() => { setQuery(s); searchDB(s); }}
-                  className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-muted rounded-lg transition-colors"
+                  className="w-full text-left px-3 py-2 text-sm text-foreground hover:bg-muted rounded-lg transition-colors flex items-center gap-2"
                 >
+                  <Search className="w-3.5 h-3.5 text-muted-foreground" />
                   {s}
                 </button>
               ))}
@@ -493,7 +520,10 @@ export default function SearchWithSuggestions({
 
           {/* Loading */}
           {loading && query.length >= 2 && (
-            <div className="p-4 text-center text-sm text-muted-foreground">Searching...</div>
+            <div className="p-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <div className="w-4 h-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
+              Searching...
+            </div>
           )}
 
           {/* Smart suggestion */}
@@ -542,9 +572,16 @@ export default function SearchWithSuggestions({
                     )}
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-foreground truncate">{r.name}</p>
-                      <p className="text-xs text-muted-foreground capitalize">
-                        {r.matchReason ? `${r.matchReason} · ` : ""}{r.category}{r.city ? ` · ${r.city}` : ""}
-                      </p>
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        {r.matchReason && <span className="capitalize">{r.matchReason} ·</span>}
+                        <span className="capitalize">{r.category}</span>
+                        {r.city && <span>· {r.city}</span>}
+                        {r.rating && (
+                          <span className="flex items-center gap-0.5">
+                            · <Star className="w-3 h-3 fill-primary text-primary" /> {r.rating}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   </button>
