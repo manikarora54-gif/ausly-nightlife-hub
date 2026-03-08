@@ -1,4 +1,4 @@
-import { MapPin, Sparkles, ArrowRight } from "lucide-react";
+import { MapPin, Sparkles } from "lucide-react";
 import SearchWithSuggestions from "@/components/search/SearchWithSuggestions";
 import { useEffect, useState } from "react";
 
@@ -30,7 +30,6 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
         <div className="absolute top-[15%] left-[10%] w-[600px] h-[600px] rounded-full bg-primary/5 blur-[160px] animate-float" />
         <div className="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] rounded-full bg-secondary/6 blur-[180px] animate-float" style={{ animationDelay: "-3s" }} />
         <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-accent/3 blur-[120px] animate-pulse-glow" />
-        {/* Grid overlay */}
         <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
@@ -51,7 +50,7 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
             style={{ background: "linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--secondary) / 0.05))" }}
           >
             <Sparkles className="w-4 h-4" />
-            Deine Stadt. Dein Tag.
+            Built for newcomers. Made for everyone.
           </div>
 
           {/* Headline */}
@@ -60,22 +59,22 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
-            <span className="text-foreground">Discover what's</span>
-            <br />
-            <span className="text-foreground">happening in </span>
+            <span className="text-foreground">Make </span>
             <span className="gradient-text relative">
               {selectedCity}
               <span className="absolute -bottom-2 left-0 right-0 h-1 rounded-full bg-gradient-to-r from-primary to-secondary opacity-60" />
             </span>
+            <br />
+            <span className="text-foreground">feel like yours</span>
           </h1>
 
           {/* Subtitle */}
           <p
-            className={`text-lg md:text-xl text-muted-foreground max-w-md mx-auto mb-12 leading-relaxed transition-all duration-700 delay-200 ${
+            className={`text-lg md:text-xl text-muted-foreground max-w-lg mx-auto mb-12 leading-relaxed transition-all duration-700 delay-200 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
             }`}
           >
-            Events, restaurants, nightlife & more — all in one place
+            Restaurants, events, nightlife & hidden gems — curated for expats and newcomers exploring Germany
           </p>
 
           {/* Search Bar */}
@@ -101,7 +100,7 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
         >
           <div className="flex items-center justify-center gap-2 mb-6">
             <MapPin className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Choose your city</span>
+            <span className="text-sm font-medium text-muted-foreground uppercase tracking-widest">Where are you?</span>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-4">
             {cities.map((city) => (

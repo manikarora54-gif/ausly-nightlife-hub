@@ -5,19 +5,19 @@ const steps = [
     icon: MapPin,
     step: "01",
     title: "Pick your city",
-    description: "Choose from Berlin, Munich, Hamburg, Cologne, Frankfurt & more across Germany.",
+    description: "Berlin, Munich, Hamburg, Cologne — choose where you are and we'll show you what's around.",
   },
   {
     icon: Sparkles,
     step: "02",
-    title: "Discover & explore",
-    description: "Browse events, restaurants, nightlife, movies — or let AI plan your perfect night.",
+    title: "Explore or let AI plan",
+    description: "Browse by category, search for something specific, or tell our AI planner your vibe and budget — it'll build the evening for you.",
   },
   {
     icon: Ticket,
     step: "03",
-    title: "Book & go",
-    description: "Reserve tables, buy tickets, and get directions — all in one tap.",
+    title: "Save, share & go",
+    description: "Bookmark your favourites, save itineraries, and head out — the city is yours tonight.",
   },
 ];
 
@@ -27,10 +27,10 @@ const HowItWorksSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-14">
           <h2 className="text-2xl md:text-4xl font-heading font-bold mb-3">
-            How <span className="gradient-text">Ausly</span> works
+            From <span className="gradient-text">"I just moved here"</span> to <span className="gradient-text">"I know a place"</span>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            From choosing your city to booking your night — it takes less than a minute.
+            Three steps to stop wondering and start exploring.
           </p>
         </div>
 
@@ -52,7 +52,6 @@ const HowItWorksSection = () => {
                 </p>
               </div>
 
-              {/* Connector arrow (desktop) */}
               {index < steps.length - 1 && (
                 <div className="hidden md:flex absolute top-1/2 -right-4 translate-x-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-background border border-border items-center justify-center">
                   <ArrowRight className="w-4 h-4 text-primary" />

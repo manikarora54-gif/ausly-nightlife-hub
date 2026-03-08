@@ -3,9 +3,9 @@ import { Building2, TrendingUp, Users, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const benefits = [
-  { icon: Users, label: "Reach thousands" },
-  { icon: TrendingUp, label: "Grow bookings" },
-  { icon: Star, label: "Build reputation" },
+  { icon: Users, label: "Reach expats & locals" },
+  { icon: TrendingUp, label: "Grow your visibility" },
+  { icon: Star, label: "Build trust with reviews" },
 ];
 
 const ForBusinessSection = () => {
@@ -18,11 +18,14 @@ const ForBusinessSection = () => {
             <div className="flex-1 text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-sm font-medium mb-4">
                 <Building2 className="w-4 h-4" />
-                For Business
+                For Venues & Organisers
               </div>
-              <h2 className="text-2xl md:text-3xl font-heading font-bold mb-4">
-                List your venue or event
+              <h2 className="text-2xl md:text-3xl font-heading font-bold mb-3">
+                Be the place people discover
               </h2>
+              <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                Thousands of newcomers are looking for their next favourite spot. List your venue or event and get in front of people who are actively exploring.
+              </p>
               <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-6">
                 {benefits.map((benefit, index) => (
                   <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -32,7 +35,7 @@ const ForBusinessSection = () => {
                 ))}
               </div>
               <Button asChild variant="secondary" size="lg" className="rounded-xl">
-                <Link to="/contact">Get started free →</Link>
+                <Link to="/contact">List your business →</Link>
               </Button>
             </div>
             

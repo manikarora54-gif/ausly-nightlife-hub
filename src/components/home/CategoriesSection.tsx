@@ -27,7 +27,7 @@ const categories = [
   {
     id: "restaurants",
     name: "Dining",
-    description: "Restaurants & cafés",
+    description: "From street food to Michelin stars",
     icon: Utensils,
     image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop",
     type: "restaurant",
@@ -36,7 +36,7 @@ const categories = [
   {
     id: "nightlife",
     name: "Nightlife",
-    description: "Bars, clubs & lounges",
+    description: "Bars, clubs & late-night spots",
     icon: Music,
     image: "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=600&h=400&fit=crop",
     type: "club",
@@ -45,7 +45,7 @@ const categories = [
   {
     id: "culture",
     name: "Culture",
-    description: "Museums & galleries",
+    description: "Museums, galleries & hidden gems",
     icon: Theater,
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop",
     type: "culture",
@@ -54,7 +54,7 @@ const categories = [
   {
     id: "sports",
     name: "Sports",
-    description: "Fitness & outdoor",
+    description: "Fitness, outdoor & wellness",
     icon: Dumbbell,
     image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=400&fit=crop",
     type: "sports",
@@ -74,9 +74,9 @@ const CategoriesSection = ({ selectedCity }: CategoriesSectionProps) => {
         <div className="flex items-center justify-between mb-10">
           <div>
             <h2 className="text-2xl md:text-4xl font-heading font-bold mb-2">
-              What are you looking for?
+              What are you in the mood for?
             </h2>
-            <p className="text-muted-foreground">Browse by category in {selectedCity}</p>
+            <p className="text-muted-foreground">Your starting point in {selectedCity} — pick a vibe</p>
           </div>
           <Link
             to="/discover"
