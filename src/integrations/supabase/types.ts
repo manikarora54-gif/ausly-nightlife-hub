@@ -214,6 +214,111 @@ export type Database = {
           },
         ]
       }
+      grievance_responses: {
+        Row: {
+          content: string
+          created_at: string
+          grievance_id: string
+          id: string
+          responder_id: string
+          responder_type: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          grievance_id: string
+          id?: string
+          responder_id: string
+          responder_type?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          grievance_id?: string
+          id?: string
+          responder_id?: string
+          responder_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grievance_responses_grievance_id_fkey"
+            columns: ["grievance_id"]
+            isOneToOne: false
+            referencedRelation: "grievances"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      grievances: {
+        Row: {
+          booking_id: string | null
+          category: string
+          created_at: string
+          description: string
+          event_id: string | null
+          id: string
+          priority: string
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+          user_type: string
+          venue_id: string | null
+        }
+        Insert: {
+          booking_id?: string | null
+          category: string
+          created_at?: string
+          description: string
+          event_id?: string | null
+          id?: string
+          priority?: string
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id: string
+          user_type?: string
+          venue_id?: string | null
+        }
+        Update: {
+          booking_id?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          event_id?: string | null
+          id?: string
+          priority?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+          user_type?: string
+          venue_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grievances_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grievances_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grievances_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       itineraries: {
         Row: {
           city: string
