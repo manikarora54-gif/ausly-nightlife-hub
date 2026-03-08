@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const VendorSettings = () => {
-  const { vendorProfile } = useOutletContext<{ vendorProfile: any }>();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [settings, setSettings] = useState({
@@ -36,7 +36,7 @@ const VendorSettings = () => {
 
   useEffect(() => {
     loadSettings();
-  }, [vendorProfile]);
+  }, [user]);
 
   const loadSettings = async () => {
     try {
@@ -54,10 +54,10 @@ const VendorSettings = () => {
 
       // Set settings from vendor profile or defaults
       setSettings({
-        businessName: vendorProfile?.business_name || "",
-        businessEmail: vendorProfile?.business_email || user.email || "",
-        businessPhone: vendorProfile?.business_phone || "",
-        businessDescription: vendorProfile?.business_description || "",
+        businessName: userProfile?.display_name || "",
+        businessEmail: userProfile?.email || user?.email || "",
+        businessPhone: userProfile?.phone || "",
+        businessDescription: "",
         emailNotifications: true,
         bookingAlerts: true,
         messageNotifications: true,
@@ -298,7 +298,7 @@ const VendorSettings = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {vendorProfile?.is_verified ? (
+              {false ? (
                 <div className="flex items-center gap-2 text-accent">
                   <Shield className="w-5 h-5" />
                   <span className="font-medium">Verified Vendor</span>
