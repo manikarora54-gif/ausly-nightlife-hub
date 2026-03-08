@@ -54,10 +54,10 @@ const VendorSettings = () => {
 
       // Set settings from vendor profile or defaults
       setSettings({
-        businessName: vendorProfile?.business_name || "",
-        businessEmail: vendorProfile?.business_email || user.email || "",
-        businessPhone: vendorProfile?.business_phone || "",
-        businessDescription: vendorProfile?.business_description || "",
+        businessName: userProfile?.display_name || "",
+        businessEmail: userProfile?.email || user?.email || "",
+        businessPhone: userProfile?.phone || "",
+        businessDescription: "",
         emailNotifications: true,
         bookingAlerts: true,
         messageNotifications: true,
