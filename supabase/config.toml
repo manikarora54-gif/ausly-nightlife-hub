@@ -1,16 +1,1 @@
 project_id = "dpbsxrqjendnoraasafs"
-
-[functions.scrape-ra-events]
-verify_jwt = false
-
-[functions.scrape-google-movies]
-verify_jwt = false
-
-[functions.scrape-google-tours]
-verify_jwt = false
-
-[functions.scrape-all]
-verify_jwt = false
-
-[functions.ai-planner]
-verify_jwt = false
