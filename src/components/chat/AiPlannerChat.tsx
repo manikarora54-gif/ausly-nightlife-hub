@@ -324,7 +324,7 @@ export default function AiPlannerChat() {
             {messages.map((msg, i) => (
               <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                  msg.role === "user" ? "bg-secondary/20" : "bg-primary/20"
+                  msg.role === "user" ? "bg-secondary/20 rounded-full" : "bg-gradient-to-br from-primary to-secondary rounded-lg shadow-sm"
                 }`}>
                   {msg.role === "user" ? <User className="w-3.5 h-3.5 text-secondary" /> : <span className="font-heading font-black text-[10px] text-primary-foreground">A</span>}
                 </div>
