@@ -184,7 +184,7 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
         ) : (
           /* Content Grid */
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {happeningNow.map((item) => {
+            {happeningNow.map((item, index) => {
               const Icon = getIcon(item.type);
               return (
                 <Link
@@ -198,8 +198,12 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
                       src={item.image}
                       alt={item.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      loading="lazy"
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop";
+                        const img = e.currentTarget;
+                        img.onerror = null;
+                        img.src = getFallbackImage(item.type, index + item.name.length);
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
