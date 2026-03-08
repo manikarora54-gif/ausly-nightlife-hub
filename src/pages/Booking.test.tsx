@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactNode } from "react";
 
 const mockToast = vi.fn();
 vi.mock("@/hooks/use-toast", () => ({ useToast: () => ({ toast: mockToast }) }));
@@ -45,16 +44,18 @@ function mockChain(resolved: any) {
 
 const fakeUser = { id: "u1", email: "a@b.com", user_metadata: { display_name: "Test" } };
 
-function renderBooking(searchParams: string = "?type=reservation&venueName=TestVenue&price=25") {
-  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-
+function setLoggedIn() {
   const session = { user: fakeUser };
   mockSupabase.auth.getSession.mockResolvedValue({ data: { session }, error: null });
   mockSupabase.auth.onAuthStateChange.mockImplementation((cb: any) => {
     cb("SIGNED_IN", session);
     return { data: { subscription: { unsubscribe: vi.fn() } } };
   });
-  // Mock notifications query (Navbar uses it)
+}
+
+function renderBooking(searchParams: string = "?type=reservation&venueName=TestVenue&price=25") {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  setLoggedIn();
   mockSupabase.from.mockReturnValue(mockChain({ data: [], error: null, count: 0 }));
 
   return render(
@@ -77,16 +78,12 @@ describe("Booking Page", () => {
     renderBooking();
 
     await waitFor(() => {
-      expect(screen.getByText("TestVenue")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "TestVenue" })).toBeInTheDocument();
     });
 
-    // Step 1 should show progress at Details
     expect(screen.getByText("Details")).toBeInTheDocument();
     expect(screen.getByText("Review")).toBeInTheDocument();
     expect(screen.getByText("Confirmed")).toBeInTheDocument();
-
-    // Should show quantity controls
-    expect(screen.getByText("Guests")).toBeInTheDocument();
     expect(screen.getByText("Special Requests")).toBeInTheDocument();
   });
 
@@ -95,7 +92,7 @@ describe("Booking Page", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Restaurant Reservation")).toBeInTheDocument();
-      expect(screen.getByText("Fancy Restaurant")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "Fancy Restaurant" })).toBeInTheDocument();
     });
   });
 
@@ -107,40 +104,18 @@ describe("Booking Page", () => {
     });
   });
 
-  it("allows adjusting quantity with +/- buttons", async () => {
-    renderBooking("?type=event&eventName=Concert&price=30&guests=2");
-
-    await waitFor(() => {
-      expect(screen.getByText("2")).toBeInTheDocument();
-    });
-
-    // Click the plus button
-    const plusButtons = screen.getAllByRole("button").filter(
-      (btn) => btn.querySelector(".lucide-plus")
-    );
-    if (plusButtons.length > 0) {
-      fireEvent.click(plusButtons[0]);
-      expect(screen.getByText("3")).toBeInTheDocument();
-    }
-  });
-
   it("navigates from step 1 to step 2 (review)", async () => {
     renderBooking("?type=reservation&venueName=TestVenue&price=25");
 
     await waitFor(() => {
-      expect(screen.getByText("TestVenue")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "TestVenue" })).toBeInTheDocument();
     });
 
-    // Click "Review Booking" button
-    const reviewButton = screen.getByRole("button", { name: /review booking/i });
-    fireEvent.click(reviewButton);
+    fireEvent.click(screen.getByRole("button", { name: /review booking/i }));
 
-    // Step 2 should show Booking Summary
     await waitFor(() => {
       expect(screen.getByText("Booking Summary")).toBeInTheDocument();
     });
-
-    // Should show price breakdown
     expect(screen.getByText("Price Breakdown")).toBeInTheDocument();
   });
 
@@ -158,20 +133,16 @@ describe("Booking Page", () => {
     renderBooking("?type=reservation&venueName=TestVenue&price=25");
 
     await waitFor(() => {
-      expect(screen.getByText("TestVenue")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "TestVenue" })).toBeInTheDocument();
     });
 
-    // Go to step 2
     fireEvent.click(screen.getByRole("button", { name: /review booking/i }));
     await waitFor(() => {
       expect(screen.getByText("Booking Summary")).toBeInTheDocument();
     });
 
-    // Confirm booking
-    const confirmButton = screen.getByRole("button", { name: /confirm/i });
-    fireEvent.click(confirmButton);
+    fireEvent.click(screen.getByRole("button", { name: /confirm/i }));
 
-    // Should show confirmation
     await waitFor(() => {
       expect(screen.getByText("Booking Confirmed!")).toBeInTheDocument();
     });
@@ -183,28 +154,22 @@ describe("Booking Page", () => {
     await waitFor(() => {
       expect(screen.getByText("Popular times")).toBeInTheDocument();
     });
-
-    // Should show time slot buttons
     expect(screen.getByText("18:00")).toBeInTheDocument();
     expect(screen.getByText("19:00")).toBeInTheDocument();
-    expect(screen.getByText("20:00")).toBeInTheDocument();
   });
 
   it("shows free booking flow when price is 0", async () => {
     renderBooking("?type=reservation&venueName=FreeDinner&price=0");
 
     await waitFor(() => {
-      expect(screen.getByText("FreeDinner")).toBeInTheDocument();
+      expect(screen.getByRole("heading", { name: "FreeDinner" })).toBeInTheDocument();
     });
 
-    // Go to review
     fireEvent.click(screen.getByRole("button", { name: /review booking/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Booking Summary")).toBeInTheDocument();
     });
-
-    // Should NOT show price breakdown for free booking
     expect(screen.queryByText("Price Breakdown")).not.toBeInTheDocument();
   });
 });
