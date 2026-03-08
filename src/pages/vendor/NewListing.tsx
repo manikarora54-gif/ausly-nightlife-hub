@@ -15,6 +15,7 @@ import {
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/vendor/ImageUpload";
 
 const venueTypes = [
   "Restaurant",
@@ -46,6 +47,7 @@ const NewListing = () => {
     phone: "",
     email: "",
     website: "",
+    images: [] as string[],
   });
 
   const slugify = (text: string) =>
@@ -115,6 +117,7 @@ const NewListing = () => {
         phone: form.phone || null,
         email: form.email || null,
         website: form.website || null,
+        images: form.images.length > 0 ? form.images : null,
         owner_id: user.id,
       });
 
@@ -212,6 +215,16 @@ const NewListing = () => {
                 required
               />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Images */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Images</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ImageUpload images={form.images} onImagesChange={(images) => setForm(prev => ({ ...prev, images }))} />
           </CardContent>
         </Card>
 

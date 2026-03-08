@@ -11,6 +11,7 @@ import {
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/vendor/ImageUpload";
 
 const eventTypes = ["concert", "party", "festival", "exhibition", "comedy", "theater", "sport", "workshop", "other"];
 
@@ -31,6 +32,7 @@ const NewEvent = () => {
     ticket_price: "",
     max_capacity: "",
     genre: "",
+    images: [] as string[],
   });
 
   useEffect(() => {
@@ -73,6 +75,7 @@ const NewEvent = () => {
         ticket_price: form.ticket_price ? Number(form.ticket_price) : null,
         max_capacity: form.max_capacity ? Number(form.max_capacity) : null,
         genre: form.genre || null,
+        images: form.images.length > 0 ? form.images : null,
       });
 
       if (error) throw error;
@@ -165,6 +168,14 @@ const NewEvent = () => {
               <Label>Full Description</Label>
               <Textarea value={form.description} onChange={(e) => handleChange("description", e.target.value)} rows={5} placeholder="Describe the event, lineup, what to expect…" />
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Images */}
+        <Card className="glass-card">
+          <CardHeader><CardTitle>Images</CardTitle></CardHeader>
+          <CardContent>
+            <ImageUpload images={form.images} onImagesChange={(images) => setForm(prev => ({ ...prev, images }))} />
           </CardContent>
         </Card>
 

@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Loader2, Trash2, ImagePlus } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/vendor/ImageUpload";
 
 const eventTypes = ["concert", "party", "festival", "exhibition", "comedy", "theater", "sport", "workshop", "other"];
 
@@ -35,7 +36,7 @@ const EditEvent = () => {
     genre: "",
     images: [] as string[],
   });
-  const [newImageUrl, setNewImageUrl] = useState("");
+  
 
   useEffect(() => {
     const load = async () => {
@@ -81,15 +82,8 @@ const EditEvent = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const addImage = () => {
-    if (newImageUrl.trim()) {
-      setForm((prev) => ({ ...prev, images: [...prev.images, newImageUrl.trim()] }));
-      setNewImageUrl("");
-    }
-  };
-
-  const removeImage = (idx: number) => {
-    setForm((prev) => ({ ...prev, images: prev.images.filter((_, i) => i !== idx) }));
+  const handleImagesChange = (images: string[]) => {
+    setForm((prev) => ({ ...prev, images }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -218,23 +212,8 @@ const EditEvent = () => {
         {/* Images */}
         <Card className="glass-card">
           <CardHeader><CardTitle>Images</CardTitle></CardHeader>
-          <CardContent className="space-y-4">
-            {form.images.length > 0 && (
-              <div className="grid grid-cols-3 gap-3">
-                {form.images.map((img, idx) => (
-                  <div key={idx} className="relative group rounded-lg overflow-hidden h-24">
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                    <button type="button" onClick={() => removeImage(idx)} className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                      <Trash2 className="w-5 h-5 text-destructive" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="flex gap-2">
-              <Input value={newImageUrl} onChange={(e) => setNewImageUrl(e.target.value)} placeholder="Paste image URL…" />
-              <Button type="button" variant="outline" onClick={addImage}><ImagePlus className="w-4 h-4" /></Button>
-            </div>
+          <CardContent>
+            <ImageUpload images={form.images} onImagesChange={handleImagesChange} />
           </CardContent>
         </Card>
 
