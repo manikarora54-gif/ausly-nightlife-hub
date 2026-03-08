@@ -173,7 +173,7 @@ const VendorMessages = () => {
     const content = newMessage.trim();
     setNewMessage("");
 
-    const { error } = await supabase.from("messages").insert({
+    const { error } = await (supabase as any).from("messages").insert({
       conversation_id: selectedConv.id,
       sender_id: user.id,
       content,
@@ -185,7 +185,7 @@ const VendorMessages = () => {
     }
 
     // Update conversation last_message_at
-    await supabase
+    await (supabase as any)
       .from("conversations")
       .update({ last_message_at: new Date().toISOString() })
       .eq("id", selectedConv.id);
