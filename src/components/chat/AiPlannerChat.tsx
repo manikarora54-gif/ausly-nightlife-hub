@@ -450,8 +450,11 @@ export default function AiPlannerChat() {
         )}
         {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
           <div className="flex gap-2">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-sm">
-              <span className="font-heading font-black text-[9px] text-primary-foreground">A</span>
+            <div className="relative w-6 h-6 rounded-md overflow-hidden shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+              <div className="absolute inset-[1.5px] rounded-[3px] bg-background flex items-center justify-center">
+                <span className="text-[8px] font-heading font-extrabold gradient-text leading-none">A</span>
+              </div>
             </div>
             <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm">
               <div className="flex items-center gap-2">
