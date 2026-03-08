@@ -23,6 +23,7 @@ const menuItems = [
   { href: "/admin/refunds", label: "Cancellations & Refunds", icon: RefreshCw },
   { href: "/admin/support", label: "Customer Support", icon: MessageSquare },
   { href: "/admin/content", label: "Content Management", icon: FileText },
+  { href: "/admin/grievances", label: "Grievances", icon: AlertTriangle },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

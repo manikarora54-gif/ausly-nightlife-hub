@@ -27,6 +27,7 @@ const menuItems = [
   { href: "/vendor/reviews", label: "Reviews", icon: Star },
   { href: "/vendor/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/vendor/messages", label: "Messages", icon: MessageSquare },
+  { href: "/vendor/grievances", label: "Support", icon: AlertTriangle },
   { href: "/vendor/settings", label: "Settings", icon: Settings },
 ];
 
