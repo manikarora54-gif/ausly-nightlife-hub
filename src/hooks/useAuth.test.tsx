@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { ReactNode } from "react";
-import { createMockSupabase } from "../mocks/supabase";
+import { createMockSupabase } from "../test/mocks/supabase";
 
 // Mock supabase before importing hooks
 const mockSupabase = createMockSupabase();
