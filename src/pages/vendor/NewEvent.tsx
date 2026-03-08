@@ -32,6 +32,7 @@ const NewEvent = () => {
     ticket_price: "",
     max_capacity: "",
     genre: "",
+    images: [] as string[],
   });
 
   useEffect(() => {
