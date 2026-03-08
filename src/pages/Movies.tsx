@@ -71,7 +71,10 @@ const Movies = () => {
   });
 
   const moviesWithGenre = useMemo(
-    () => movies.map((m) => ({ ...m, genre: detectGenre(m) })),
+    () => movies.map((m) => ({
+      ...m,
+      genre: (m as any).genre || detectGenreFallback(m),
+    })),
     [movies]
   );
 
