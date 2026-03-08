@@ -47,6 +47,7 @@ const NewListing = () => {
     phone: "",
     email: "",
     website: "",
+    images: [] as string[],
   });
 
   const slugify = (text: string) =>
