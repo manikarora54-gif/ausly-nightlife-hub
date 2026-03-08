@@ -166,6 +166,7 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
+      <SEOHead title="Sign Up – Ausly" description="Create your free Ausly account to discover restaurants, events, and nightlife across Germany. Join 10,000+ explorers." noindex />
       {/* Background decorations */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-15%] right-[-10%] w-[500px] h-[500px] rounded-full bg-primary/6 blur-[140px] animate-float" />

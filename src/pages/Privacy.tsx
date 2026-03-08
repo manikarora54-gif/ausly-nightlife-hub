@@ -6,6 +6,7 @@ import SEOHead from "@/components/seo/SEOHead";
 const Privacy = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Privacy Policy – Ausly" description="Learn how Ausly collects, uses, and protects your personal data. Read our privacy policy." />
       <Navbar />
       
       <main className="pt-24 pb-16">

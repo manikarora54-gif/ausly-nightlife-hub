@@ -113,6 +113,7 @@ const HelpCenter = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Help Center – Ausly" description="Find answers to common questions about Ausly. Get help with bookings, account settings, and more." />
       <Navbar />
       
       <main className="pt-24 pb-16">
