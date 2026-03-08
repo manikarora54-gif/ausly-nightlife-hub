@@ -41,7 +41,6 @@ const ReviewForm = ({ venueId }: ReviewFormProps) => {
     try {
       await createReview.mutateAsync({
         venue_id: venueId,
-        user_id: user.id,
         rating,
         content: content.trim() || null,
       });
