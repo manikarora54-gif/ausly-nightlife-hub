@@ -12,15 +12,17 @@ import { Button } from "@/components/ui/button";
 import { Search, Film, Clapperboard, Theater, Swords, Laugh, Heart, Ghost, Rocket, Baby, Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const VALID_GENRES = ["Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Romance", "Animation", "Thriller", "Documentary", "Adventure", "Fantasy", "Musical", "Mystery", "Western", "Family"];
+
 const GENRE_KEYWORDS: Record<string, string[]> = {
-  Action: ["action", "fight", "battle", "war", "combat", "thriller", "spy", "chase"],
-  Comedy: ["comedy", "funny", "humor", "humour", "laugh", "comedic", "satire"],
-  Drama: ["drama", "dramatic", "emotional", "family drama"],
-  "Sci-Fi": ["sci-fi", "science fiction", "space", "alien", "futuristic", "dystop"],
-  Horror: ["horror", "scary", "terror", "haunted", "zombie", "slasher"],
-  Romance: ["romance", "romantic", "love story", "love"],
-  Animation: ["animation", "animated", "anime", "cartoon", "pixar"],
-  Thriller: ["thriller", "suspense", "mystery", "crime", "detective"],
+  Action: ["action", "fight", "battle", "war", "combat"],
+  Comedy: ["comedy", "funny", "humor", "laugh"],
+  Drama: ["drama", "dramatic", "emotional"],
+  "Sci-Fi": ["sci-fi", "science fiction", "space", "alien"],
+  Horror: ["horror", "scary", "terror", "haunted"],
+  Romance: ["romance", "romantic", "love story"],
+  Animation: ["animation", "animated", "anime"],
+  Thriller: ["thriller", "suspense", "mystery", "crime"],
 };
 
 const GENRE_ICONS: Record<string, any> = {
@@ -33,9 +35,16 @@ const GENRE_ICONS: Record<string, any> = {
   Romance: Heart,
   Animation: Baby,
   Thriller: Sparkles,
+  Documentary: Film,
+  Adventure: Swords,
+  Fantasy: Sparkles,
+  Musical: Clapperboard,
+  Mystery: Sparkles,
+  Western: Clapperboard,
+  Family: Baby,
 };
 
-function detectGenre(movie: { name: string; description: string | null; short_description: string | null }): string {
+function detectGenreFallback(movie: { name: string; description: string | null; short_description: string | null }): string {
   const text = `${movie.name} ${movie.description || ""} ${movie.short_description || ""}`.toLowerCase();
   for (const [genre, keywords] of Object.entries(GENRE_KEYWORDS)) {
     if (keywords.some((kw) => text.includes(kw))) return genre;
