@@ -46,25 +46,24 @@ const VendorDashboard = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch all venues (in production, filter by owner_id when column exists)
+      // Fetch vendor's own venues
       const { data: venues } = await supabase
         .from("venues")
         .select("id, name, average_rating, review_count")
-        .limit(10);
+        .eq("owner_id", user.id);
 
-      // Fetch all events (in production, filter by organizer_id when column exists)
-      const { data: events } = await supabase
-        .from("events")
-        .select("id, name")
-        .limit(10);
+      const venueIds = venues?.map(v => v.id) || [];
 
-      // Fetch sample bookings
-      const { data: bookings } = await supabase
-        .from("bookings")
-        .select("*")
-        .limit(50);
+      // Fetch events linked to vendor's venues
+      const { data: events } = venueIds.length > 0
+        ? await supabase.from("events").select("id, name").in("venue_id", venueIds)
+        : { data: [] };
 
-      // Calculate stats from available data
+      // Fetch bookings for vendor's venues
+      const { data: bookings } = venueIds.length > 0
+        ? await supabase.from("bookings").select("*").in("venue_id", venueIds).order("booking_date", { ascending: false }).limit(50)
+        : { data: [] };
+
       const totalListings = (venues?.length || 0) + (events?.length || 0);
       const totalBookings = bookings?.length || 0;
       const pendingBookings = bookings?.filter(b => b.status === "pending").length || 0;
@@ -81,12 +80,10 @@ const VendorDashboard = () => {
         totalRevenue,
         averageRating: Math.round(avgRating * 10) / 10,
         totalReviews,
-        unreadMessages: 0, // Messages table not yet available
+        unreadMessages: 0,
       });
 
-      // Get recent bookings
-      const recentBookingsData = bookings?.slice(0, 5) || [];
-      setRecentBookings(recentBookingsData);
+      setRecentBookings(bookings?.slice(0, 5) || []);
       
     } catch (error) {
       console.error("Error fetching dashboard data:", error);

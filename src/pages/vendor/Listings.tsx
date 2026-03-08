@@ -36,12 +36,12 @@ const VendorListings = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch venues (when owner_id column exists, filter by it)
+      // Filter venues by owner_id
       const { data, error } = await supabase
         .from("venues")
         .select("*")
-        .order("created_at", { ascending: false })
-        .limit(20);
+        .eq("owner_id", user.id)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       setVenues(data || []);

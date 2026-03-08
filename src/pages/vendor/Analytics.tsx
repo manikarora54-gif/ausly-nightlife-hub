@@ -47,18 +47,18 @@ const VendorAnalytics = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch bookings for analytics
-      const { data: bookings } = await supabase
-        .from("bookings")
-        .select("*")
-        .order("created_at", { ascending: true })
-        .limit(100);
-
-      // Fetch venues for ratings
+      // Fetch vendor's venues for ratings
       const { data: venues } = await supabase
         .from("venues")
-        .select("average_rating, review_count")
-        .limit(10);
+        .select("id, average_rating, review_count")
+        .eq("owner_id", user.id);
+
+      const venueIds = venues?.map(v => v.id) || [];
+
+      // Fetch bookings for vendor's venues
+      const { data: bookings } = venueIds.length > 0
+        ? await supabase.from("bookings").select("*").in("venue_id", venueIds).order("created_at", { ascending: true }).limit(100)
+        : { data: [] };
 
       // Calculate stats
       const totalRevenue = bookings?.reduce((sum, b) => sum + (Number(b.total_amount) || 0), 0) || 0;
