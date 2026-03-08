@@ -117,7 +117,7 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
       location: venue.address,
       city: venue.city,
       image: venue.images?.[0] || getFallbackImage(venue.type, venue.name.length),
-      price: venue.price_range && venue.price_range > 0 ? "€".repeat(venue.price_range) : null,
+      price: venue.price_range && venue.price_range > 0 ? `${"€".repeat(venue.price_range)} range` : "Contact venue",
       link: `/venue/${venue.slug || venue.id}`,
     })),
   ].slice(0, 8);
