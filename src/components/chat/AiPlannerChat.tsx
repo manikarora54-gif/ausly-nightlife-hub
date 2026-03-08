@@ -252,9 +252,9 @@ export default function AiPlannerChat() {
   return (
     <div className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-4rem)] flex flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-primary/10 animate-fade-in overflow-hidden">
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card">
-        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-primary" />
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-gradient-to-r from-card to-card/80">
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[0_0_12px_hsl(var(--primary)/0.3)]">
+          <span className="font-heading font-black text-sm text-primary-foreground">A</span>
         </div>
         <div className="flex-1">
           <h3 className="font-heading font-semibold text-sm">Ausly AI Planner</h3>
