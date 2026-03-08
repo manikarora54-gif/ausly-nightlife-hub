@@ -115,6 +115,11 @@ const Footer = () => {
             <h4 className="font-heading font-semibold text-foreground">Über Ausly</h4>
             <ul className="space-y-2 text-sm">
               <li>
+                <Link to="/our-story" className="text-muted-foreground hover:text-primary transition-colors">
+                  Unsere Geschichte
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Kontakt
                 </Link>
