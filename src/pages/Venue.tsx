@@ -211,8 +211,11 @@ const Venue = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-sm">No reviews yet.</p>
+                  <p className="text-muted-foreground text-sm">No reviews yet. Be the first!</p>
                 )}
+                <div className="mt-6">
+                  <ReviewForm venueId={venue.id} />
+                </div>
               </div>
             </div>
 
