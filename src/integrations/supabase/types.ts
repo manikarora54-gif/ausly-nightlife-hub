@@ -103,6 +103,8 @@ export type Database = {
           name: string
           short_description: string | null
           slug: string
+          source: string | null
+          source_url: string | null
           start_date: string
           ticket_currency: string | null
           ticket_price: number | null
@@ -123,6 +125,8 @@ export type Database = {
           name: string
           short_description?: string | null
           slug: string
+          source?: string | null
+          source_url?: string | null
           start_date: string
           ticket_currency?: string | null
           ticket_price?: number | null
@@ -143,6 +147,8 @@ export type Database = {
           name?: string
           short_description?: string | null
           slug?: string
+          source?: string | null
+          source_url?: string | null
           start_date?: string
           ticket_currency?: string | null
           ticket_price?: number | null
@@ -357,6 +363,8 @@ export type Database = {
           review_count: number | null
           short_description: string | null
           slug: string
+          source: string | null
+          source_url: string | null
           type: string
           updated_at: string
           website: string | null
@@ -384,6 +392,8 @@ export type Database = {
           review_count?: number | null
           short_description?: string | null
           slug: string
+          source?: string | null
+          source_url?: string | null
           type: string
           updated_at?: string
           website?: string | null
@@ -411,6 +421,8 @@ export type Database = {
           review_count?: number | null
           short_description?: string | null
           slug?: string
+          source?: string | null
+          source_url?: string | null
           type?: string
           updated_at?: string
           website?: string | null

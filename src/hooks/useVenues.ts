@@ -1,4 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
@@ -6,7 +7,7 @@ export type Venue = Tables<"venues">;
 export type VenueInsert = TablesInsert<"venues">;
 export type VenueUpdate = TablesUpdate<"venues">;
 
-// Fetch all venues with optional filters
+// Fetch all venues with optional filters + realtime updates
 export const useVenues = (filters?: {
   city?: string;
   type?: string;
@@ -14,6 +15,26 @@ export const useVenues = (filters?: {
   search?: string;
   limit?: number;
 }) => {
+  const queryClient = useQueryClient();
+
+  // Subscribe to realtime changes on venues table
+  useEffect(() => {
+    const channel = supabase
+      .channel("venues-realtime")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "venues" },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["venues"] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
   return useQuery({
     queryKey: ["venues", filters],
     queryFn: async () => {
