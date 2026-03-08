@@ -48,7 +48,7 @@ async function streamChat({
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers,
-    body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content })) }),
+    body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content || "Here are your plans!" })) }),
   });
 
   if (!resp.ok) {
@@ -84,7 +84,20 @@ async function streamChat({
         if (hasToolCall && toolCallArgs) {
           try {
             const parsed = JSON.parse(toolCallArgs);
-            onToolCall(parsed);
+            // Validate the parsed data has required structure
+            if (parsed.city && Array.isArray(parsed.itineraries) && parsed.itineraries.length > 0) {
+              // Validate each itinerary has required fields
+              const validItineraries = parsed.itineraries.filter((it: any) => 
+                it.title && Array.isArray(it.stops) && it.stops.length > 0
+              );
+              if (validItineraries.length > 0) {
+                onToolCall({ ...parsed, itineraries: validItineraries });
+              } else {
+                console.warn("No valid itineraries in tool call data");
+              }
+            } else {
+              console.warn("Invalid tool call structure:", Object.keys(parsed));
+            }
           } catch (e) {
             console.error("Failed to parse tool call args:", e, toolCallArgs.slice(0, 200));
           }
@@ -116,7 +129,14 @@ async function streamChat({
   if (hasToolCall && toolCallArgs) {
     try {
       const parsed = JSON.parse(toolCallArgs);
-      onToolCall(parsed);
+      if (parsed.city && Array.isArray(parsed.itineraries) && parsed.itineraries.length > 0) {
+        const validItineraries = parsed.itineraries.filter((it: any) => 
+          it.title && Array.isArray(it.stops) && it.stops.length > 0
+        );
+        if (validItineraries.length > 0) {
+          onToolCall({ ...parsed, itineraries: validItineraries });
+        }
+      }
     } catch (e) {
       console.error("Failed to parse tool call args:", e);
     }
