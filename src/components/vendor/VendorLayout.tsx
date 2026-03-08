@@ -12,7 +12,8 @@ import {
   LogOut,
   CalendarDays,
   Plus,
-  Star
+  Star,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ const menuItems = [
   { href: "/vendor/reviews", label: "Reviews", icon: Star },
   { href: "/vendor/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/vendor/messages", label: "Messages", icon: MessageSquare },
+  { href: "/vendor/grievances", label: "Support", icon: AlertTriangle },
   { href: "/vendor/settings", label: "Settings", icon: Settings },
 ];
 

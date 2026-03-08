@@ -10,7 +10,8 @@ import {
   Menu,
   X,
   LogOut,
-  FileText
+  FileText,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ const menuItems = [
   { href: "/admin/refunds", label: "Cancellations & Refunds", icon: RefreshCw },
   { href: "/admin/support", label: "Customer Support", icon: MessageSquare },
   { href: "/admin/content", label: "Content Management", icon: FileText },
+  { href: "/admin/grievances", label: "Grievances", icon: AlertTriangle },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

@@ -139,6 +139,11 @@ const Footer = () => {
                   Hilfe
                 </Link>
               </li>
+              <li>
+                <Link to="/grievances" className="text-muted-foreground hover:text-primary transition-colors">
+                  Beschwerde einreichen
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

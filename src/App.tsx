@@ -31,6 +31,7 @@ import MovieSearch from "./pages/MovieSearch";
 import Cinemas from "./pages/Cinemas";
 import Profile from "./pages/Profile";
 import Itinerary from "./pages/Itinerary";
+import CustomerGrievances from "./pages/Grievances";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminBookings from "./pages/admin/Bookings";
 import AdminPayments from "./pages/admin/Payments";
@@ -38,6 +39,7 @@ import AdminRefunds from "./pages/admin/Refunds";
 import AdminSupport from "./pages/admin/Support";
 import AdminContent from "./pages/admin/Content";
 import AdminSettings from "./pages/admin/Settings";
+import AdminGrievances from "./pages/admin/Grievances";
 import VendorLayout from "./components/vendor/VendorLayout";
 import VendorDashboard from "./pages/vendor/Dashboard";
 import VendorListings from "./pages/vendor/Listings";
@@ -51,6 +53,7 @@ import VendorReviews from "./pages/vendor/Reviews";
 import VendorAnalytics from "./pages/vendor/Analytics";
 import VendorMessages from "./pages/vendor/Messages";
 import VendorSettings from "./pages/vendor/Settings";
+import VendorGrievances from "./pages/vendor/Grievances";
 
 const queryClient = new QueryClient();
 
@@ -77,6 +80,7 @@ const App = () => (
             <Route path="/terms" element={<Terms />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/our-story" element={<OurStory />} />
+            <Route path="/grievances" element={<CustomerGrievances />} />
             {/* Protected Vendor Routes */}
             <Route path="/vendor" element={<RoleProtectedRoute requiredRole="vendor"><VendorLayout /></RoleProtectedRoute>}>
               <Route index element={<VendorDashboard />} />
@@ -91,6 +95,7 @@ const App = () => (
               <Route path="analytics" element={<VendorAnalytics />} />
               <Route path="messages" element={<VendorMessages />} />
               <Route path="settings" element={<VendorSettings />} />
+              <Route path="grievances" element={<VendorGrievances />} />
             </Route>
             {/* Protected Admin Routes */}
             <Route path="/admin" element={<RoleProtectedRoute requiredRole="admin"><AdminLayout /></RoleProtectedRoute>}>
@@ -101,6 +106,7 @@ const App = () => (
               <Route path="support" element={<AdminSupport />} />
               <Route path="content" element={<AdminContent />} />
               <Route path="settings" element={<AdminSettings />} />
+              <Route path="grievances" element={<AdminGrievances />} />
             </Route>
             <Route path="/movies" element={<Movies />} />
             <Route path="/movies/search" element={<MovieSearch />} />
