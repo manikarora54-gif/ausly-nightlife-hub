@@ -17,6 +17,7 @@ import {
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
 } from "lucide-react";
 import SEOHead from "@/components/seo/SEOHead";
+import SocialShareButtons from "@/components/social/SocialShareButtons";
 
 const priceLabel = (range: number | null) => {
   if (!range) return "Contact venue";
