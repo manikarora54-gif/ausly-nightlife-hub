@@ -193,6 +193,10 @@ const Discover = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`Discover ${selectedCity !== "All Cities" ? selectedCity : "Germany"} – Restaurants, Bars & Events | Ausly`}
+        description={`Explore the best restaurants, bars, clubs, and events in ${selectedCity !== "All Cities" ? selectedCity : "Germany"}. Filter by category, city, and more on Ausly.`}
+      />
       <Navbar />
 
       <main className="pt-20 pb-16">
