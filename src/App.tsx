@@ -22,6 +22,7 @@ import Terms from "./pages/Terms";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import OurStory from "./pages/OurStory";
+import AdminLogin from "./pages/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
@@ -97,6 +98,8 @@ const App = () => (
               <Route path="settings" element={<VendorSettings />} />
               <Route path="grievances" element={<VendorGrievances />} />
             </Route>
+            {/* Admin Login */}
+            <Route path="/admin/login" element={<AdminLogin />} />
             {/* Protected Admin Routes */}
             <Route path="/admin" element={<RoleProtectedRoute requiredRole="admin"><AdminLayout /></RoleProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
