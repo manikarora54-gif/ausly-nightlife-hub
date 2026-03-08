@@ -116,6 +116,7 @@ Deno.serve(async (req) => {
           description: movie.description || movie.name,
           short_description: movie.description?.substring(0, 150) || null,
           event_type: 'movie',
+          genre: movie.genre || null,
           start_date: new Date().toISOString(),
           is_active: true,
           images: movie.image_url ? [movie.image_url] : [],
