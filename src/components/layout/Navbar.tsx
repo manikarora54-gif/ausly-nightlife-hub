@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles, AlertTriangle } from "lucide-react";
+import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles, AlertTriangle, Bell } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import SearchWithSuggestions from "@/components/search/SearchWithSuggestions";
 
