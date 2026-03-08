@@ -393,10 +393,10 @@ const Discover = () => {
                 <Link
                   key={item.id}
                   to={item.link}
-                  className={`group glass-card rounded-2xl overflow-hidden hover-glow transition-all duration-300 animate-fade-in ${
+                  className={`group glass-card rounded-2xl overflow-hidden hover-glow transition-all duration-300 hover:-translate-y-1 animate-fade-in ${
                     viewMode === "list" ? "flex flex-row" : ""
                   }`}
-                  style={{ animationDelay: `${Math.min(i, 8) * 0.04}s` }}
+                  style={{ animationDelay: `${Math.min(i, 8) * 0.06}s` }}
                 >
                   {/* Image */}
                   <div className={`relative overflow-hidden ${viewMode === "list" ? "w-52 flex-shrink-0" : "h-52"}`}>

@@ -164,10 +164,24 @@ const SignUp = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background decorations */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-15%] right-[-10%] w-[500px] h-[500px] rounded-full bg-primary/6 blur-[140px] animate-float" />
+        <div className="absolute bottom-[-15%] left-[-10%] w-[400px] h-[400px] rounded-full bg-secondary/6 blur-[120px] animate-float" style={{ animationDelay: "-3s" }} />
+        <div className="absolute top-[30%] left-[60%] w-[250px] h-[250px] rounded-full bg-accent/4 blur-[100px] animate-pulse-glow" />
+        <div
+          className="absolute inset-0 opacity-[0.015]"
+          style={{
+            backgroundImage: "radial-gradient(hsl(var(--primary) / 0.5) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+      </div>
+
       <Navbar />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-24 pb-16 relative z-10">
         <div className="container mx-auto px-4">
           <div className="max-w-lg mx-auto">
             {/* Progress Bar */}

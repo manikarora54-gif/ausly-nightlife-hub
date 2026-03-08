@@ -36,16 +36,26 @@ const VendorLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // RoleProtectedRoute already validates vendor/admin access before rendering this component.
-  // No duplicate role check needed here.
-
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate("/");
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Subtle background decoration */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-primary/3 blur-[180px]" />
+        <div className="absolute bottom-[5%] right-[-5%] w-[350px] h-[350px] rounded-full bg-secondary/3 blur-[160px]" />
+        <div
+          className="absolute inset-0 opacity-[0.01]"
+          style={{
+            backgroundImage: "radial-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
+
       {/* Mobile Sidebar Toggle */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/30">
         <div className="flex items-center justify-between h-16 px-4">
@@ -60,7 +70,7 @@ const VendorLayout = () => {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex relative z-10">
         {/* Sidebar */}
         <aside
           className={cn(
@@ -71,13 +81,18 @@ const VendorLayout = () => {
           <div className="flex flex-col h-full">
             {/* Logo */}
             <div className="h-16 lg:h-20 flex items-center px-6 border-b border-border/30">
-              <h1 className="text-xl font-heading font-bold gradient-text">Vendor Portal</h1>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-secondary to-primary flex items-center justify-center text-primary-foreground font-bold text-sm shadow-lg shadow-secondary/20">
+                  V
+                </div>
+                <h1 className="text-xl font-heading font-bold gradient-text">Vendor Portal</h1>
+              </div>
             </div>
 
             {/* Quick Actions */}
             <div className="p-4 border-b border-border/30">
               <Link to="/vendor/listings/new">
-                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                <Button className="w-full bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:opacity-90 shadow-lg shadow-primary/20 transition-all">
                   <Plus className="w-4 h-4 mr-2" />
                   Add New Listing
                 </Button>
@@ -85,7 +100,7 @@ const VendorLayout = () => {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+            <nav className="flex-1 overflow-y-auto p-4 space-y-1">
               {menuItems.map((item) => {
                 const isActive = location.pathname === item.href || 
                   (item.href !== "/vendor" && location.pathname.startsWith(item.href));
@@ -97,12 +112,13 @@ const VendorLayout = () => {
                     className={cn(
                       "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
                       isActive
-                        ? "bg-primary/20 text-primary border border-primary/30"
+                        ? "bg-primary/20 text-primary border border-primary/30 shadow-sm shadow-primary/10"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}
                   >
-                    <item.icon className="w-5 h-5" />
+                    <item.icon className={cn("w-5 h-5 transition-transform duration-200", isActive && "scale-110")} />
                     <span className="font-medium">{item.label}</span>
+                    {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />}
                   </Link>
                 );
               })}
@@ -110,7 +126,7 @@ const VendorLayout = () => {
 
             {/* Logout */}
             <div className="p-4 border-t border-border/30 space-y-3">
-              <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
+              <Button variant="outline" className="w-full justify-start hover:border-primary/30 transition-colors" onClick={handleLogout}>
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
               </Button>

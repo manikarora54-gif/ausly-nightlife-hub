@@ -115,10 +115,16 @@ const Venue = () => {
   const IconComp = config.icon;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Decorative background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] rounded-full bg-primary/5 blur-[150px]" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[350px] h-[350px] rounded-full bg-secondary/4 blur-[120px]" />
+      </div>
+
       <Navbar />
 
-      <main className="pt-20">
+      <main className="pt-20 relative z-10">
         <div className="container mx-auto px-4">
           <Breadcrumbs
             items={[
