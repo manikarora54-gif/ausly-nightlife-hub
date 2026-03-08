@@ -27,7 +27,7 @@ const GENRE_ICONS: Record<string, any> = {
   All: Clapperboard,
   Action: Swords,
   Comedy: Laugh,
-  Drama: Drama,
+  Drama: Theater,
   "Sci-Fi": Rocket,
   Horror: Ghost,
   Romance: Heart,
