@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import {
   Search, MapPin, Star, Grid3X3, List, Loader2, SlidersHorizontal,
   Utensils, Wine, Music, Ticket, Film, PartyPopper, X, ChevronDown,
-  ArrowUpDown, Clock, TrendingUp, Sparkles,
+  ArrowUpDown, Clock, TrendingUp, Sparkles, Compass,
 } from "lucide-react";
 import { useVenues } from "@/hooks/useVenues";
 import { useEvents } from "@/hooks/useEvents";
