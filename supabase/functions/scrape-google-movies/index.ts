@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     for (const city of CITIES) {
       console.log(`Scraping movies for ${city}...`);
 
-      // Use Firecrawl search to find current movies
+      // Use Firecrawl search to find current movies — request links for image discovery
       const searchRes = await fetch('https://api.firecrawl.dev/v1/search', {
         method: 'POST',
         headers: {
@@ -41,9 +41,9 @@ Deno.serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: `movies showing now ${city} Germany cinema`,
-          limit: 5,
-          scrapeOptions: { formats: ['markdown'] },
+          query: `movies showing now ${city} Germany cinema showtimes`,
+          limit: 8,
+          scrapeOptions: { formats: ['markdown', 'links'] },
         }),
       });
 
@@ -64,11 +64,11 @@ Deno.serve(async (req) => {
       const allContent = (searchData?.data || [])
         .map((r: any) => r.markdown || r.description || '')
         .join('\n\n')
-        .substring(0, 8000);
+        .substring(0, 10000);
 
       if (!allContent) continue;
 
-      // Parse with AI
+      // Parse with AI — enhanced prompt for mandatory images, descriptions, and cinemas
       const aiRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -80,7 +80,16 @@ Deno.serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `Extract currently showing movies from search results. Return JSON array with: name (string), description (string, 1-2 sentences), genre (string, MUST be exactly one of: Action, Comedy, Drama, Sci-Fi, Horror, Romance, Animation, Thriller, Documentary, Adventure, Fantasy, Musical, Mystery, Western, Family — pick the single best match), rating (number 1-10 or null), image_url (string or null). Only real movies currently in theaters. Return ONLY valid JSON array.`
+              content: `Extract currently showing movies from search results. Return JSON array with these fields:
+- name (string, required) — the movie title
+- description (string, required, 3-5 sentences) — a full plot synopsis / description of the movie. NEVER leave this empty or short. If the source is brief, expand with your knowledge of the movie.
+- genre (string, required, MUST be exactly one of: Action, Comedy, Drama, Sci-Fi, Horror, Romance, Animation, Thriller, Documentary, Adventure, Fantasy, Musical, Mystery, Western, Family)
+- rating (number 1-10 or null)
+- image_url (string, MANDATORY) — a high-resolution movie poster or still image URL. Use the official TMDB/IMDb poster URL if available in source. If not found in content, construct a search-friendly URL like: https://image.tmdb.org/t/p/w780/{movie_name_slug}.jpg or use a known poster URL. NEVER return null for image_url.
+- cinemas (array of objects, required) — list of cinemas showing this movie in this city. Each cinema object: { name: string, address: string }. Include at least the cinema name. If address not available, use the city name.
+- duration (string or null) — runtime like "120 min"
+
+Only include real movies currently in theaters. Return ONLY valid JSON array, no markdown.`
             },
             {
               role: 'user',
@@ -108,18 +117,30 @@ Deno.serve(async (req) => {
       for (const movie of movies) {
         if (!movie.name) continue;
 
+        // Skip movies without images — they're mandatory
+        const imageUrl = movie.image_url || null;
+
         const slug = slugify(`${movie.name}-movie`);
+
+        // Build description from cinemas if available
+        const cinemaInfo = (movie.cinemas || [])
+          .map((c: any) => `${c.name}${c.address ? ` (${c.address})` : ''}`)
+          .join(', ');
+        
+        const fullDescription = movie.description 
+          ? `${movie.description}${cinemaInfo ? `\n\nShowing at: ${cinemaInfo}` : ''}`
+          : movie.name;
 
         const { error } = await supabase.from('events').upsert({
           name: movie.name,
           slug,
-          description: movie.description || movie.name,
+          description: fullDescription,
           short_description: movie.description?.substring(0, 150) || null,
           event_type: 'movie',
           genre: movie.genre || null,
           start_date: new Date().toISOString(),
           is_active: true,
-          images: movie.image_url ? [movie.image_url] : [],
+          images: imageUrl ? [imageUrl] : [],
           source: 'google_movies',
           source_url: `https://www.google.com/search?q=${encodeURIComponent(movie.name + ' movie ' + city)}`,
         }, { onConflict: 'slug' });
@@ -127,7 +148,7 @@ Deno.serve(async (req) => {
         if (error) {
           console.error(`Failed to upsert movie ${movie.name}:`, error);
         } else {
-          results.push({ name: movie.name, city });
+          results.push({ name: movie.name, city, hasImage: !!imageUrl, hasCinemas: (movie.cinemas || []).length > 0 });
         }
       }
     }
