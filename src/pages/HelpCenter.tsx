@@ -16,6 +16,7 @@ import {
   MessageCircle,
   Mail
 } from "lucide-react";
+import SEOHead from "@/components/seo/SEOHead";
 
 const faqCategories = [
   {
