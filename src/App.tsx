@@ -21,6 +21,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import OurStory from "./pages/OurStory";
 import AdminLayout from "./components/admin/AdminLayout";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
@@ -71,6 +72,7 @@ const App = () => (
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/our-story" element={<OurStory />} />
             {/* Protected Vendor Routes */}
             <Route path="/vendor" element={<RoleProtectedRoute requiredRole="vendor"><VendorLayout /></RoleProtectedRoute>}>
               <Route index element={<VendorDashboard />} />
