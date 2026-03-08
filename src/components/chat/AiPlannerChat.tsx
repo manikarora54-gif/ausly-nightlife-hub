@@ -129,7 +129,14 @@ async function streamChat({
   if (hasToolCall && toolCallArgs) {
     try {
       const parsed = JSON.parse(toolCallArgs);
-      onToolCall(parsed);
+      if (parsed.city && Array.isArray(parsed.itineraries) && parsed.itineraries.length > 0) {
+        const validItineraries = parsed.itineraries.filter((it: any) => 
+          it.title && Array.isArray(it.stops) && it.stops.length > 0
+        );
+        if (validItineraries.length > 0) {
+          onToolCall({ ...parsed, itineraries: validItineraries });
+        }
+      }
     } catch (e) {
       console.error("Failed to parse tool call args:", e);
     }
