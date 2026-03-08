@@ -298,7 +298,7 @@ const VendorSettings = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {vendorProfile?.is_verified ? (
+              {false ? (
                 <div className="flex items-center gap-2 text-accent">
                   <Shield className="w-5 h-5" />
                   <span className="font-medium">Verified Vendor</span>
