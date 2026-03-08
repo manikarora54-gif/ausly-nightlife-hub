@@ -13,7 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import ReviewForm from "@/components/venue/ReviewForm";
 import {
-  Star, MapPin, Clock, Phone, Globe, Heart, Share2, Calendar, Users,
+  Star, MapPin, Clock, Phone, Globe, Heart, Calendar, Users,
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
 } from "lucide-react";
 import SEOHead from "@/components/seo/SEOHead";

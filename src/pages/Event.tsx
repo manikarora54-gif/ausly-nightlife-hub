@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import {
-  MapPin, Clock, Calendar, Users, Ticket, Share2, ArrowRight, Minus, Plus, Shield,
+  MapPin, Clock, Calendar, Users, Ticket, ArrowRight, Minus, Plus, Shield,
 } from "lucide-react";
 import { format } from "date-fns";
 import SEOHead from "@/components/seo/SEOHead";
