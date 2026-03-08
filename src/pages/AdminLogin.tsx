@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Lock, ArrowRight, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, ShieldCheck, Chrome } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
 import { z } from "zod";
 
 const signInSchema = z.object({
@@ -66,6 +67,22 @@ const AdminLogin = () => {
       }
     }
     // Role check + redirect handled by useEffect above
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (error) {
+        setErrors({ general: `Google sign-in failed: ${error.message}` });
+      }
+    } catch (err) {
+      setErrors({ general: "An unexpected error occurred during Google sign-in" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -154,6 +171,17 @@ const AdminLogin = () => {
                 <ArrowRight className="w-4 h-4 ml-1" />
               </>
             )}
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full h-12 text-base font-semibold"
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+          >
+            <Chrome className="w-4 h-4 mr-2" />
+            Sign In with Google
           </Button>
         </form>
 
