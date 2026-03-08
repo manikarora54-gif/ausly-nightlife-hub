@@ -259,6 +259,12 @@ const Navbar = () => {
                             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                           </div>
                         </div>
+                        <Link to="/grievances" className="block" onClick={() => setMobileOpen(false)}>
+                          <Button variant="outline" className="w-full justify-start rounded-xl">
+                            <AlertTriangle className="w-4 h-4 mr-3 text-yellow-500" />
+                            My Grievances
+                          </Button>
+                        </Link>
                         {isVendor() &&
                       <Link to="/vendor" className="block" onClick={() => setMobileOpen(false)}>
                             <Button variant="outline" className="w-full justify-start rounded-xl">
