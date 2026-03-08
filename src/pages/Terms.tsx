@@ -1,10 +1,12 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { FileText, Scale, AlertCircle, CheckCircle } from "lucide-react";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Terms = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Terms of Service – Ausly" description="Read the terms and conditions for using Ausly. Understand your rights and obligations." />
       <Navbar />
       
       <main className="pt-24 pb-16">

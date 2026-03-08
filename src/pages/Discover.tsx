@@ -12,6 +12,7 @@ import {
   ArrowUpDown, Clock, TrendingUp, Sparkles, Compass, Heart,
 } from "lucide-react";
 import { useVenues } from "@/hooks/useVenues";
+import SEOHead from "@/components/seo/SEOHead";
 import { useEvents } from "@/hooks/useEvents";
 import { useToggleFavorite, useFavorites } from "@/hooks/useFavorites";
 import { useAuth } from "@/hooks/useAuth";
@@ -193,6 +194,10 @@ const Discover = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`Discover ${selectedCity !== "All Cities" ? selectedCity : "Germany"} – Restaurants, Bars & Events | Ausly`}
+        description={`Explore the best restaurants, bars, clubs, and events in ${selectedCity !== "All Cities" ? selectedCity : "Germany"}. Filter by category, city, and more on Ausly.`}
+      />
       <Navbar />
 
       <main className="pt-20 pb-16">

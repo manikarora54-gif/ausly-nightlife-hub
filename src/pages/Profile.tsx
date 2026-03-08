@@ -16,6 +16,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { GrievanceList } from "@/components/grievance/GrievanceComponents";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Profile = () => {
   const [searchParams] = useSearchParams();
@@ -73,6 +74,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="My Profile – Ausly" description="Manage your Ausly profile, bookings, favorites, and itineraries." noindex />
       <Navbar />
       <main className="container mx-auto px-4 pt-24 pb-12 max-w-4xl">
         {/* Profile Header */}

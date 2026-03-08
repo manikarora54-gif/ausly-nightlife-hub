@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import SEOHead from "@/components/seo/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -317,6 +318,7 @@ const Plan = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="AI Night Planner – Ausly" description="Let AI plan your perfect night out in Germany. Choose your city, vibe, and budget — get a personalized itinerary in seconds." />
       <Navbar />
 
       <main className="pt-24 pb-16">

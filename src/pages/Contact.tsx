@@ -13,6 +13,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -52,6 +53,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="Contact Us – Ausly" description="Get in touch with the Ausly team. We'd love to hear your questions, feedback, or partnership inquiries." />
       <Navbar />
       
       <main className="pt-24 pb-16">

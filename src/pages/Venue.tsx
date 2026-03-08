@@ -16,6 +16,7 @@ import {
   Star, MapPin, Clock, Phone, Globe, Heart, Share2, Calendar, Users,
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
 } from "lucide-react";
+import SEOHead from "@/components/seo/SEOHead";
 
 const priceLabel = (range: number | null) => {
   if (!range) return "Contact venue";
@@ -116,6 +117,12 @@ const Venue = () => {
 
   return (
     <div className="min-h-screen bg-background relative">
+      <SEOHead
+        title={`${venue.name} – ${venue.city} | Ausly`}
+        description={venue.short_description || venue.description?.slice(0, 155) || `Discover ${venue.name} in ${venue.city}. View menu, reviews, and make a reservation on Ausly.`}
+        image={images[0]}
+        type="place"
+      />
       {/* Decorative background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-[20%] right-[-5%] w-[400px] h-[400px] rounded-full bg-primary/5 blur-[150px]" />

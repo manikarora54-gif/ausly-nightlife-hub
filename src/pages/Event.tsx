@@ -14,6 +14,7 @@ import {
   MapPin, Clock, Calendar, Users, Ticket, Share2, ArrowRight, Minus, Plus, Shield,
 } from "lucide-react";
 import { format } from "date-fns";
+import SEOHead from "@/components/seo/SEOHead";
 
 const EventPage = () => {
   const { id } = useParams();
@@ -81,6 +82,12 @@ const EventPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title={`${event.name} – ${event.event_type} | Ausly`}
+        description={event.short_description || event.description?.slice(0, 155) || `${event.name} – ${event.event_type} event. Get tickets and details on Ausly.`}
+        image={images[0]}
+        type="event"
+      />
       <Navbar />
 
       <main className="pt-20">
