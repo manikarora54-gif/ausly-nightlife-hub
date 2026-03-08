@@ -12,6 +12,7 @@ import {
   ArrowUpDown, Clock, TrendingUp, Sparkles, Compass, Heart,
 } from "lucide-react";
 import { useVenues } from "@/hooks/useVenues";
+import SEOHead from "@/components/seo/SEOHead";
 import { useEvents } from "@/hooks/useEvents";
 import { useToggleFavorite, useFavorites } from "@/hooks/useFavorites";
 import { useAuth } from "@/hooks/useAuth";

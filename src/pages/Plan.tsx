@@ -318,6 +318,7 @@ const Plan = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="AI Night Planner – Ausly" description="Let AI plan your perfect night out in Germany. Choose your city, vibe, and budget — get a personalized itinerary in seconds." />
       <Navbar />
 
       <main className="pt-24 pb-16">
