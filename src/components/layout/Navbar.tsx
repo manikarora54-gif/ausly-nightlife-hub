@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles } from "lucide-react";
+import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import SearchWithSuggestions from "@/components/search/SearchWithSuggestions";
 
@@ -150,6 +150,12 @@ const Navbar = () => {
                       My Itineraries
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
+                    <Link to="/grievances" className="flex items-center gap-3">
+                      <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                      My Grievances
+                    </Link>
+                  </DropdownMenuItem>
                   {isVendor() &&
                 <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
                       <Link to="/vendor" className="flex items-center gap-3">
@@ -253,6 +259,12 @@ const Navbar = () => {
                             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                           </div>
                         </div>
+                        <Link to="/grievances" className="block" onClick={() => setMobileOpen(false)}>
+                          <Button variant="outline" className="w-full justify-start rounded-xl">
+                            <AlertTriangle className="w-4 h-4 mr-3 text-yellow-500" />
+                            My Grievances
+                          </Button>
+                        </Link>
                         {isVendor() &&
                       <Link to="/vendor" className="block" onClick={() => setMobileOpen(false)}>
                             <Button variant="outline" className="w-full justify-start rounded-xl">
