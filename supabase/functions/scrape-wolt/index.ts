@@ -20,73 +20,6 @@ function slugify(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-async function scrapeRestaurantMenu(firecrawlKey: string, restaurantUrl: string, restaurantName: string, cityName: string, lovableApiKey: string): Promise<any[]> {
-  console.log(`Scraping menu for ${restaurantName}...`);
-  
-  try {
-    const scrapeRes = await fetch('https://api.firecrawl.dev/v1/scrape', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${firecrawlKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        url: restaurantUrl,
-        formats: ['markdown'],
-        onlyMainContent: true,
-        waitFor: 5000,
-      }),
-    });
-
-    const scrapeText = await scrapeRes.text();
-    let scrapeData: any;
-    try { scrapeData = JSON.parse(scrapeText); } catch { return []; }
-
-    const menuContent = (scrapeData?.data?.markdown || scrapeData?.markdown || '').substring(0, 12000);
-    if (!menuContent.trim()) return [];
-
-    const aiRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${lovableApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: `Extract menu items from this Wolt restaurant page. Return a JSON array of menu items. Each object must have:
-- name (string, required) — dish/item name
-- description (string or null) — brief description of the dish
-- price (number or null) — price in EUR (just the number, no currency symbol)
-- category (string, required) — menu category (e.g. "Burgers", "Pizza", "Drinks", "Desserts", "Sides", "Salads", "Main Courses", "Appetizers")
-- image_url (string or null) — image URL if available
-
-Extract up to 30 items. Prioritize popular/featured items. Return ONLY valid JSON array.`
-          },
-          {
-            role: 'user',
-            content: `Extract menu items from ${restaurantName} in ${cityName}:\n\n${menuContent}`
-          }
-        ],
-        temperature: 0.1,
-      }),
-    });
-
-    const aiText = await aiRes.text();
-    let aiData: any;
-    try { aiData = JSON.parse(aiText); } catch { return []; }
-
-    const aiContent = aiData?.choices?.[0]?.message?.content || '[]';
-    const cleaned = aiContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-    return JSON.parse(cleaned);
-  } catch (e) {
-    console.error(`Menu scrape failed for ${restaurantName}:`, e);
-    return [];
-  }
-}
-
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -107,7 +40,6 @@ Deno.serve(async (req) => {
     let body: any = {};
     try { body = await req.json(); } catch {}
     const cityFilter = body?.city as string | undefined;
-    const scrapeMenus = body?.scrapeMenus !== false; // default true
 
     const citiesToScrape = cityFilter
       ? CITIES.filter(c => c.name.toLowerCase() === cityFilter.toLowerCase())
@@ -121,7 +53,6 @@ Deno.serve(async (req) => {
     }
 
     const results: any[] = [];
-    let menuCount = 0;
 
     for (const city of citiesToScrape) {
       console.log(`Scraping Wolt restaurants for ${city.name}...`);
@@ -142,7 +73,9 @@ Deno.serve(async (req) => {
 
       const scrapeText = await scrapeRes.text();
       let scrapeData: any;
-      try { scrapeData = JSON.parse(scrapeText); } catch {
+      try {
+        scrapeData = JSON.parse(scrapeText);
+      } catch {
         console.error(`Non-JSON scrape response for ${city.name}:`, scrapeText.substring(0, 200));
       }
 
@@ -161,7 +94,9 @@ Deno.serve(async (req) => {
 
       const searchText = await searchRes.text();
       let searchData: any;
-      try { searchData = JSON.parse(searchText); } catch {
+      try {
+        searchData = JSON.parse(searchText);
+      } catch {
         console.error(`Non-JSON search response for ${city.name}:`, searchText.substring(0, 200));
         continue;
       }
@@ -178,7 +113,6 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Parse restaurants with AI
       const aiRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -193,16 +127,16 @@ Deno.serve(async (req) => {
               content: `You are extracting restaurant data from Wolt scraped content. Return a JSON array of restaurants. Each object must have:
 
 - name (string, required) — restaurant name, cleaned of any extra text
-- description (string, required, 3-5 sentences) — describe the cuisine, atmosphere, popular dishes, what makes it special. NEVER leave empty.
-- short_description (string, required, max 100 chars) — brief tagline
+- description (string, required, 3-5 sentences)
+- short_description (string, required, max 100 chars)
 - cuisine (string, required) — primary cuisine type
-- address (string, required) — specific street address. Use real addresses when available, otherwise use "City Center, [City]" with a plausible street.
+- address (string, required) — specific street address
 - price_range (number 1-4)
-- rating (number or null) — rating out of 5 if mentioned
+- rating (number or null)
 - delivery_fee (string or null)
 - delivery_time (string or null)
 - website (string URL or null) — the Wolt URL for this restaurant
-- image_url (string, MANDATORY) — extract image URLs from Wolt CDN
+- image_url (string, MANDATORY)
 - features (array of strings)
 
 Extract at most 20 unique restaurants per city. Return ONLY valid JSON array.`
@@ -254,60 +188,20 @@ Extract at most 20 unique restaurants per city. Return ONLY valid JSON array.`
         if (rest.rating) venueData.average_rating = rest.rating;
         if (rest.price_range) venueData.price_range = rest.price_range;
 
-        const { data: upsertedVenue, error } = await supabase
-          .from('venues')
-          .upsert(venueData, { onConflict: 'slug' })
-          .select('id')
-          .single();
+        const { error } = await supabase.from('venues').upsert(venueData, { onConflict: 'slug' });
 
         if (error) {
           console.error(`Failed to upsert restaurant ${rest.name}:`, error);
-          continue;
-        }
-
-        results.push({
-          name: rest.name,
-          city: city.name,
-          cuisine: rest.cuisine,
-          hasImage: !!rest.image_url,
-          price_range: rest.price_range,
-        });
-
-        // Scrape menu for this restaurant if enabled and we have a URL
-        if (scrapeMenus && upsertedVenue?.id && rest.website) {
-          const menuItems = await scrapeRestaurantMenu(firecrawlKey, rest.website, rest.name, city.name, lovableApiKey);
-
-          if (menuItems.length > 0) {
-            // Delete old menu items for this venue
-            await supabase.from('menu_items').delete().eq('venue_id', upsertedVenue.id);
-
-            const menuRows = menuItems.map((item: any) => ({
-              venue_id: upsertedVenue.id,
-              name: item.name,
-              description: item.description || null,
-              price: item.price || null,
-              currency: 'EUR',
-              category: item.category || 'Other',
-              image_url: item.image_url || null,
-              is_available: true,
-            }));
-
-            const { error: menuError } = await supabase.from('menu_items').insert(menuRows);
-            if (menuError) {
-              console.error(`Failed to insert menu for ${rest.name}:`, menuError);
-            } else {
-              menuCount += menuItems.length;
-              console.log(`Inserted ${menuItems.length} menu items for ${rest.name}`);
-            }
-          }
+        } else {
+          results.push({ name: rest.name, city: city.name, cuisine: rest.cuisine });
         }
       }
     }
 
-    console.log(`Scraped ${results.length} restaurants, ${menuCount} menu items total`);
+    console.log(`Scraped ${results.length} Wolt restaurants total`);
 
     return new Response(
-      JSON.stringify({ success: true, count: results.length, menuItemsCount: menuCount, restaurants: results }),
+      JSON.stringify({ success: true, count: results.length, restaurants: results }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
