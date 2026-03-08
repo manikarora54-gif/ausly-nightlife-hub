@@ -37,7 +37,6 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // Accept optional city filter to avoid timeouts
     let body: any = {};
     try { body = await req.json(); } catch {}
     const cityFilter = body?.city as string | undefined;
@@ -58,7 +57,6 @@ Deno.serve(async (req) => {
     for (const city of citiesToScrape) {
       console.log(`Scraping Wolt restaurants for ${city.name}...`);
 
-      // Scrape Wolt restaurant listing page
       const scrapeRes = await fetch('https://api.firecrawl.dev/v1/scrape', {
         method: 'POST',
         headers: {
@@ -81,7 +79,6 @@ Deno.serve(async (req) => {
         console.error(`Non-JSON scrape response for ${city.name}:`, scrapeText.substring(0, 200));
       }
 
-      // Also search for more Wolt restaurants in this city
       const searchRes = await fetch('https://api.firecrawl.dev/v1/search', {
         method: 'POST',
         headers: {
@@ -104,7 +101,6 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Combine content
       const scrapedContent = scrapeData?.data?.markdown || scrapeData?.markdown || '';
       const searchContent = (searchData?.data || [])
         .map((r: any) => `### ${r.title || ''}\nURL: ${r.url || ''}\n${r.markdown || r.description || ''}`)
@@ -117,7 +113,6 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Parse with AI
       const aiRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -132,19 +127,19 @@ Deno.serve(async (req) => {
               content: `You are extracting restaurant data from Wolt scraped content. Return a JSON array of restaurants. Each object must have:
 
 - name (string, required) — restaurant name, cleaned of any extra text
-- description (string, required, 3-5 sentences) — describe the cuisine, atmosphere, popular dishes, what makes it special. NEVER leave empty.
-- short_description (string, required, max 100 chars) — brief tagline
-- cuisine (string, required) — primary cuisine type (e.g. "Italian", "Japanese", "German", "Turkish", "Indian", "American", "Vietnamese", "Thai", "Mexican", "Mediterranean", "Korean", "Middle Eastern")
-- address (string, required) — specific street address. Use real addresses when available, otherwise use "City Center, [City]" with a plausible street.
-- price_range (number 1-4) — 1=budget, 2=moderate, 3=upscale, 4=fine dining. Estimate from context.
-- rating (number or null) — rating out of 5 if mentioned
-- delivery_fee (string or null) — e.g. "€1.99", "Free delivery"
-- delivery_time (string or null) — e.g. "25-35 min"
+- description (string, required, 3-5 sentences)
+- short_description (string, required, max 100 chars)
+- cuisine (string, required) — primary cuisine type
+- address (string, required) — specific street address
+- price_range (number 1-4)
+- rating (number or null)
+- delivery_fee (string or null)
+- delivery_time (string or null)
 - website (string URL or null) — the Wolt URL for this restaurant
-- image_url (string, MANDATORY) — extract image URLs. Look for Wolt CDN URLs (imageproxy.wolt.com, wolt.com). NEVER return null — use a relevant food/restaurant image URL if not found.
-- features (array of strings) — e.g. ["Delivery", "Takeaway", "Popular"], extract from tags/badges if available
+- image_url (string, MANDATORY)
+- features (array of strings)
 
-Extract at most 20 unique restaurants per city. Prioritize diversity in cuisine types. Return ONLY valid JSON array.`
+Extract at most 20 unique restaurants per city. Return ONLY valid JSON array.`
             },
             {
               role: 'user',
@@ -157,23 +152,14 @@ Extract at most 20 unique restaurants per city. Prioritize diversity in cuisine 
 
       const aiText = await aiRes.text();
       let aiData: any;
-      try {
-        aiData = JSON.parse(aiText);
-      } catch {
-        console.error('AI non-JSON:', aiText.substring(0, 200));
-        continue;
-      }
+      try { aiData = JSON.parse(aiText); } catch { continue; }
 
       const aiContent = aiData?.choices?.[0]?.message?.content || '[]';
-
       let restaurants: any[] = [];
       try {
         const cleaned = aiContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         restaurants = JSON.parse(cleaned);
-      } catch (e) {
-        console.error(`Failed to parse restaurants for ${city.name}:`, e);
-        continue;
-      }
+      } catch { continue; }
 
       console.log(`Found ${restaurants.length} restaurants for ${city.name}`);
 
@@ -199,25 +185,15 @@ Extract at most 20 unique restaurants per city. Prioritize diversity in cuisine 
           source_url: rest.website || `https://wolt.com/en/deu/${city.woltSlug}/restaurants`,
         };
 
-        if (rest.rating) {
-          venueData.average_rating = rest.rating;
-        }
-        if (rest.price_range) {
-          venueData.price_range = rest.price_range;
-        }
+        if (rest.rating) venueData.average_rating = rest.rating;
+        if (rest.price_range) venueData.price_range = rest.price_range;
 
         const { error } = await supabase.from('venues').upsert(venueData, { onConflict: 'slug' });
 
         if (error) {
           console.error(`Failed to upsert restaurant ${rest.name}:`, error);
         } else {
-          results.push({
-            name: rest.name,
-            city: city.name,
-            cuisine: rest.cuisine,
-            hasImage: !!rest.image_url,
-            price_range: rest.price_range,
-          });
+          results.push({ name: rest.name, city: city.name, cuisine: rest.cuisine });
         }
       }
     }
