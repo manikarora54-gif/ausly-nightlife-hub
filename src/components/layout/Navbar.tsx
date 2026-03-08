@@ -114,7 +114,22 @@ const Navbar = () => {
               <Search className="w-5 h-5" />
             </Button>
 
-            {/* Auth Section */}
+            {/* Notifications Bell */}
+            {user && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/notifications")}
+                className="rounded-full hover:bg-muted relative">
+                <Bell className="w-5 h-5" />
+                {(unreadCount ?? 0) > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                    {unreadCount! > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </Button>
+            )}
+
             {loading ?
             <div className="w-10 h-10 rounded-full bg-muted animate-pulse" /> :
             user ?
