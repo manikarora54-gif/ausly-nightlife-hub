@@ -57,7 +57,8 @@ const RoleProtectedRoute = ({ children, requiredRole }: RoleProtectedRouteProps)
   }
 
   if (!user) {
-    return <Navigate to="/signin" state={{ from: location.pathname }} replace />;
+    const loginPath = requiredRole === "admin" ? "/admin/login" : "/signin";
+    return <Navigate to={loginPath} state={{ from: location.pathname }} replace />;
   }
 
   if (!hasAccess) {
