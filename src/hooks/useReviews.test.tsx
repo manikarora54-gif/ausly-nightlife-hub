@@ -122,7 +122,7 @@ describe("useDeleteReview", () => {
       expect(res).toEqual({ id: "r1", venueId: "v1" });
     });
 
-    expect(result.current.isSuccess).toBe(true);
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(mockSupabase.from).toHaveBeenCalledWith("reviews");
   });
 });
