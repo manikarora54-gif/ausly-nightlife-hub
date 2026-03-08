@@ -11,6 +11,7 @@ import { useVenueReviews } from "@/hooks/useReviews";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import ReviewForm from "@/components/venue/ReviewForm";
 import {
   Star, MapPin, Clock, Phone, Globe, Heart, Share2, Calendar, Users,
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
