@@ -69,6 +69,22 @@ const AdminLogin = () => {
     // Role check + redirect handled by useEffect above
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await lovable.auth.signInWithOAuth("google", {
+        redirect_uri: window.location.origin,
+      });
+      if (error) {
+        setErrors({ general: `Google sign-in failed: ${error.message}` });
+      }
+    } catch (err) {
+      setErrors({ general: "An unexpected error occurred during Google sign-in" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background relative overflow-hidden flex items-center justify-center">
       {/* Ambient background */}
