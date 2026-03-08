@@ -261,7 +261,7 @@ const Profile = () => {
                   <Sparkles className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                   <h3 className="font-heading font-semibold mb-2">No itineraries yet</h3>
                   <p className="text-sm text-muted-foreground mb-4">Use the AI Planner to create personalized itineraries!</p>
-                  <Button className="rounded-xl" onClick={() => navigate("/")}>
+                  <Button className="rounded-xl" onClick={() => navigate("/plan")}>
                     <Sparkles className="w-4 h-4 mr-2" />
                     Open AI Planner
                   </Button>
