@@ -47,7 +47,14 @@ Deno.serve(async (req) => {
         }),
       });
 
-      const searchData = await searchRes.json();
+      const searchText = await searchRes.text();
+      let searchData: any;
+      try {
+        searchData = JSON.parse(searchText);
+      } catch {
+        console.error(`Non-JSON response for ${city}:`, searchText.substring(0, 200));
+        continue;
+      }
       
       if (!searchRes.ok) {
         console.error(`Failed to search movies for ${city}:`, searchData);
