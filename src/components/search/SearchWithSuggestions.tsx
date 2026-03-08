@@ -286,10 +286,10 @@ export default function SearchWithSuggestions({
       const shouldSearchEvents = !parsed.venueType || parsed.category === "events";
 
       const promises: Promise<any>[] = [];
-      if (shouldSearchVenues) promises.push(venueQuery);
-      if (shouldSearchEvents) promises.push(eventQuery);
+      if (shouldSearchVenues) promises.push(venueQuery.then());
+      if (shouldSearchEvents) promises.push(eventQuery.then());
 
-      const results = await Promise.all(promises);
+      const queryResults = await Promise.all(promises);
       
       let venueResults: any[] = [];
       let eventResults: any[] = [];
