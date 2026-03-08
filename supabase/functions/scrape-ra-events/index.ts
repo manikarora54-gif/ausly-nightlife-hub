@@ -43,6 +43,7 @@ Deno.serve(async (req) => {
       
       const raUrl = `https://ra.co/events/de/${city.raSlug}`;
       
+      // Request markdown + links for better image extraction
       const scrapeRes = await fetch('https://api.firecrawl.dev/v1/scrape', {
         method: 'POST',
         headers: {
@@ -51,7 +52,7 @@ Deno.serve(async (req) => {
         },
         body: JSON.stringify({
           url: raUrl,
-          formats: ['markdown'],
+          formats: ['markdown', 'links'],
           onlyMainContent: true,
           waitFor: 3000,
         }),
@@ -78,7 +79,6 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      // Use Lovable AI to parse the events from markdown
       const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
       if (!lovableApiKey) {
         console.error('LOVABLE_API_KEY not configured, skipping AI parsing');
@@ -96,11 +96,21 @@ Deno.serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `You extract event data from Resident Advisor website content. Return a JSON array of events. Each event should have: name (string), date (ISO date string), venue_name (string), description (string, short), event_type (one of: concert, club_night, festival, party, live_music). Only include real events, not navigation or ads. Return ONLY valid JSON array, no markdown.`
+              content: `You extract event data from Resident Advisor website content. Return a JSON array of events. Each event MUST have:
+- name (string, required)
+- date (ISO date string, required)
+- venue_name (string, required) — the club/venue hosting the event
+- venue_address (string) — full street address of the venue if available, otherwise use the city name
+- description (string, required, 2-4 sentences) — describe the event, lineup, vibe. NEVER leave empty. If the source is brief, expand with context about the venue and event type.
+- event_type (one of: concert, club_night, festival, party, live_music)
+- image_url (string, MANDATORY) — event flyer or venue image URL from the page content. Look for image URLs in the markdown (usually RA CDN links like ra.co/images or i.ra.co). If no image found in content, use null but try hard to find one.
+- lineup (string or null) — artist/DJ names if available
+
+Only include real events, not navigation or ads. Return ONLY valid JSON array, no markdown.`
             },
             {
               role: 'user',
-              content: `Extract events from this Resident Advisor page for ${city.name}, Germany:\n\n${markdown.substring(0, 8000)}`
+              content: `Extract events from this Resident Advisor page for ${city.name}, Germany:\n\n${markdown.substring(0, 10000)}`
             }
           ],
           temperature: 0.1,
@@ -114,7 +124,6 @@ Deno.serve(async (req) => {
       
       let events: any[] = [];
       try {
-        // Try to parse JSON, handle potential markdown wrapping
         const cleaned = aiContent.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         events = JSON.parse(cleaned);
       } catch (e) {
@@ -129,14 +138,20 @@ Deno.serve(async (req) => {
         const slug = slugify(`${event.name}-${city.name}-${event.date?.split('T')[0] || ''}`);
         const sourceUrl = raUrl;
 
+        // Build rich description with venue info
+        const venueInfo = event.venue_name ? `\n\nVenue: ${event.venue_name}${event.venue_address ? ` — ${event.venue_address}` : ''}` : '';
+        const lineupInfo = event.lineup ? `\n\nLineup: ${event.lineup}` : '';
+        const fullDescription = `${event.description || `${event.name} at ${event.venue_name || city.name}`}${venueInfo}${lineupInfo}`;
+
         const { error } = await supabase.from('events').upsert({
           name: event.name,
           slug,
-          description: event.description || `${event.name} at ${event.venue_name || city.name}`,
+          description: fullDescription,
           short_description: event.description?.substring(0, 150) || null,
           event_type: event.event_type || 'club_night',
           start_date: event.date,
           is_active: true,
+          images: event.image_url ? [event.image_url] : [],
           source: 'resident_advisor',
           source_url: sourceUrl,
         }, { onConflict: 'slug' });
@@ -144,7 +159,7 @@ Deno.serve(async (req) => {
         if (error) {
           console.error(`Failed to upsert event ${event.name}:`, error);
         } else {
-          results.push({ name: event.name, city: city.name });
+          results.push({ name: event.name, city: city.name, hasImage: !!event.image_url, venue: event.venue_name });
         }
       }
     }

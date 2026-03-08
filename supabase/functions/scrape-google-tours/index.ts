@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     for (const city of CITIES) {
       console.log(`Scraping tours for ${city}...`);
 
-      // Search for tours and experiences
+      // Search for tours and experiences — request links for image discovery
       const searchRes = await fetch('https://api.firecrawl.dev/v1/search', {
         method: 'POST',
         headers: {
@@ -42,8 +42,8 @@ Deno.serve(async (req) => {
         },
         body: JSON.stringify({
           query: `best tours experiences activities things to do ${city} Germany 2026`,
-          limit: 5,
-          scrapeOptions: { formats: ['markdown'] },
+          limit: 8,
+          scrapeOptions: { formats: ['markdown', 'links'] },
         }),
       });
 
@@ -64,11 +64,11 @@ Deno.serve(async (req) => {
       const allContent = (searchData?.data || [])
         .map((r: any) => r.markdown || r.description || '')
         .join('\n\n')
-        .substring(0, 8000);
+        .substring(0, 10000);
 
       if (!allContent) continue;
 
-      // Parse with AI
+      // Parse with AI — enhanced for mandatory images, full descriptions, and addresses
       const aiRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -80,7 +80,16 @@ Deno.serve(async (req) => {
           messages: [
             {
               role: 'system',
-              content: `Extract tours, experiences, and activities from search results. Return JSON array with: name (string), description (string, 2-3 sentences), address (string or "City Center"), type (one of: tour, museum, experience, food_tour, walking_tour, boat_tour, attraction), price_estimate (number in EUR or null), website (string url or null). Return ONLY valid JSON array.`
+              content: `Extract tours, experiences, and activities from search results. Return JSON array with these fields:
+- name (string, required)
+- description (string, required, 3-5 sentences) — a rich, detailed description of the tour/experience. NEVER leave empty or use just the name. Include what visitors will see/do, highlights, and what makes it special.
+- address (string, required) — full street address if available. If exact address not found, use a known landmark address or "City Center, [City]". NEVER leave empty.
+- type (one of: tour, museum, experience, food_tour, walking_tour, boat_tour, attraction)
+- price_estimate (number in EUR or null)
+- website (string url or null)
+- image_url (string, MANDATORY) — a high-resolution photo URL of the place/tour. Look for image URLs in the content. If not found, use a well-known stock image URL or a Google Maps/Places photo URL. Try to find real images. NEVER return null.
+
+Return ONLY valid JSON array.`
             },
             {
               role: 'user',
@@ -119,6 +128,7 @@ Deno.serve(async (req) => {
           address: tour.address || `${city} City Center`,
           city,
           website: tour.website || null,
+          images: tour.image_url ? [tour.image_url] : [],
           is_active: true,
           source: 'google_tours',
           source_url: `https://www.google.com/search?q=${encodeURIComponent(tour.name + ' ' + city)}`,
@@ -127,7 +137,7 @@ Deno.serve(async (req) => {
         if (error) {
           console.error(`Failed to upsert tour ${tour.name}:`, error);
         } else {
-          results.push({ name: tour.name, city });
+          results.push({ name: tour.name, city, hasImage: !!tour.image_url });
         }
       }
     }
