@@ -52,8 +52,8 @@ const NewEvent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.event_type || !form.start_date) {
-      toast({ title: "Missing fields", description: "Name, type and start date are required.", variant: "destructive" });
+    if (!form.name || !form.event_type || !form.start_date || !form.venue_id) {
+      toast({ title: "Missing fields", description: "Name, type, venue and start date are required.", variant: "destructive" });
       return;
     }
 
@@ -65,7 +65,7 @@ const NewEvent = () => {
         name: form.name,
         slug,
         event_type: form.event_type,
-        venue_id: form.venue_id || null,
+        venue_id: form.venue_id,
         start_date: new Date(form.start_date).toISOString(),
         end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
         short_description: form.short_description || null,
@@ -122,9 +122,9 @@ const NewEvent = () => {
                 <Input value={form.genre} onChange={(e) => handleChange("genre", e.target.value)} placeholder="e.g. Techno, Jazz, Hip-Hop" />
               </div>
             </div>
-            {venues.length > 0 && (
+            {venues.length > 0 ? (
               <div className="space-y-2">
-                <Label>Venue (optional)</Label>
+                <Label>Venue *</Label>
                 <Select value={form.venue_id} onValueChange={(v) => handleChange("venue_id", v)}>
                   <SelectTrigger><SelectValue placeholder="Select venue" /></SelectTrigger>
                   <SelectContent>
@@ -132,6 +132,8 @@ const NewEvent = () => {
                   </SelectContent>
                 </Select>
               </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">You need to create a venue listing first before creating events.</p>
             )}
           </CardContent>
         </Card>

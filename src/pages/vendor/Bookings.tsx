@@ -48,10 +48,25 @@ const VendorBookings = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch bookings (when owner_id/organizer_id columns exist, filter by vendor's venues/events)
+      // Get vendor's venue IDs
+      const { data: venues } = await supabase
+        .from("venues")
+        .select("id")
+        .eq("owner_id", user.id);
+
+      const venueIds = venues?.map(v => v.id) || [];
+
+      if (venueIds.length === 0) {
+        setBookings([]);
+        setLoading(false);
+        return;
+      }
+
+      // Fetch bookings for vendor's venues
       const { data, error } = await supabase
         .from("bookings")
         .select("*")
+        .in("venue_id", venueIds)
         .order("booking_date", { ascending: false })
         .limit(50);
 

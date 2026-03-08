@@ -37,12 +37,26 @@ const VendorEvents = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch events (when organizer_id column exists, filter by it)
+      // Get vendor's venue IDs first
+      const { data: venues } = await supabase
+        .from("venues")
+        .select("id")
+        .eq("owner_id", user.id);
+
+      const venueIds = venues?.map(v => v.id) || [];
+
+      if (venueIds.length === 0) {
+        setEvents([]);
+        setLoading(false);
+        return;
+      }
+
+      // Fetch events linked to vendor's venues
       const { data, error } = await supabase
         .from("events")
         .select("*")
-        .order("start_date", { ascending: false })
-        .limit(20);
+        .in("venue_id", venueIds)
+        .order("start_date", { ascending: false });
 
       if (error) throw error;
       setEvents(data || []);
