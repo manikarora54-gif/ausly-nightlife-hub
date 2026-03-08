@@ -18,6 +18,9 @@ import { cn } from "@/lib/utils";
 
 const menuItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/analytics", label: "Analytics", icon: BarChart3 },
+  { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/approvals", label: "Approvals", icon: CheckSquare },
   { href: "/admin/bookings", label: "Bookings", icon: Calendar },
   { href: "/admin/payments", label: "Payments", icon: CreditCard },
   { href: "/admin/refunds", label: "Cancellations & Refunds", icon: RefreshCw },
