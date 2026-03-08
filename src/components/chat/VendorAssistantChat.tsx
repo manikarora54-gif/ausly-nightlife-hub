@@ -27,10 +27,10 @@ function saveChatHistory(messages: Msg[]) {
 }
 
 const quickStarters = [
-  "How are my listings performing? 📊",
-  "Tips to improve my ratings ⭐",
-  "How to get more bookings? 📈",
-  "Help me plan a new event 🎉",
+  "How's my business doing? 📊",
+  "Any tips for better reviews? ⭐",
+  "Help me get more bookings 📈",
+  "I want to create an event 🎉",
 ];
 
 async function streamChat({
@@ -194,10 +194,10 @@ export default function VendorAssistantChat() {
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0 mt-0.5">
                 <BriefcaseBusiness className="w-4 h-4 text-white" />
               </div>
-              <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
-                <p className="mb-1">Hey! 👋 I'm your <strong>Vendor Assistant</strong> — I know your listings, bookings, reviews, and events.</p>
-                <p className="text-xs text-muted-foreground">Ask me anything about growing your business on Ausly!</p>
-              </div>
+               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
+                 <p className="mb-1">Hey there! 👋 I'm your <strong>business buddy</strong> — I've got all your stats, reviews, and bookings right here.</p>
+                 <p className="text-xs text-muted-foreground">Ask me anything — let's grow your business together 🚀</p>
+               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 pl-9">
               {quickStarters.map((q) => (
@@ -245,9 +245,13 @@ export default function VendorAssistantChat() {
               <BriefcaseBusiness className="w-3 h-3 text-white" />
             </div>
             <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm">
-              <div className="flex items-center gap-2">
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
-                <span className="text-xs text-muted-foreground">Analyzing your business...</span>
+              <div className="flex items-center gap-1.5">
+                <span className="flex gap-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "300ms" }} />
+                </span>
+                <span className="text-xs text-muted-foreground ml-1">looking at your data...</span>
               </div>
             </div>
           </div>

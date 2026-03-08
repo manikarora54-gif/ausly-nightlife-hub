@@ -206,10 +206,10 @@ function saveChatHistory(messages: Msg[]) {
 }
 
 const quickStarters = [
-  "Plan my night out in Berlin 🌃",
-  "Date night in Munich under €50 💕",
-  "Best weekend plan for Hamburg 🎉",
-  "Chill evening in Frankfurt 🍷",
+  "Plan my night out in Berlin! 🌃",
+  "Cheap date night in Munich? 💕",
+  "What's happening this weekend? 🎉",
+  "Something unique in Frankfurt 🍷",
 ];
 
 export default function AiPlannerChat() {
@@ -383,8 +383,8 @@ export default function AiPlannerChat() {
                 </div>
               </div>
               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
-                <p className="mb-1">Hey! 👋 I'll create <strong>visual itinerary cards</strong> with venues you can tap to explore.</p>
-                <p className="text-xs text-muted-foreground">Tell me your city & vibe — I'll do the rest!</p>
+                <p className="mb-1">Hey hey! 👋 I'm your go-to for finding the <strong>best spots</strong> in Germany.</p>
+                <p className="text-xs text-muted-foreground">Tell me what you're feeling — I'll put together a plan you'll actually love ✨</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 pl-9">
@@ -477,9 +477,13 @@ export default function AiPlannerChat() {
               </div>
             </div>
             <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm">
-              <div className="flex items-center gap-2">
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-primary" />
-                <span className="text-xs text-muted-foreground">Planning your night...</span>
+              <div className="flex items-center gap-1.5">
+                <span className="flex gap-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
+                </span>
+                <span className="text-xs text-muted-foreground ml-1">thinking...</span>
               </div>
             </div>
           </div>
