@@ -329,8 +329,11 @@ export default function AiPlannerChat() {
     <div className="fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] h-[580px] max-h-[calc(100vh-4rem)] flex flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-primary/10 animate-fade-in overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-gradient-to-r from-card to-card/80">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[0_0_12px_hsl(var(--primary)/0.3)]">
-          <span className="font-heading font-black text-sm text-primary-foreground">A</span>
+        <div className="relative w-9 h-9 rounded-lg overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+          <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
+            <span className="text-sm font-heading font-extrabold gradient-text leading-none">A</span>
+          </div>
         </div>
         <div className="flex-1">
           <h3 className="font-heading font-semibold text-sm">Ausly AI Planner</h3>
