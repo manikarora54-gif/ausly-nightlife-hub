@@ -28,6 +28,7 @@ const CATEGORIES = [
   { id: "restaurants", label: "Restaurants", icon: Utensils, types: ["restaurant", "Restaurant", "cafe", "Cafe"] },
   { id: "bars", label: "Bars", icon: Wine, types: ["bar", "Bar", "Beer Garden"] },
   { id: "clubs", label: "Clubs", icon: Music, types: ["club", "Club"] },
+  { id: "experiences", label: "Experiences", icon: Compass, types: ["tour", "experience", "walking_tour", "boat_tour", "food_tour", "day_trip", "attraction", "workshop", "pub_crawl"] },
   { id: "events", label: "Events", icon: Ticket, types: ["__events__"] },
   { id: "movies", label: "Movies", icon: Film, types: ["__movies__"] },
 ] as const;
