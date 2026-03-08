@@ -7,12 +7,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Mail, Phone, Calendar, MapPin, Clock, CreditCard, Sparkles, ChevronRight, Loader2, Heart, Star } from "lucide-react";
+import { User, Mail, Phone, Calendar, MapPin, Clock, CreditCard, Sparkles, ChevronRight, Loader2, Heart, Star, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useBookings } from "@/hooks/useBookings";
 import { useItineraries } from "@/hooks/useItineraries";
 import { useFavorites } from "@/hooks/useFavorites";
+import { GrievanceList } from "@/components/grievance/GrievanceComponents";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
