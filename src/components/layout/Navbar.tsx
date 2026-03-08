@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles, AlertTriangle } from "lucide-react";
+import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles, AlertTriangle, Bell } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import SearchWithSuggestions from "@/components/search/SearchWithSuggestions";
+import { useUnreadCount, useNotificationRealtime } from "@/hooks/useNotifications";
 
 const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -16,6 +17,8 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading, signOut, isVendor } = useAuth();
+  const { data: unreadCount } = useUnreadCount();
+  useNotificationRealtime();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -111,7 +114,22 @@ const Navbar = () => {
               <Search className="w-5 h-5" />
             </Button>
 
-            {/* Auth Section */}
+            {/* Notifications Bell */}
+            {user && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/notifications")}
+                className="rounded-full hover:bg-muted relative">
+                <Bell className="w-5 h-5" />
+                {(unreadCount ?? 0) > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                    {unreadCount! > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </Button>
+            )}
+
             {loading ?
             <div className="w-10 h-10 rounded-full bg-muted animate-pulse" /> :
             user ?
@@ -201,6 +219,21 @@ const Navbar = () => {
 
               <Search className="w-5 h-5" />
             </Button>
+
+            {user && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/notifications")}
+                className="rounded-full relative">
+                <Bell className="w-5 h-5" />
+                {(unreadCount ?? 0) > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                    {unreadCount! > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+              </Button>
+            )}
             
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
