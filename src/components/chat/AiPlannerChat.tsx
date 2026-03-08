@@ -326,7 +326,7 @@ export default function AiPlannerChat() {
                 <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                   msg.role === "user" ? "bg-secondary/20" : "bg-primary/20"
                 }`}>
-                  {msg.role === "user" ? <User className="w-3.5 h-3.5 text-secondary" /> : <Bot className="w-3.5 h-3.5 text-primary" />}
+                  {msg.role === "user" ? <User className="w-3.5 h-3.5 text-secondary" /> : <span className="font-heading font-black text-[10px] text-primary-foreground">A</span>}
                 </div>
                 <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
                   msg.role === "user"
