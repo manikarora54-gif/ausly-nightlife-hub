@@ -82,15 +82,8 @@ const EditEvent = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const addImage = () => {
-    if (newImageUrl.trim()) {
-      setForm((prev) => ({ ...prev, images: [...prev.images, newImageUrl.trim()] }));
-      setNewImageUrl("");
-    }
-  };
-
-  const removeImage = (idx: number) => {
-    setForm((prev) => ({ ...prev, images: prev.images.filter((_, i) => i !== idx) }));
+  const handleImagesChange = (images: string[]) => {
+    setForm((prev) => ({ ...prev, images }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
