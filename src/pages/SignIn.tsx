@@ -137,18 +137,21 @@ const SignIn = () => {
           {/* Social proof */}
           <div className="flex items-center gap-6">
             <div className="flex -space-x-3">
-              {[
-                "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face",
-                "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
-                "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&fit=crop&crop=face",
-                "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
-              ].map((src, i) => (
-                <img
+              {["A", "M", "S", "L"].map((letter, i) => (
+                <div
                   key={i}
-                  src={src}
-                  alt=""
-                  className="w-10 h-10 rounded-full border-2 border-background object-cover"
-                />
+                  className="w-10 h-10 rounded-full border-2 border-background flex items-center justify-center text-xs font-bold text-primary-foreground"
+                  style={{
+                    background: [
+                      "linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)))",
+                      "linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--accent)))",
+                      "linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)))",
+                      "linear-gradient(135deg, hsl(var(--brand-cyan)), hsl(var(--primary)))",
+                    ][i],
+                  }}
+                >
+                  {letter}
+                </div>
               ))}
             </div>
             <div>
