@@ -64,21 +64,23 @@ const Discover = () => {
   }, [activeCategory, selectedCity, search, setSearchParams]);
 
   const cityFilter = selectedCity !== "All Cities" ? selectedCity : undefined;
+  const isMoviesCategory = activeCategory === "movies";
 
   const { data: venues = [], isLoading: venuesLoading } = useVenues({
     search: search || undefined,
     city: cityFilter,
   });
 
+  // Don't filter by upcoming for movies — they use scrape date, not a future event date
   const { data: events = [], isLoading: eventsLoading } = useEvents({
     search: search || undefined,
     city: cityFilter,
-    upcoming: true,
+    upcoming: !isMoviesCategory,
   });
 
   const currentCat = CATEGORIES.find(c => c.id === activeCategory) || CATEGORIES[0];
   const isEventsTab = activeCategory === "events";
-  const isMoviesTab = activeCategory === "movies";
+  const isMoviesTab = isMoviesCategory;
 
   /* ─── Build unified items ─── */
   const items = useMemo(() => {
