@@ -82,8 +82,12 @@ const App = () => (
               <Route index element={<VendorDashboard />} />
               <Route path="listings" element={<VendorListings />} />
               <Route path="listings/new" element={<NewListing />} />
+              <Route path="listings/:id/edit" element={<EditListing />} />
               <Route path="bookings" element={<VendorBookings />} />
               <Route path="events" element={<VendorEvents />} />
+              <Route path="events/new" element={<NewEvent />} />
+              <Route path="events/:id/edit" element={<EditEvent />} />
+              <Route path="reviews" element={<VendorReviews />} />
               <Route path="analytics" element={<VendorAnalytics />} />
               <Route path="messages" element={<VendorMessages />} />
               <Route path="settings" element={<VendorSettings />} />
