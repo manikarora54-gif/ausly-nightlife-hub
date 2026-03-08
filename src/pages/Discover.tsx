@@ -70,10 +70,11 @@ const Discover = () => {
     city: cityFilter,
   });
 
+  // Don't filter by upcoming for movies — they use scrape date, not a future event date
   const { data: events = [], isLoading: eventsLoading } = useEvents({
     search: search || undefined,
     city: cityFilter,
-    upcoming: true,
+    upcoming: isMoviesTab ? false : true,
   });
 
   const currentCat = CATEGORIES.find(c => c.id === activeCategory) || CATEGORIES[0];
