@@ -21,12 +21,15 @@ serve(async (req) => {
     const authHeader = req.headers.get("Authorization");
 
     if (authHeader?.startsWith("Bearer ")) {
-      const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
-        global: { headers: { Authorization: authHeader } },
-      });
-      const token = authHeader.replace("Bearer ", "");
-      const { data, error } = await supabaseAuth.auth.getClaims(token);
-      isAuthenticated = !error && !!data?.claims?.sub;
+      try {
+        const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+          global: { headers: { Authorization: authHeader } },
+        });
+        const { data, error } = await supabaseAuth.auth.getUser();
+        isAuthenticated = !error && !!data?.user;
+      } catch (e) {
+        console.error("Auth check failed:", e);
+      }
     }
 
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -37,9 +40,36 @@ serve(async (req) => {
       supabase.from("events").select("slug, name, event_type, start_date, end_date, ticket_price, short_description, images, venues(name, city, address)").eq("is_active", true).gte("start_date", new Date().toISOString()).limit(100),
     ]);
 
-    // Detect if user is asking for a plan/itinerary vs a general question
+    // Detect if user is asking for a plan/itinerary
     const lastUserMsg = messages.filter((m: any) => m.role === "user").pop()?.content?.toLowerCase() || "";
-    const isPlanRequest = /plan|itinerary|night out|evening|what should|recommend|suggest|where should|date night|weekend|tonight|today/i.test(lastUserMsg);
+    const isPlanRequest = /plan|itinerary|night out|evening|what should|recommend|suggest|where should|date night|weekend|tonight|today|best.*for|things to do|activities/i.test(lastUserMsg);
+
+    // Build a clean venue lookup for the AI
+    const venueList = (venues || []).map(v => ({
+      slug: v.slug,
+      name: v.name,
+      type: v.type,
+      cuisine: v.cuisine,
+      city: v.city,
+      address: v.address,
+      price_range: v.price_range,
+      rating: v.average_rating,
+      features: v.features,
+      desc: v.short_description,
+      img: v.images?.[0] || null,
+    }));
+
+    const eventList = (events || []).map(e => ({
+      slug: e.slug,
+      name: e.name,
+      type: e.event_type,
+      date: e.start_date,
+      price: e.ticket_price,
+      desc: e.short_description,
+      img: e.images?.[0] || null,
+      venue: e.venues?.name || null,
+      city: e.venues?.city || null,
+    }));
 
     const systemPrompt = `You are Ausly AI, a friendly nightlife & entertainment planner for Germany.
 
@@ -50,41 +80,40 @@ COMMUNICATION STYLE:
 - Emoji sparingly 🎉
 
 YOUR PROCESS:
-1. Ask 1-2 quick questions: city, vibe, budget (keep it brief, use bullet options)
-2. Once you know enough, call the "generate_itineraries" tool to create 3-5 itinerary options
-3. After tool call, write a SHORT intro like "Here are your plans! 🎉" — the tool output will be rendered as visual cards automatically
+1. If the user gives you a city and any preference, call the "generate_itineraries" tool IMMEDIATELY. Don't ask too many questions.
+2. If you need more info, ask at most 1-2 quick questions with bullet options
+3. After tool call, write ONLY a short intro like "Here are your plans! 🎉" — the tool output renders as visual cards automatically
+4. NEVER write out venue lists, itinerary details, or stop-by-stop plans in text. ALWAYS use the tool for that.
 
-WHEN TO USE THE TOOL:
-- User asks for recommendations, plans, itineraries, or "what should I do"
-- You have enough info (at minimum: a city)
-- Default to the city if user doesn't specify preferences
+CRITICAL RULES FOR TOOL CALLS:
+- ONLY use venue slugs and names that EXACTLY match the data below
+- ONLY use image URLs that EXACTLY come from the venue/event data below — NEVER make up or guess image URLs
+- If a venue has no image (empty images array or null), do NOT include an "image" field for that stop
+- Each stop's "slug" must exactly match a slug from the data
+- Each stop's "name" must exactly match the name from the data
+- estimated_total should be a realistic number based on price_range and stop count
 
-WHEN NOT TO USE THE TOOL:
-- User is asking a general question
-- User is still answering your preference questions
-- User wants info about a specific venue/event
+VENUE DATA (use EXACT slugs, names, and image URLs):
+${JSON.stringify(venueList, null, 0)}
 
-VENUE DATA (use exact slugs):
-${JSON.stringify(venues?.slice(0, 120), null, 0)}
+EVENTS DATA (use EXACT slugs, names, and image URLs):
+${JSON.stringify(eventList, null, 0)}
 
-EVENTS DATA (use exact slugs):
-${JSON.stringify(events?.slice(0, 50), null, 0)}
-
-RULES:
-- Only recommend venues from the data above
+ADDITIONAL RULES:
+- Only recommend venues/events from the data above — NEVER invent venues
 - Each itinerary option should have 3-5 stops
 - Include mix of dining, drinks, entertainment
 - Vary the options: one budget, one premium, one unique/adventurous
 - Use realistic times and travel considerations
-- ALWAYS use real slugs and real image URLs from the venue data
-${isAuthenticated ? "- User is signed in, they can book." : "- User is NOT signed in. Mention they can sign in to save/book."}`;
+- If user asks about a city with no venues in the data, say so honestly
+${isAuthenticated ? "- User is signed in, they can save plans and book." : "- User is NOT signed in. Mention they can sign in to save plans."}`;
 
     const tools = [
       {
         type: "function",
         function: {
           name: "generate_itineraries",
-          description: "Generate 3-5 curated itinerary options for the user's night/day out. Each option is a themed plan with stops at real venues.",
+          description: "Generate 3-5 curated itinerary options for the user's night/day out. Each option is a themed plan with stops at real venues. ALWAYS use this tool when the user wants recommendations or plans — never write plans as text.",
           parameters: {
             type: "object",
             properties: {
@@ -95,9 +124,9 @@ ${isAuthenticated ? "- User is signed in, they can book." : "- User is NOT signe
                 items: {
                   type: "object",
                   properties: {
-                    title: { type: "string", description: "Catchy short title for this option, e.g. 'Budget Bites & Beats' or 'Luxury Date Night'" },
+                    title: { type: "string", description: "Catchy short title, e.g. 'Budget Bites & Beats'" },
                     emoji: { type: "string", description: "Single emoji representing this option" },
-                    vibe: { type: "string", description: "One-word vibe: chill, party, romantic, foodie, cultural, adventurous" },
+                    vibe: { type: "string", enum: ["chill", "party", "romantic", "foodie", "cultural", "adventurous"], description: "Vibe category" },
                     estimated_total: { type: "number", description: "Total estimated cost per person in EUR" },
                     stops: {
                       type: "array",
@@ -105,13 +134,13 @@ ${isAuthenticated ? "- User is signed in, they can book." : "- User is NOT signe
                       items: {
                         type: "object",
                         properties: {
-                          time: { type: "string", description: "Time like '19:00' or '7:00 PM'" },
-                          name: { type: "string", description: "Venue or event name (must match real data)" },
-                          slug: { type: "string", description: "Exact slug from venue/event data" },
-                          type: { type: "string", enum: ["dining", "drinks", "nightlife", "activity", "event"], description: "Type of stop" },
+                          time: { type: "string", description: "Time like '19:00'" },
+                          name: { type: "string", description: "EXACT venue/event name from the data" },
+                          slug: { type: "string", description: "EXACT slug from the data" },
+                          type: { type: "string", enum: ["dining", "drinks", "nightlife", "activity", "event"] },
                           description: { type: "string", description: "1 sentence why this stop is great" },
                           cost_estimate: { type: "string", description: "Cost like '€15-25' or 'Free'" },
-                          image: { type: "string", description: "Image URL from the venue/event data (use first image from images array)" },
+                          image: { type: "string", description: "EXACT image URL from the venue/event data. OMIT this field if no image exists." },
                           tip: { type: "string", description: "Quick insider tip" },
                         },
                         required: ["time", "name", "slug", "type", "description", "cost_estimate"],
@@ -131,21 +160,29 @@ ${isAuthenticated ? "- User is signed in, they can book." : "- User is NOT signe
       },
     ];
 
+    // Build request body — use tool_choice to force tool call when it's clearly a plan request
+    const requestBody: any = {
+      model: "google/gemini-2.5-flash",
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...messages.slice(-10), // Only send last 10 messages to avoid context bloat
+      ],
+      tools,
+      stream: true,
+    };
+
+    // If clearly a plan request and we have venue data, encourage tool use
+    if (isPlanRequest && venueList.length > 0) {
+      requestBody.tool_choice = { type: "function", function: { name: "generate_itineraries" } };
+    }
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        tools,
-        stream: true,
-      }),
+      body: JSON.stringify(requestBody),
     });
 
     if (!response.ok) {
