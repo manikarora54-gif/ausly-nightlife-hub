@@ -65,16 +65,15 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-brand-cyan to-brand-emerald flex items-center justify-center shadow-lg shadow-primary/25 group-hover:shadow-primary/40 transition-shadow duration-300">
-                <MapPin className="w-5 h-5 text-primary-foreground" />
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="relative w-9 h-9 rounded-lg overflow-hidden transition-transform duration-300 group-hover:scale-105">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+              <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
+                <span className="text-base font-heading font-extrabold gradient-text leading-none">A</span>
               </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-brand-emerald border-2 border-background animate-pulse" />
             </div>
-            <span className="text-xl font-bold tracking-tight">
-              <span className="bg-gradient-to-r from-primary via-brand-cyan to-brand-emerald bg-clip-text text-transparent">A</span>
-              <span className="text-foreground">usly</span>
+            <span className="text-xl font-heading font-extrabold tracking-tight">
+              <span className="gradient-text">Ausly</span>
             </span>
           </Link>
 
@@ -207,13 +206,15 @@ const Navbar = () => {
                 <div className="flex flex-col h-full">
                   {/* Mobile Header */}
                   <div className="p-6 border-b border-border">
-                    <Link to="/" className="flex items-center gap-3" onClick={() => setMobileOpen(false)}>
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary via-brand-cyan to-brand-emerald flex items-center justify-center">
-                        <MapPin className="w-5 h-5 text-primary-foreground" />
+                    <Link to="/" className="flex items-center gap-2.5" onClick={() => setMobileOpen(false)}>
+                      <div className="relative w-9 h-9 rounded-lg overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+                        <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
+                          <span className="text-base font-heading font-extrabold gradient-text leading-none">A</span>
+                        </div>
                       </div>
-                      <span className="text-xl font-bold">
-                        <span className="bg-gradient-to-r from-primary to-brand-cyan bg-clip-text text-transparent">A</span>
-                        <span>usly</span>
+                      <span className="text-xl font-heading font-extrabold">
+                        <span className="gradient-text">Ausly</span>
                       </span>
                     </Link>
                   </div>
