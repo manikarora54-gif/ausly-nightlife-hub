@@ -175,7 +175,75 @@ const Profile = () => {
             )}
           </TabsContent>
 
-          {/* Itineraries Tab */}
+          {/* Favorites Tab */}
+          <TabsContent value="favorites" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-heading font-semibold">Your Favorites</h2>
+              <Badge variant="outline">{favorites?.length || 0} saved</Badge>
+            </div>
+            {favoritesLoading ? (
+              <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
+            ) : !favorites?.length ? (
+              <Card className="glass-card">
+                <CardContent className="py-12 text-center">
+                  <Heart className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <h3 className="font-heading font-semibold mb-2">No favorites yet</h3>
+                  <p className="text-sm text-muted-foreground mb-4">Save venues and events you love to find them here later!</p>
+                  <Link to="/discover">
+                    <Button className="rounded-xl">Discover Places</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {favorites.map((fav: any) => {
+                  const item = fav.venues || fav.events;
+                  if (!item) return null;
+                  const isVenue = !!fav.venues;
+                  return (
+                    <Link key={fav.id} to={isVenue ? `/venue/${item.slug}` : `/event/${item.slug}`}>
+                      <Card className="glass-card hover:border-primary/30 transition-colors cursor-pointer">
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 rounded-xl bg-muted overflow-hidden flex-shrink-0">
+                              {item.images?.[0] ? (
+                                <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <Heart className="w-6 h-6 text-muted-foreground" />
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-heading font-semibold truncate">{item.name}</h3>
+                              <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                                <Badge variant="outline" className="text-xs capitalize">
+                                  {isVenue ? item.type : item.event_type}
+                                </Badge>
+                                {isVenue && item.average_rating > 0 && (
+                                  <span className="flex items-center gap-1">
+                                    <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                                    {Number(item.average_rating).toFixed(1)}
+                                  </span>
+                                )}
+                                {isVenue && item.city && (
+                                  <span className="flex items-center gap-1">
+                                    <MapPin className="w-3 h-3" /> {item.city}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
+
           <TabsContent value="itineraries" className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-heading font-semibold">Saved Itineraries</h2>
