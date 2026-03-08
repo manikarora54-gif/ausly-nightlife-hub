@@ -18,8 +18,8 @@ import {
 } from "lucide-react";
 
 const priceLabel = (range: number | null) => {
-  if (!range) return "€";
-  return "€".repeat(range);
+  if (!range) return "Contact venue";
+  return `${"€".repeat(range)} range`;
 };
 
 const venueTypeConfig: Record<string, { icon: typeof Utensils; bookingType: string; cta: string; emoji: string }> = {
