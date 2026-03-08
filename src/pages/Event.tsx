@@ -203,7 +203,7 @@ const EventPage = () => {
                   )}
 
                   {/* Ticket quantity */}
-                  {(spotsLeft === null || spotsLeft > 0) && (
+                  {(spotsLeft === null || spotsLeft > 0) && hasPrice && (
                     <div>
                       <label className="text-xs font-medium text-muted-foreground mb-2 block">Tickets</label>
                       <div className="flex items-center gap-3">
@@ -224,7 +224,7 @@ const EventPage = () => {
                   )}
 
                   {/* Price summary */}
-                  {event.ticket_price && event.ticket_price > 0 && ticketCount > 0 && (
+                  {hasPrice && ticketCount > 0 && (
                     <div className="bg-muted/50 rounded-xl p-3 space-y-1.5 text-sm">
                       <div className="flex justify-between text-muted-foreground">
                         <span>{ticketCount}× €{event.ticket_price}</span>
@@ -239,6 +239,13 @@ const EventPage = () => {
                         <span className="text-primary">€{(totalPrice + 1.5 * ticketCount).toFixed(2)}</span>
                       </div>
                     </div>
+                  )}
+
+                  {/* Cinema pricing note */}
+                  {isMovie && !hasPrice && (
+                    <p className="text-xs text-muted-foreground text-center bg-muted/50 rounded-xl p-3">
+                      Ticket prices vary by cinema and format. Check your local cinema for exact pricing.
+                    </p>
                   )}
                 </div>
 
