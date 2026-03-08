@@ -10,7 +10,11 @@ const DropdownMenuTrigger = DropdownMenuPrimitive.Trigger;
 
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 
-const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
+const DropdownMenuPortal = ({
+  ...props
+}: DropdownMenuPrimitive.DropdownMenuPortalProps) => (
+  <DropdownMenuPrimitive.Portal {...props} />
+);
 
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
 
