@@ -8,6 +8,8 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import RoleProtectedRoute from "@/components/auth/RoleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import AiPlannerChat from "@/components/chat/AiPlannerChat";
+import VendorAssistantChat from "@/components/chat/VendorAssistantChat";
+import { useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Venue from "./pages/Venue";
