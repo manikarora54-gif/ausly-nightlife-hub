@@ -7,12 +7,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Mail, Phone, Calendar, MapPin, Clock, CreditCard, Sparkles, ChevronRight, Loader2, Heart, Star } from "lucide-react";
+import { User, Mail, Phone, Calendar, MapPin, Clock, CreditCard, Sparkles, ChevronRight, Loader2, Heart, Star, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useBookings } from "@/hooks/useBookings";
 import { useItineraries } from "@/hooks/useItineraries";
 import { useFavorites } from "@/hooks/useFavorites";
+import { GrievanceList } from "@/components/grievance/GrievanceComponents";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -98,6 +99,9 @@ const Profile = () => {
             </TabsTrigger>
             <TabsTrigger value="itineraries" className="rounded-lg gap-2">
               <Sparkles className="w-4 h-4" /> Itineraries
+            </TabsTrigger>
+            <TabsTrigger value="grievances" className="rounded-lg gap-2">
+              <AlertTriangle className="w-4 h-4" /> Grievances
             </TabsTrigger>
             <TabsTrigger value="settings" className="rounded-lg gap-2">
               <User className="w-4 h-4" /> Settings
@@ -297,6 +301,11 @@ const Profile = () => {
                 ))}
               </div>
             )}
+          </TabsContent>
+
+          {/* Grievances Tab */}
+          <TabsContent value="grievances" className="space-y-4">
+            <GrievanceList userType="customer" />
           </TabsContent>
 
           {/* Settings Tab */}
