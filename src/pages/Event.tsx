@@ -173,7 +173,7 @@ const EventPage = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Price per ticket</span>
                     <span className="font-heading font-bold text-2xl text-primary">
-                      {event.ticket_price ? `€${event.ticket_price}` : "Free"}
+                      {hasPrice ? `€${event.ticket_price}` : isMovie ? "Check cinema" : "Free"}
                     </span>
                   </div>
 
