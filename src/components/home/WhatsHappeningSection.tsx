@@ -175,7 +175,8 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
                     </p>
                     
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">{item.price}</span>
+                      {item.price && <span className="font-bold text-primary">{item.price}</span>}
+                      {!item.price && <span />}
                       <Button size="sm" variant="neon" className="text-xs">
                         {getCTAText(item.type)}
                       </Button>
