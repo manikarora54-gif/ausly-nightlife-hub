@@ -39,6 +39,7 @@ import AdminRefunds from "./pages/admin/Refunds";
 import AdminSupport from "./pages/admin/Support";
 import AdminContent from "./pages/admin/Content";
 import AdminSettings from "./pages/admin/Settings";
+import AdminGrievances from "./pages/admin/Grievances";
 import VendorLayout from "./components/vendor/VendorLayout";
 import VendorDashboard from "./pages/vendor/Dashboard";
 import VendorListings from "./pages/vendor/Listings";
