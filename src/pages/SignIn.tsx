@@ -85,6 +85,7 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden flex">
+      <SEOHead title="Sign In – Ausly" description="Sign in to your Ausly account to discover restaurants, events, and nightlife across Germany." noindex />
       {/* Ambient background effects */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/8 blur-[120px] animate-float" />

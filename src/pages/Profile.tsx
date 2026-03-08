@@ -74,6 +74,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead title="My Profile – Ausly" description="Manage your Ausly profile, bookings, favorites, and itineraries." noindex />
       <Navbar />
       <main className="container mx-auto px-4 pt-24 pb-12 max-w-4xl">
         {/* Profile Header */}
