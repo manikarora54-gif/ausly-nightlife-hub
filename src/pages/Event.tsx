@@ -11,10 +11,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Progress } from "@/components/ui/progress";
 import {
-  MapPin, Clock, Calendar, Users, Ticket, Share2, ArrowRight, Minus, Plus, Shield,
+  MapPin, Clock, Calendar, Users, Ticket, ArrowRight, Minus, Plus, Shield,
 } from "lucide-react";
 import { format } from "date-fns";
 import SEOHead from "@/components/seo/SEOHead";
+import SocialShareButtons from "@/components/social/SocialShareButtons";
 
 const EventPage = () => {
   const { id } = useParams();
@@ -271,16 +272,9 @@ const EventPage = () => {
                   <span>Booking will be available soon</span>
                 </div>
 
-                <Button
-                  variant="outline"
-                  className="w-full mt-4"
-                  onClick={() => {
-                    if (navigator.share) { navigator.share({ title: event.name, url: window.location.href }); }
-                    else { navigator.clipboard.writeText(window.location.href); toast({ title: "Link copied!" }); }
-                  }}
-                >
-                  <Share2 className="w-4 h-4 mr-2" /> Share Event
-                </Button>
+                <div className="flex justify-center gap-2 mt-4">
+                  <SocialShareButtons title={event.name} description={event.short_description || `Check out ${event.name} on Ausly!`} />
+                </div>
               </div>
             </div>
           </div>

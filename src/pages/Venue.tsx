@@ -13,10 +13,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import ReviewForm from "@/components/venue/ReviewForm";
 import {
-  Star, MapPin, Clock, Phone, Globe, Heart, Share2, Calendar, Users,
+  Star, MapPin, Clock, Phone, Globe, Heart, Calendar, Users,
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
 } from "lucide-react";
 import SEOHead from "@/components/seo/SEOHead";
+import SocialShareButtons from "@/components/social/SocialShareButtons";
 
 const priceLabel = (range: number | null) => {
   if (!range) return "Contact venue";
@@ -322,13 +323,8 @@ const Venue = () => {
                   Reservations will be available soon
                 </p>
 
-                <div className="flex gap-2 mt-4">
-                  <Button variant="outline" className="flex-1" onClick={() => {
-                    if (navigator.share) { navigator.share({ title: venue.name, url: window.location.href }); }
-                    else { navigator.clipboard.writeText(window.location.href); toast({ title: "Link copied!" }); }
-                  }}>
-                    <Share2 className="w-4 h-4 mr-2" /> Share
-                  </Button>
+                <div className="flex justify-center gap-2 mt-4">
+                  <SocialShareButtons title={venue.name} description={venue.short_description || `Check out ${venue.name} on Ausly!`} />
                 </div>
               </div>
 
