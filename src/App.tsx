@@ -21,6 +21,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
+import OurStory from "./pages/OurStory";
 import AdminLayout from "./components/admin/AdminLayout";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
