@@ -111,7 +111,7 @@ const Discover = () => {
           address: (e as any).venues?.name || "",
           rating: null,
           reviewCount: null,
-          price: e.ticket_price ? `€${Number(e.ticket_price).toFixed(0)}` : null,
+          price: e.ticket_price ? `€${Number(e.ticket_price).toFixed(0)}` : "Contact venue",
           image: e.images?.[0],
           featured: e.is_featured,
           date: e.start_date,
