@@ -303,6 +303,11 @@ const Profile = () => {
             )}
           </TabsContent>
 
+          {/* Grievances Tab */}
+          <TabsContent value="grievances" className="space-y-4">
+            <GrievanceList userType="customer" />
+          </TabsContent>
+
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-4">
             <h2 className="text-xl font-heading font-semibold">Profile Settings</h2>
