@@ -75,6 +75,7 @@ const NewEvent = () => {
         ticket_price: form.ticket_price ? Number(form.ticket_price) : null,
         max_capacity: form.max_capacity ? Number(form.max_capacity) : null,
         genre: form.genre || null,
+        images: form.images.length > 0 ? form.images : null,
       });
 
       if (error) throw error;
