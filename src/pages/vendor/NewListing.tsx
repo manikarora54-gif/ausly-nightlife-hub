@@ -218,6 +218,16 @@ const NewListing = () => {
           </CardContent>
         </Card>
 
+        {/* Images */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Images</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ImageUpload images={form.images} onImagesChange={(images) => setForm(prev => ({ ...prev, images }))} />
+          </CardContent>
+        </Card>
+
         {/* Description */}
         <Card>
           <CardHeader>
