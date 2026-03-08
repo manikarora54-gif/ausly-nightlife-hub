@@ -9,6 +9,7 @@ import HowItWorksSection from "@/components/home/HowItWorksSection";
 import WhyAuslySection from "@/components/home/WhyAuslySection";
 import ForBusinessSection from "@/components/home/ForBusinessSection";
 import FinalCTASection from "@/components/home/FinalCTASection";
+import { GradientDivider } from "@/components/decorative/FloatingShapes";
 
 const Index = () => {
   const [selectedCity, setSelectedCity] = useState("Berlin");
@@ -22,11 +23,17 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection selectedCity={selectedCity} onCityChange={setSelectedCity} />
+        <GradientDivider />
         <CategoriesSection selectedCity={selectedCity} />
+        <GradientDivider />
         <WhatsHappeningSection selectedCity={selectedCity} />
+        <GradientDivider />
         <HowItWorksSection />
+        <GradientDivider />
         <WhyAuslySection />
+        <GradientDivider />
         <ForBusinessSection />
+        <GradientDivider />
         <FinalCTASection selectedCity={selectedCity} />
       </main>
       <Footer />

@@ -196,7 +196,20 @@ const Discover = () => {
       <Navbar />
 
       <main className="pt-20 pb-16">
-        <div className="container mx-auto px-4">
+        {/* Decorative hero background for discover */}
+        <div className="absolute top-0 left-0 right-0 h-[400px] overflow-hidden pointer-events-none">
+          <div className="absolute top-[-50%] left-[20%] w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]" />
+          <div className="absolute top-[-30%] right-[10%] w-[400px] h-[400px] rounded-full bg-secondary/5 blur-[120px]" />
+          <div
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: "radial-gradient(hsl(var(--primary) / 0.5) 1px, transparent 1px)",
+              backgroundSize: "30px 30px",
+            }}
+          />
+        </div>
+
+        <div className="container mx-auto px-4 relative">
           <Breadcrumbs
             items={[
               { label: "Home", href: "/" },
