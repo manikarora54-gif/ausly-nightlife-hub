@@ -106,6 +106,7 @@ const App = () => (
               <Route path="support" element={<AdminSupport />} />
               <Route path="content" element={<AdminContent />} />
               <Route path="settings" element={<AdminSettings />} />
+              <Route path="grievances" element={<AdminGrievances />} />
             </Route>
             <Route path="/movies" element={<Movies />} />
             <Route path="/movies/search" element={<MovieSearch />} />
