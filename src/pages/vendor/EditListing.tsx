@@ -45,7 +45,6 @@ const EditListing = () => {
     images: [] as string[],
   });
   const [newFeature, setNewFeature] = useState("");
-  const [newImageUrl, setNewImageUrl] = useState("");
 
   useEffect(() => {
     if (id) fetchVenue();
