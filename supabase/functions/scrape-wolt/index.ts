@@ -37,9 +37,25 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
+    // Accept optional city filter to avoid timeouts
+    let body: any = {};
+    try { body = await req.json(); } catch {}
+    const cityFilter = body?.city as string | undefined;
+
+    const citiesToScrape = cityFilter
+      ? CITIES.filter(c => c.name.toLowerCase() === cityFilter.toLowerCase())
+      : CITIES;
+
+    if (citiesToScrape.length === 0) {
+      return new Response(
+        JSON.stringify({ success: false, error: `City "${cityFilter}" not found` }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const results: any[] = [];
 
-    for (const city of CITIES) {
+    for (const city of citiesToScrape) {
       console.log(`Scraping Wolt restaurants for ${city.name}...`);
 
       // Scrape Wolt restaurant listing page
