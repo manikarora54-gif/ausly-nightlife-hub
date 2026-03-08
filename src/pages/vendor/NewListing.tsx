@@ -15,6 +15,7 @@ import {
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/vendor/ImageUpload";
 
 const venueTypes = [
   "Restaurant",
