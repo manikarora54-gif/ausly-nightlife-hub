@@ -17,7 +17,6 @@ serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Authenticate user via JWT instead of spoofable header
     let isAuthenticated = false;
     const authHeader = req.headers.get("Authorization");
 
@@ -30,74 +29,107 @@ serve(async (req) => {
       isAuthenticated = !error && !!data?.claims?.sub;
     }
 
-    // Use service role only for reading public venue/event data
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const [{ data: venues }, { data: events }] = await Promise.all([
-      supabase.from("venues").select("slug, name, type, cuisine, city, address, price_range, average_rating, features, short_description").eq("is_active", true).limit(200),
-      supabase.from("events").select("slug, name, event_type, start_date, end_date, ticket_price, short_description, venues(name, city)").eq("is_active", true).gte("start_date", new Date().toISOString()).limit(100),
+      supabase.from("venues").select("slug, name, type, cuisine, city, address, price_range, average_rating, features, short_description, images").eq("is_active", true).limit(200),
+      supabase.from("events").select("slug, name, event_type, start_date, end_date, ticket_price, short_description, images, venues(name, city, address)").eq("is_active", true).gte("start_date", new Date().toISOString()).limit(100),
     ]);
 
-    const systemPrompt = `You are Ausly AI, a friendly and enthusiastic nightlife & entertainment planner for cities across Germany. You help people plan their perfect day, evening, or weekend.
-- Warm, fun, and knowledgeable about German nightlife and culture
-- Use emojis sparingly but effectively 🎉
-- Give personalized recommendations based on user preferences
-- Always include estimated costs and time for each activity
+    // Detect if user is asking for a plan/itinerary vs a general question
+    const lastUserMsg = messages.filter((m: any) => m.role === "user").pop()?.content?.toLowerCase() || "";
+    const isPlanRequest = /plan|itinerary|night out|evening|what should|recommend|suggest|where should|date night|weekend|tonight|today/i.test(lastUserMsg);
+
+    const systemPrompt = `You are Ausly AI, a friendly nightlife & entertainment planner for Germany.
+
+COMMUNICATION STYLE:
+- Be CONCISE. Short sentences. No walls of text.
+- Use bullet points, not paragraphs
+- Max 2-3 sentences for descriptions
+- Emoji sparingly 🎉
 
 YOUR PROCESS:
-1. First, ask the user 2-3 quick questions to understand their preferences:
-   - Which city? (Berlin, Munich, Hamburg, Frankfurt, Cologne, Düsseldorf)
-   - What's the occasion? (Date night, friends outing, solo adventure, weekend trip)
-   - What vibe? (Chill, party, foodie, cultural, romantic)
-   - Budget level? (Budget-friendly, moderate, splurge)
-2. Then create a detailed itinerary with:
-   - Timeline with specific times
-   - Venue/restaurant names from the real data below
-   - Estimated cost per person for each stop
-   - Total estimated cost
-   - Pro tips for each venue
-   - Transportation suggestions between venues
+1. Ask 1-2 quick questions: city, vibe, budget (keep it brief, use bullet options)
+2. Once you know enough, call the "generate_itineraries" tool to create 3-5 itinerary options
+3. After tool call, write a SHORT intro like "Here are your plans! 🎉" — the tool output will be rendered as visual cards automatically
 
-INTERACTIVE ACTIONS:
-You MUST include interactive action buttons in your responses to help users navigate and book. Use this exact syntax:
+WHEN TO USE THE TOOL:
+- User asks for recommendations, plans, itineraries, or "what should I do"
+- You have enough info (at minimum: a city)
+- Default to the city if user doesn't specify preferences
 
-- To link to a venue page: {{ACTION:VENUE:venue-slug:View Venue Name}}
-- To link to an event page: {{ACTION:EVENT:event-slug:View Event Name}}
-- To start a booking for a venue: {{ACTION:BOOK_VENUE:venue-slug:venue-name:Book Now}}
-- To start a booking for an event: {{ACTION:BOOK_EVENT:event-slug:event-name:Book Tickets}}
-- To explore a category: {{ACTION:DISCOVER:type:Browse Category}}
-- To open the map: {{ACTION:MAP:::Open Map}}
-- To explore a city: {{ACTION:CITY:city-name:Explore City}}
+WHEN NOT TO USE THE TOOL:
+- User is asking a general question
+- User is still answering your preference questions
+- User wants info about a specific venue/event
 
-ALWAYS include at least one action button per venue or event you mention. Place them right after describing each venue/event. Example:
+VENUE DATA (use exact slugs):
+${JSON.stringify(venues?.slice(0, 120), null, 0)}
 
-**7:00 PM - Dinner at Bella Italia** 🍝
-Amazing Italian restaurant in Mitte with handmade pasta.
-*Estimated: €25-35 per person*
-{{ACTION:VENUE:bella-italia:View Bella Italia}} {{ACTION:BOOK_VENUE:bella-italia:Bella Italia:Reserve a Table}}
-
-REAL VENUE DATA (IMPORTANT: each venue has a "slug" field - you MUST use the exact slug value from the data for action buttons):
-${JSON.stringify(venues?.slice(0, 100), null, 0)}
-
-UPCOMING EVENTS (IMPORTANT: each event has a "slug" field - you MUST use the exact slug value from the data for action buttons):
+EVENTS DATA (use exact slugs):
 ${JSON.stringify(events?.slice(0, 50), null, 0)}
 
-IMPORTANT RULES:
-- Only recommend venues and events from the data above
-- If a city has limited data, acknowledge it and suggest what's available
-- Always format itineraries clearly with times, venues, and costs
-- Include a mix of dining, drinks, and entertainment
-- Consider opening hours and realistic travel times
-- Use markdown formatting for readability
-- ALWAYS include action buttons for every venue and event mentioned
+RULES:
+- Only recommend venues from the data above
+- Each itinerary option should have 3-5 stops
+- Include mix of dining, drinks, entertainment
+- Vary the options: one budget, one premium, one unique/adventurous
+- Use realistic times and travel considerations
+- ALWAYS use real slugs and real image URLs from the venue data
+${isAuthenticated ? "- User is signed in, they can book." : "- User is NOT signed in. Mention they can sign in to save/book."}`;
 
-AUTHENTICATION RULES:
-${isAuthenticated ? `- The user IS signed in. You can offer booking actions freely using {{ACTION:BOOK_VENUE:...}} and {{ACTION:BOOK_EVENT:...}} buttons.` : `- The user is NOT signed in. They can browse and discover venues/events, but CANNOT book.
-- When they ask to book or reserve anything, kindly tell them they need to sign in or create an account first.
-- Include a sign-in button: {{ACTION:SIGNIN:::Sign In}} or sign-up button: {{ACTION:SIGNUP:::Create Account}}
-- Do NOT include any BOOK_VENUE or BOOK_EVENT action buttons for unauthenticated users.
-- You can still show VENUE and EVENT view buttons so they can explore.`}`;
+    const tools = [
+      {
+        type: "function",
+        function: {
+          name: "generate_itineraries",
+          description: "Generate 3-5 curated itinerary options for the user's night/day out. Each option is a themed plan with stops at real venues.",
+          parameters: {
+            type: "object",
+            properties: {
+              city: { type: "string", description: "The city for the itineraries" },
+              itineraries: {
+                type: "array",
+                description: "3-5 different itinerary options",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string", description: "Catchy short title for this option, e.g. 'Budget Bites & Beats' or 'Luxury Date Night'" },
+                    emoji: { type: "string", description: "Single emoji representing this option" },
+                    vibe: { type: "string", description: "One-word vibe: chill, party, romantic, foodie, cultural, adventurous" },
+                    estimated_total: { type: "number", description: "Total estimated cost per person in EUR" },
+                    stops: {
+                      type: "array",
+                      description: "3-5 stops in chronological order",
+                      items: {
+                        type: "object",
+                        properties: {
+                          time: { type: "string", description: "Time like '19:00' or '7:00 PM'" },
+                          name: { type: "string", description: "Venue or event name (must match real data)" },
+                          slug: { type: "string", description: "Exact slug from venue/event data" },
+                          type: { type: "string", enum: ["dining", "drinks", "nightlife", "activity", "event"], description: "Type of stop" },
+                          description: { type: "string", description: "1 sentence why this stop is great" },
+                          cost_estimate: { type: "string", description: "Cost like '€15-25' or 'Free'" },
+                          image: { type: "string", description: "Image URL from the venue/event data (use first image from images array)" },
+                          tip: { type: "string", description: "Quick insider tip" },
+                        },
+                        required: ["time", "name", "slug", "type", "description", "cost_estimate"],
+                        additionalProperties: false,
+                      },
+                    },
+                  },
+                  required: ["title", "emoji", "vibe", "estimated_total", "stops"],
+                  additionalProperties: false,
+                },
+              },
+            },
+            required: ["city", "itineraries"],
+            additionalProperties: false,
+          },
+        },
+      },
+    ];
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -111,6 +143,7 @@ ${isAuthenticated ? `- The user IS signed in. You can offer booking actions free
           { role: "system", content: systemPrompt },
           ...messages,
         ],
+        tools,
         stream: true,
       }),
     });
