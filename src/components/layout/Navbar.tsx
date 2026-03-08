@@ -30,8 +30,8 @@ const Navbar = () => {
   { href: "/discover?type=bars", label: "Bars & Clubs", icon: "🍸" },
   { href: "/discover?type=events", label: "Events", icon: "🎉" },
   { href: "/discover?type=experiences", label: "Experiences", icon: "✨" },
-  { href: "/map", label: "Map", icon: "📍" },
-  { href: "/movies", label: "Movies", icon: "🎬" }];
+  { href: "/movies", label: "Movies", icon: "🎬" },
+  { href: "/map", label: "Map", icon: "📍" }];
 
 
   const isActiveLink = (path: string) => {
