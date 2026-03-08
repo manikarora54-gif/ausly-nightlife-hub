@@ -8,9 +8,10 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { ArrowLeft, Loader2, Trash2, ImagePlus } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/vendor/ImageUpload";
 
 const eventTypes = ["concert", "party", "festival", "exhibition", "comedy", "theater", "sport", "workshop", "other"];
 
