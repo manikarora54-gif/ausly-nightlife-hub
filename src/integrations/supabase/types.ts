@@ -355,6 +355,56 @@ export type Database = {
         }
         Relationships: []
       }
+      menu_items: {
+        Row: {
+          category: string | null
+          created_at: string
+          currency: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          is_available: boolean | null
+          name: string
+          price: number | null
+          updated_at: string
+          venue_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean | null
+          name: string
+          price?: number | null
+          updated_at?: string
+          venue_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          currency?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          is_available?: boolean | null
+          name?: string
+          price?: number | null
+          updated_at?: string
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_items_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
