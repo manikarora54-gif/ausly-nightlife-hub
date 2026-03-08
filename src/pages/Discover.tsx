@@ -9,11 +9,14 @@ import { Badge } from "@/components/ui/badge";
 import {
   Search, MapPin, Star, Grid3X3, List, Loader2, SlidersHorizontal,
   Utensils, Wine, Music, Ticket, Film, PartyPopper, X, ChevronDown,
-  ArrowUpDown, Clock, TrendingUp, Sparkles, Compass,
+  ArrowUpDown, Clock, TrendingUp, Sparkles, Compass, Heart,
 } from "lucide-react";
 import { useVenues } from "@/hooks/useVenues";
 import { useEvents } from "@/hooks/useEvents";
+import { useToggleFavorite, useFavorites } from "@/hooks/useFavorites";
+import { useAuth } from "@/hooks/useAuth";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
