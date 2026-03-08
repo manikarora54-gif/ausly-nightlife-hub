@@ -21,16 +21,8 @@ const getIcon = (type: string) => {
   }
 };
 
-const getCTAText = (type: string) => {
-  switch (type) {
-    case "restaurant":
-    case "cafe":
-      return "Reserve table";
-    case "cinema":
-      return "Get tickets";
-    default:
-      return "Book now";
-  }
+const getCTAText = () => {
+  return "View details";
 };
 
 interface WhatsHappeningSectionProps {
@@ -178,7 +170,7 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
                       {item.price && <span className="font-bold text-primary">{item.price}</span>}
                       {!item.price && <span />}
                       <Button size="sm" variant="neon" className="text-xs">
-                        {getCTAText(item.type)}
+                        {getCTAText()}
                       </Button>
                     </div>
                   </div>

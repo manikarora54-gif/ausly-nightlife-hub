@@ -149,8 +149,8 @@ const Movie = () => {
                           <p className="font-bold">{showtime.time}</p>
                           <p className="text-sm text-muted-foreground">€{showtime.price}</p>
                         </div>
-                        <Button onClick={() => navigate(`/booking/${showtime.id}`)}>
-                          Book
+                        <Button disabled>
+                          Coming Soon
                         </Button>
                       </div>
                     </CardContent>
