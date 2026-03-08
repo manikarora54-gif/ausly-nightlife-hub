@@ -1,129 +1,200 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { 
-  MessageSquare, 
-  Send, 
+import { Input } from "@/components/ui/input";
+import {
+  MessageSquare,
+  Send,
   Search,
   User,
-  Clock
+  Clock,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
-interface Conversation {
+interface ConversationRow {
   id: string;
-  customerName: string;
-  lastMessage: string;
-  lastMessageTime: string;
-  unreadCount: number;
-  bookingRef?: string;
+  venue_id: string | null;
+  customer_id: string;
+  vendor_id: string;
+  booking_id: string | null;
+  last_message_at: string;
+  created_at: string;
 }
 
-interface Message {
+interface MessageRow {
   id: string;
-  message: string;
-  isFromVendor: boolean;
-  createdAt: string;
+  conversation_id: string;
+  sender_id: string;
+  content: string;
+  is_read: boolean;
+  created_at: string;
 }
 
 const VendorMessages = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [conversations, setConversations] = useState<ConversationRow[]>([]);
+  const [selectedConv, setSelectedConv] = useState<ConversationRow | null>(null);
+  const [messages, setMessages] = useState<MessageRow[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
+  const [customerNames, setCustomerNames] = useState<Record<string, string>>({});
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>({});
+  const [lastMessages, setLastMessages] = useState<Record<string, string>>({});
+  const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Load conversations
   useEffect(() => {
-    // Mock conversations for demo since vendor_messages table may not exist yet
-    const mockConversations: Conversation[] = [
-      {
-        id: "1",
-        customerName: "Max Müller",
-        lastMessage: "Is it possible to add a birthday cake to our reservation?",
-        lastMessageTime: "2 hours ago",
-        unreadCount: 2,
-        bookingRef: "AUS-ABC123",
-      },
-      {
-        id: "2",
-        customerName: "Anna Schmidt",
-        lastMessage: "Thank you for the quick response!",
-        lastMessageTime: "5 hours ago",
-        unreadCount: 0,
-        bookingRef: "AUS-DEF456",
-      },
-      {
-        id: "3",
-        customerName: "Thomas Weber",
-        lastMessage: "Can we change our reservation to 8pm instead?",
-        lastMessageTime: "1 day ago",
-        unreadCount: 1,
-      },
-    ];
+    if (!user) return;
+    const load = async () => {
+      const { data, error } = await supabase
+        .from("conversations")
+        .select("*")
+        .eq("vendor_id", user.id)
+        .order("last_message_at", { ascending: false });
 
-    setConversations(mockConversations);
-    setLoading(false);
-  }, []);
+      if (error) {
+        console.error("Error loading conversations:", error);
+        setLoading(false);
+        return;
+      }
 
-  const loadMessages = (conversation: Conversation) => {
-    setSelectedConversation(conversation);
-    
-    // Mock messages
-    const mockMessages: Message[] = [
-      {
-        id: "1",
-        message: "Hello! I have a question about my upcoming reservation.",
-        isFromVendor: false,
-        createdAt: "2 hours ago",
-      },
-      {
-        id: "2",
-        message: "Hi! Of course, how can I help you?",
-        isFromVendor: true,
-        createdAt: "2 hours ago",
-      },
-      {
-        id: "3",
-        message: conversation.lastMessage,
-        isFromVendor: false,
-        createdAt: conversation.lastMessageTime,
-      },
-    ];
+      const convs = (data || []) as ConversationRow[];
+      setConversations(convs);
 
-    setMessages(mockMessages);
-  };
+      // Load customer names
+      const customerIds = [...new Set(convs.map((c) => c.customer_id))];
+      if (customerIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("id, display_name, email")
+          .in("id", customerIds);
 
-  const sendMessage = () => {
-    if (!newMessage.trim() || !selectedConversation) return;
+        const names: Record<string, string> = {};
+        (profiles || []).forEach((p: any) => {
+          names[p.id] = p.display_name || p.email || "Customer";
+        });
+        setCustomerNames(names);
+      }
 
-    const message: Message = {
-      id: Date.now().toString(),
-      message: newMessage,
-      isFromVendor: true,
-      createdAt: "Just now",
+      // Load unread counts & last messages
+      const counts: Record<string, number> = {};
+      const lasts: Record<string, string> = {};
+      for (const conv of convs) {
+        const { count } = await supabase
+          .from("messages")
+          .select("*", { count: "exact", head: true })
+          .eq("conversation_id", conv.id)
+          .eq("is_read", false)
+          .neq("sender_id", user.id);
+        counts[conv.id] = count || 0;
+
+        const { data: lastMsg } = await supabase
+          .from("messages")
+          .select("content")
+          .eq("conversation_id", conv.id)
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        lasts[conv.id] = (lastMsg as any)?.content || "No messages yet";
+      }
+      setUnreadCounts(counts);
+      setLastMessages(lasts);
+      setLoading(false);
     };
+    load();
+  }, [user]);
 
-    setMessages([...messages, message]);
+  // Load messages for selected conversation
+  useEffect(() => {
+    if (!selectedConv) return;
+    const load = async () => {
+      const { data } = await supabase
+        .from("messages")
+        .select("*")
+        .eq("conversation_id", selectedConv.id)
+        .order("created_at", { ascending: true });
+      setMessages((data || []) as MessageRow[]);
+
+      // Mark as read
+      await supabase
+        .from("messages")
+        .update({ is_read: true })
+        .eq("conversation_id", selectedConv.id)
+        .neq("sender_id", user?.id || "");
+
+      setUnreadCounts((prev) => ({ ...prev, [selectedConv.id]: 0 }));
+    };
+    load();
+  }, [selectedConv, user]);
+
+  // Realtime subscription
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel("vendor-messages")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
+        const msg = payload.new as MessageRow;
+        if (selectedConv && msg.conversation_id === selectedConv.id) {
+          setMessages((prev) => [...prev, msg]);
+          // Mark as read immediately
+          if (msg.sender_id !== user.id) {
+            supabase.from("messages").update({ is_read: true }).eq("id", msg.id);
+          }
+        } else {
+          // Update unread count
+          setUnreadCounts((prev) => ({
+            ...prev,
+            [msg.conversation_id]: (prev[msg.conversation_id] || 0) + 1,
+          }));
+        }
+        setLastMessages((prev) => ({ ...prev, [msg.conversation_id]: msg.content }));
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [user, selectedConv]);
+
+  // Auto-scroll
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !selectedConv || !user) return;
+    const content = newMessage.trim();
     setNewMessage("");
 
-    toast({
-      title: "Message sent",
-      description: "Your message has been sent successfully.",
+    const { error } = await supabase.from("messages").insert({
+      conversation_id: selectedConv.id,
+      sender_id: user.id,
+      content,
     });
+
+    if (error) {
+      toast({ title: "Failed to send", description: error.message, variant: "destructive" });
+      return;
+    }
+
+    // Update conversation last_message_at
+    await supabase
+      .from("conversations")
+      .update({ last_message_at: new Date().toISOString() })
+      .eq("id", selectedConv.id);
   };
 
-  const filteredConversations = conversations.filter(conv =>
-    conv.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    conv.bookingRef?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredConversations = conversations.filter((conv) => {
+    const name = customerNames[conv.customer_id] || "";
+    return name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   if (loading) {
     return (
@@ -135,12 +206,9 @@ const VendorMessages = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-heading font-bold">Messages</h1>
-        <p className="text-muted-foreground mt-1">
-          Communicate with your customers
-        </p>
+        <p className="text-muted-foreground mt-1">Communicate with your customers</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-250px)] min-h-[500px]">
@@ -163,7 +231,7 @@ const VendorMessages = () => {
                 <div className="flex flex-col items-center justify-center py-12 px-4">
                   <MessageSquare className="w-12 h-12 text-muted-foreground mb-3" />
                   <p className="text-muted-foreground text-center">
-                    No conversations yet
+                    {conversations.length === 0 ? "No conversations yet. Messages from customers will appear here." : "No matching conversations"}
                   </p>
                 </div>
               ) : (
@@ -171,10 +239,10 @@ const VendorMessages = () => {
                   {filteredConversations.map((conv) => (
                     <button
                       key={conv.id}
-                      onClick={() => loadMessages(conv)}
+                      onClick={() => setSelectedConv(conv)}
                       className={cn(
                         "w-full text-left p-4 hover:bg-muted/50 transition-colors",
-                        selectedConversation?.id === conv.id && "bg-muted/50"
+                        selectedConv?.id === conv.id && "bg-muted/50"
                       )}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -184,25 +252,24 @@ const VendorMessages = () => {
                           </div>
                           <div className="min-w-0">
                             <div className="flex items-center gap-2">
-                              <p className="font-medium truncate">{conv.customerName}</p>
-                              {conv.unreadCount > 0 && (
+                              <p className="font-medium truncate">
+                                {customerNames[conv.customer_id] || "Customer"}
+                              </p>
+                              {(unreadCounts[conv.id] || 0) > 0 && (
                                 <Badge className="bg-secondary text-secondary-foreground h-5 min-w-5 flex items-center justify-center">
-                                  {conv.unreadCount}
+                                  {unreadCounts[conv.id]}
                                 </Badge>
                               )}
                             </div>
-                            {conv.bookingRef && (
-                              <p className="text-xs text-primary">{conv.bookingRef}</p>
-                            )}
                             <p className="text-sm text-muted-foreground truncate mt-1">
-                              {conv.lastMessage}
+                              {lastMessages[conv.id] || "No messages yet"}
                             </p>
                           </div>
                         </div>
                       </div>
                       <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
-                        {conv.lastMessageTime}
+                        {format(new Date(conv.last_message_at), "MMM d, HH:mm")}
                       </p>
                     </button>
                   ))}
@@ -214,7 +281,7 @@ const VendorMessages = () => {
 
         {/* Message Thread */}
         <Card className="glass-card lg:col-span-2 flex flex-col">
-          {selectedConversation ? (
+          {selectedConv ? (
             <>
               <CardHeader className="border-b border-border/50">
                 <div className="flex items-center gap-3">
@@ -222,43 +289,45 @@ const VendorMessages = () => {
                     <User className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg">{selectedConversation.customerName}</CardTitle>
-                    {selectedConversation.bookingRef && (
-                      <p className="text-sm text-primary">{selectedConversation.bookingRef}</p>
-                    )}
+                    <CardTitle className="text-lg">
+                      {customerNames[selectedConv.customer_id] || "Customer"}
+                    </CardTitle>
                   </div>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="flex-1 p-4 overflow-hidden">
                 <ScrollArea className="h-[calc(100vh-480px)] min-h-[300px]">
                   <div className="space-y-4">
+                    {messages.length === 0 && (
+                      <p className="text-center text-muted-foreground py-8">No messages yet. Start the conversation!</p>
+                    )}
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
-                        className={cn(
-                          "flex",
-                          msg.isFromVendor ? "justify-end" : "justify-start"
-                        )}
+                        className={cn("flex", msg.sender_id === user?.id ? "justify-end" : "justify-start")}
                       >
                         <div
                           className={cn(
                             "max-w-[70%] rounded-lg p-3",
-                            msg.isFromVendor
+                            msg.sender_id === user?.id
                               ? "bg-primary text-primary-foreground"
                               : "bg-muted"
                           )}
                         >
-                          <p className="text-sm">{msg.message}</p>
-                          <p className={cn(
-                            "text-xs mt-1",
-                            msg.isFromVendor ? "text-primary-foreground/70" : "text-muted-foreground"
-                          )}>
-                            {msg.createdAt}
+                          <p className="text-sm">{msg.content}</p>
+                          <p
+                            className={cn(
+                              "text-xs mt-1",
+                              msg.sender_id === user?.id ? "text-primary-foreground/70" : "text-muted-foreground"
+                            )}
+                          >
+                            {format(new Date(msg.created_at), "HH:mm")}
                           </p>
                         </div>
                       </div>
                     ))}
+                    <div ref={scrollRef} />
                   </div>
                 </ScrollArea>
               </CardContent>
@@ -278,10 +347,7 @@ const VendorMessages = () => {
                       }
                     }}
                   />
-                  <Button 
-                    onClick={sendMessage}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90"
-                  >
+                  <Button onClick={sendMessage} className="bg-primary text-primary-foreground hover:bg-primary/90">
                     <Send className="w-4 h-4" />
                   </Button>
                 </div>
