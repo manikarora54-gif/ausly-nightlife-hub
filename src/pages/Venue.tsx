@@ -11,6 +11,7 @@ import { useVenueReviews } from "@/hooks/useReviews";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import ReviewForm from "@/components/venue/ReviewForm";
 import {
   Star, MapPin, Clock, Phone, Globe, Heart, Share2, Calendar, Users,
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
@@ -210,8 +211,11 @@ const Venue = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-sm">No reviews yet.</p>
+                  <p className="text-muted-foreground text-sm">No reviews yet. Be the first!</p>
                 )}
+                <div className="mt-6">
+                  <ReviewForm venueId={venue.id} />
+                </div>
               </div>
             </div>
 
