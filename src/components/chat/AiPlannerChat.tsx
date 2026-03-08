@@ -356,8 +356,11 @@ export default function AiPlannerChat() {
         {messages.length === 0 ? (
           <div className="space-y-3">
             <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                <span className="font-heading font-black text-[10px] text-primary-foreground">A</span>
+              <div className="relative w-7 h-7 rounded-lg overflow-hidden shrink-0 mt-0.5">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+                <div className="absolute inset-[1.5px] rounded-[5px] bg-background flex items-center justify-center">
+                  <span className="text-[10px] font-heading font-extrabold gradient-text leading-none">A</span>
+                </div>
               </div>
               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
                 <p className="mb-1">Hey! 👋 I'll create <strong>visual itinerary cards</strong> with venues you can tap to explore.</p>
