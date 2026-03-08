@@ -31,6 +31,7 @@ import MovieSearch from "./pages/MovieSearch";
 import Cinemas from "./pages/Cinemas";
 import Profile from "./pages/Profile";
 import Itinerary from "./pages/Itinerary";
+import CustomerGrievances from "./pages/Grievances";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminBookings from "./pages/admin/Bookings";
 import AdminPayments from "./pages/admin/Payments";
