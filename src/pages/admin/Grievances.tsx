@@ -69,7 +69,7 @@ const AdminGrievances = () => {
   });
 
   // Fetch submitter profiles
-  const submitterIds = [...new Set(grievances.map((g: any) => g.user_id))];
+  const submitterIds = [...new Set(grievances.map((g: any) => g.user_id))] as string[];
   const { data: profiles = [] } = useQuery({
     queryKey: ["grievance-profiles", submitterIds.join(",")],
     queryFn: async () => {
