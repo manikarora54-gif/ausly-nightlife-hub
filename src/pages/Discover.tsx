@@ -64,6 +64,7 @@ const Discover = () => {
   }, [activeCategory, selectedCity, search, setSearchParams]);
 
   const cityFilter = selectedCity !== "All Cities" ? selectedCity : undefined;
+  const isMoviesCategory = activeCategory === "movies";
 
   const { data: venues = [], isLoading: venuesLoading } = useVenues({
     search: search || undefined,
@@ -74,12 +75,12 @@ const Discover = () => {
   const { data: events = [], isLoading: eventsLoading } = useEvents({
     search: search || undefined,
     city: cityFilter,
-    upcoming: isMoviesTab ? false : true,
+    upcoming: !isMoviesCategory,
   });
 
   const currentCat = CATEGORIES.find(c => c.id === activeCategory) || CATEGORIES[0];
   const isEventsTab = activeCategory === "events";
-  const isMoviesTab = activeCategory === "movies";
+  const isMoviesTab = isMoviesCategory;
 
   /* ─── Build unified items ─── */
   const items = useMemo(() => {
