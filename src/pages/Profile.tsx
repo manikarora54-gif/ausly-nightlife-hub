@@ -22,6 +22,7 @@ const Profile = () => {
   const { data: profile, isLoading: profileLoading } = useProfile();
   const { data: bookings, isLoading: bookingsLoading } = useBookings();
   const { data: itineraries, isLoading: itinerariesLoading } = useItineraries();
+  const { data: favorites, isLoading: favoritesLoading } = useFavorites();
   const { toast } = useToast();
   const navigate = useNavigate();
   const defaultTab = searchParams.get("tab") || "bookings";
