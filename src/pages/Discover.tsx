@@ -157,7 +157,7 @@ const Discover = () => {
         address: v.address,
         rating: v.average_rating,
         reviewCount: v.review_count,
-        price: v.price_range ? "€".repeat(v.price_range) : null,
+        price: v.price_range ? `${"€".repeat(v.price_range)} range` : "Contact venue",
         image: v.images?.[0],
         featured: v.is_featured,
         date: null,
