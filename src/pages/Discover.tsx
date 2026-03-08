@@ -111,12 +111,14 @@ const Discover = () => {
           address: (e as any).venues?.name || "",
           rating: null,
           reviewCount: null,
-          price: e.ticket_price ? `€${e.ticket_price}` : null,
+          price: e.ticket_price ? `€${Number(e.ticket_price).toFixed(0)}` : null,
           image: e.images?.[0],
           featured: e.is_featured,
           date: e.start_date,
+          time: e.start_date ? format(new Date(e.start_date), "h:mm a") : null,
           link: `/event/${e.slug}`,
           genre: e.genre,
+          entityType: "event" as const,
         }));
     } else if (isMoviesTab) {
       results = events
@@ -131,12 +133,14 @@ const Discover = () => {
           address: "",
           rating: null,
           reviewCount: null,
-          price: null,
+          price: e.ticket_price ? `€${Number(e.ticket_price).toFixed(0)}` : null,
           image: e.images?.[0],
           featured: e.is_featured,
           date: e.start_date,
+          time: e.start_date ? format(new Date(e.start_date), "h:mm a") : null,
           link: `/event/${e.slug}`,
           genre: e.genre,
+          entityType: "event" as const,
         }));
     } else {
       const filtered = activeCategory === "all"
@@ -157,8 +161,10 @@ const Discover = () => {
         image: v.images?.[0],
         featured: v.is_featured,
         date: null,
+        time: null,
         link: `/venue/${v.slug}`,
         features: v.features,
+        entityType: "venue" as const,
       }));
     }
 
