@@ -26,6 +26,57 @@ const getCTAText = () => {
   return "View details";
 };
 
+const fallbackImagesByType: Record<string, string[]> = {
+  event: [
+    "https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&h=500&fit=crop",
+  ],
+  restaurant: [
+    "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=800&h=500&fit=crop",
+  ],
+  bar: [
+    "https://images.unsplash.com/photo-1525268323446-0505b6fe7778?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1571613316887-6f8d5cbf7ef7?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=500&fit=crop",
+  ],
+  club: [
+    "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&h=500&fit=crop",
+  ],
+  live_music: [
+    "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1506157786151-b8491531f063?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=500&fit=crop",
+  ],
+  cinema: [
+    "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1595769816263-9b910be24d5f?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&h=500&fit=crop",
+  ],
+  cafe: [
+    "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=500&fit=crop",
+    "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=500&fit=crop",
+  ],
+};
+
+const getFallbackImage = (type: string, seed = 0) => {
+  const normalizedType = type?.toLowerCase() ?? "event";
+  const pool = fallbackImagesByType[normalizedType] || fallbackImagesByType.event;
+  return pool[seed % pool.length];
+};
+
 interface WhatsHappeningSectionProps {
   selectedCity: string;
 }
