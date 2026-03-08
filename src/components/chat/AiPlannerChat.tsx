@@ -400,11 +400,18 @@ export default function AiPlannerChat() {
           <>
             {messages.map((msg, i) => (
               <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                  msg.role === "user" ? "bg-secondary/20" : "bg-gradient-to-br from-primary to-secondary rounded-lg shadow-sm"
-                }`}>
-                  {msg.role === "user" ? <User className="w-3 h-3 text-secondary" /> : <span className="font-heading font-black text-[9px] text-primary-foreground">A</span>}
-                </div>
+                {msg.role === "user" ? (
+                  <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-3 h-3 text-secondary" />
+                  </div>
+                ) : (
+                  <div className="relative w-6 h-6 rounded-md overflow-hidden shrink-0 mt-0.5">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+                    <div className="absolute inset-[1.5px] rounded-[3px] bg-background flex items-center justify-center">
+                      <span className="text-[8px] font-heading font-extrabold gradient-text leading-none">A</span>
+                    </div>
+                  </div>
+                )}
                 <div className={`max-w-[90%] ${msg.role === "user" ? "" : ""}`}>
                   {msg.role === "user" ? (
                     <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm p-2.5 text-sm">
