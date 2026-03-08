@@ -371,7 +371,12 @@ const Discover = () => {
                 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                 : "grid-cols-1"
             }`}>
-              {items.map((item, i) => (
+              {items.map((item, i) => {
+                const isFaved = item.entityType === "venue"
+                  ? favoriteVenueIds.has(item.id)
+                  : favoriteEventIds.has(item.id);
+
+                return (
                 <Link
                   key={item.id}
                   to={item.link}
@@ -412,11 +417,34 @@ const Discover = () => {
                       )}
                     </div>
 
-                    {item.price && (
-                      <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-bold bg-background/80 backdrop-blur-sm text-foreground">
-                        {item.price}
-                      </span>
-                    )}
+                    {/* Top-right: Price + Fav */}
+                    <div className="absolute top-3 right-3 flex items-center gap-2">
+                      {item.price && (
+                        <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-background/80 backdrop-blur-sm text-foreground">
+                          {item.price}
+                        </span>
+                      )}
+                      {user && (
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            toggleFavorite.mutate(
+                              { venueId: item.entityType === "venue" ? item.id : undefined, eventId: item.entityType === "event" ? item.id : undefined },
+                              {
+                                onSuccess: (res) => {
+                                  toast({ title: res.action === "added" ? "Added to favorites ❤️" : "Removed from favorites" });
+                                },
+                              }
+                            );
+                          }}
+                          className="w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center hover:bg-background transition-colors"
+                          aria-label={isFaved ? "Remove from favorites" : "Add to favorites"}
+                        >
+                          <Heart className={`w-4 h-4 transition-colors ${isFaved ? "fill-destructive text-destructive" : "text-muted-foreground hover:text-destructive"}`} />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Content */}
@@ -427,13 +455,22 @@ const Discover = () => {
                       </h3>
                       {item.rating && (
                         <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted text-sm flex-shrink-0">
-                          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                          <Star className="w-3 h-3 fill-primary text-primary" />
                           <span className="font-medium">{Number(item.rating).toFixed(1)}</span>
                         </div>
                       )}
                     </div>
 
                     <p className="text-sm text-muted-foreground mb-2">{item.subtitle}</p>
+
+                    {/* Time for events */}
+                    {item.time && (
+                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                        <Clock className="w-3 h-3" />
+                        <span>{item.time}</span>
+                        {item.date && <span>· {format(new Date(item.date), "EEE, MMM d")}</span>}
+                      </div>
+                    )}
 
                     {item.location && (
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-auto pt-2">
@@ -457,7 +494,8 @@ const Discover = () => {
                     )}
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
