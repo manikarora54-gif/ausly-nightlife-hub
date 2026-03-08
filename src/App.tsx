@@ -53,6 +53,7 @@ import VendorReviews from "./pages/vendor/Reviews";
 import VendorAnalytics from "./pages/vendor/Analytics";
 import VendorMessages from "./pages/vendor/Messages";
 import VendorSettings from "./pages/vendor/Settings";
+import VendorGrievances from "./pages/vendor/Grievances";
 
 const queryClient = new QueryClient();
 
