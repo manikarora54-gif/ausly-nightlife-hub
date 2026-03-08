@@ -206,10 +206,10 @@ function saveChatHistory(messages: Msg[]) {
 }
 
 const quickStarters = [
-  "Plan my night out in Berlin 🌃",
-  "Date night in Munich under €50 💕",
-  "Best weekend plan for Hamburg 🎉",
-  "Chill evening in Frankfurt 🍷",
+  "Plan my night out in Berlin! 🌃",
+  "Cheap date night in Munich? 💕",
+  "What's happening this weekend? 🎉",
+  "Something unique in Frankfurt 🍷",
 ];
 
 export default function AiPlannerChat() {
