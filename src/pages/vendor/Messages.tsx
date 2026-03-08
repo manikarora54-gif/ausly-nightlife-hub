@@ -147,7 +147,7 @@ const VendorMessages = () => {
           setMessages((prev) => [...prev, msg]);
           // Mark as read immediately
           if (msg.sender_id !== user.id) {
-            supabase.from("messages").update({ is_read: true }).eq("id", msg.id);
+            (supabase as any).from("messages").update({ is_read: true }).eq("id", msg.id);
           }
         } else {
           // Update unread count
