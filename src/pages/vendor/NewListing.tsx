@@ -117,6 +117,7 @@ const NewListing = () => {
         phone: form.phone || null,
         email: form.email || null,
         website: form.website || null,
+        images: form.images.length > 0 ? form.images : null,
         owner_id: user.id,
       });
 
