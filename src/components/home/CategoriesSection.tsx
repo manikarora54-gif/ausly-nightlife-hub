@@ -1,5 +1,7 @@
 import { Calendar, Film, Utensils, Music, Theater, Dumbbell, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { DotPattern, GlowOrb } from "@/components/decorative/FloatingShapes";
 
 interface CategoriesSectionProps {
   selectedCity: string;
@@ -63,15 +65,22 @@ const categories = [
 ];
 
 const CategoriesSection = ({ selectedCity }: CategoriesSectionProps) => {
+  const { ref, isVisible } = useScrollReveal();
+
   const getCategoryLink = (category: (typeof categories)[0]) => {
     if (category.link) return category.link;
     return `/discover?type=${category.type}&city=${selectedCity.toLowerCase()}`;
   };
 
   return (
-    <section className="py-20 relative overflow-hidden">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-10">
+    <section ref={ref} className="py-20 relative overflow-hidden">
+      {/* Decorative elements */}
+      <DotPattern className="inset-0" />
+      <GlowOrb color="primary" size={300} className="top-0 -right-32" />
+      <GlowOrb color="secondary" size={250} className="-bottom-20 -left-20" />
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className={`flex items-center justify-between mb-10 transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}>
           <div>
             <h2 className="text-2xl md:text-4xl font-heading font-bold mb-2">
               What are you in the mood for?
@@ -87,11 +96,14 @@ const CategoriesSection = ({ selectedCity }: CategoriesSectionProps) => {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {categories.map((category) => (
+          {categories.map((category, index) => (
             <Link
               key={category.id}
               to={getCategoryLink(category)}
-              className="group relative overflow-hidden rounded-2xl aspect-[16/9] md:aspect-[2/1]"
+              className={`group relative overflow-hidden rounded-2xl aspect-[16/9] md:aspect-[2/1] transition-all duration-700 ${
+                isVisible ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-10 scale-95"
+              }`}
+              style={{ transitionDelay: `${index * 100}ms` }}
             >
               <img
                 src={category.image}
@@ -105,9 +117,12 @@ const CategoriesSection = ({ selectedCity }: CategoriesSectionProps) => {
               />
               <div className={`absolute inset-0 bg-gradient-to-t ${category.gradient} group-hover:opacity-90 transition-opacity`} />
 
+              {/* Shimmer overlay on hover */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+
               <div className="absolute inset-0 flex items-end p-5 md:p-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
                     <category.icon className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -119,7 +134,7 @@ const CategoriesSection = ({ selectedCity }: CategoriesSectionProps) => {
                 </div>
               </div>
 
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0 transition-all duration-300">
                 <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
                   <ArrowRight className="w-4 h-4 text-white" />
                 </div>
