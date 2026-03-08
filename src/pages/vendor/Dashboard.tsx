@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Store, 
@@ -24,7 +24,7 @@ interface DashboardStats {
 }
 
 const VendorDashboard = () => {
-  const { vendorProfile } = useOutletContext<{ vendorProfile: any }>();
+  const { user } = useAuth();
   const [stats, setStats] = useState<DashboardStats>({
     totalListings: 0,
     totalBookings: 0,
@@ -153,7 +153,7 @@ const VendorDashboard = () => {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-heading font-bold">
-          Welcome back{vendorProfile?.business_name ? `, ${vendorProfile.business_name}` : ""}!
+          Welcome back!
         </h1>
         <p className="text-muted-foreground mt-2">
           Here's an overview of your business performance

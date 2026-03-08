@@ -42,8 +42,12 @@ import VendorLayout from "./components/vendor/VendorLayout";
 import VendorDashboard from "./pages/vendor/Dashboard";
 import VendorListings from "./pages/vendor/Listings";
 import NewListing from "./pages/vendor/NewListing";
+import EditListing from "./pages/vendor/EditListing";
 import VendorBookings from "./pages/vendor/Bookings";
 import VendorEvents from "./pages/vendor/Events";
+import NewEvent from "./pages/vendor/NewEvent";
+import EditEvent from "./pages/vendor/EditEvent";
+import VendorReviews from "./pages/vendor/Reviews";
 import VendorAnalytics from "./pages/vendor/Analytics";
 import VendorMessages from "./pages/vendor/Messages";
 import VendorSettings from "./pages/vendor/Settings";
@@ -78,8 +82,12 @@ const App = () => (
               <Route index element={<VendorDashboard />} />
               <Route path="listings" element={<VendorListings />} />
               <Route path="listings/new" element={<NewListing />} />
+              <Route path="listings/:id/edit" element={<EditListing />} />
               <Route path="bookings" element={<VendorBookings />} />
               <Route path="events" element={<VendorEvents />} />
+              <Route path="events/new" element={<NewEvent />} />
+              <Route path="events/:id/edit" element={<EditEvent />} />
+              <Route path="reviews" element={<VendorReviews />} />
               <Route path="analytics" element={<VendorAnalytics />} />
               <Route path="messages" element={<VendorMessages />} />
               <Route path="settings" element={<VendorSettings />} />
