@@ -297,12 +297,12 @@ const Venue = () => {
                   </div>
                 )}
 
-                <Button variant="neon" className="w-full" size="lg" onClick={handleReserve}>
-                  {config.cta} <ArrowRight className="w-4 h-4 ml-2" />
+                <Button variant="neon" className="w-full" size="lg" disabled>
+                  Coming Soon
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground mt-3">
-                  Free cancellation • Instant confirmation
+                  Reservations will be available soon
                 </p>
 
                 <div className="flex gap-2 mt-4">
