@@ -172,6 +172,17 @@ const AdminLogin = () => {
               </>
             )}
           </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full h-12 text-base font-semibold"
+            onClick={handleGoogleSignIn}
+            disabled={isLoading}
+          >
+            <Chrome className="w-4 h-4 mr-2" />
+            Sign In with Google
+          </Button>
         </form>
 
         <p className="text-center text-[11px] text-muted-foreground/50 mt-8">
