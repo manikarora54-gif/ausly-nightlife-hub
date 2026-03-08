@@ -80,10 +80,11 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
         <img
           src={berlinBg}
           alt=""
-          className="w-full h-full object-cover opacity-[0.07]"
+          className="w-full h-full object-cover opacity-[0.15]"
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-background/40 to-background" />
+        <div className="absolute inset-0 bg-primary/[0.03]" />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
