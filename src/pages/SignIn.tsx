@@ -86,13 +86,31 @@ const SignIn = () => {
     <div className="min-h-screen bg-background relative overflow-hidden flex">
       {/* Ambient background effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/8 blur-[120px]" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-secondary/8 blur-[120px]" />
-        <div className="absolute top-[40%] left-[50%] w-[300px] h-[300px] rounded-full bg-accent/5 blur-[100px]" />
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-primary/8 blur-[120px] animate-float" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-secondary/8 blur-[120px] animate-float" style={{ animationDelay: "-3s" }} />
+        <div className="absolute top-[40%] left-[50%] w-[300px] h-[300px] rounded-full bg-accent/5 blur-[100px] animate-pulse-glow" />
+        {/* Grid pattern overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: "linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
       </div>
 
       {/* Left side — branding panel (hidden on mobile) */}
       <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12">
+        {/* Background city image with overlay */}
+        <div className="absolute inset-0 overflow-hidden">
+          <img 
+            src="https://images.unsplash.com/photo-1560969184-10fe8719e047?w=1200&h=900&fit=crop" 
+            alt="" 
+            className="w-full h-full object-cover opacity-[0.12]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/95 to-background/80" />
+        </div>
+
         <div className="relative z-10 max-w-lg">
           {/* Logo */}
           <Link to="/" className="inline-flex items-center gap-3 mb-12 group">
@@ -145,6 +163,10 @@ const SignIn = () => {
               ))}
             </div>
           </div>
+
+          {/* Floating decorative elements */}
+          <div className="absolute top-12 right-12 w-20 h-20 rounded-2xl border border-primary/10 rotate-12 opacity-20" />
+          <div className="absolute bottom-20 right-24 w-12 h-12 rounded-full border border-secondary/15 opacity-20 animate-float" />
         </div>
       </div>
 
