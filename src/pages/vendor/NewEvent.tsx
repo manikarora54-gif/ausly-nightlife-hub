@@ -52,8 +52,8 @@ const NewEvent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.name || !form.event_type || !form.start_date) {
-      toast({ title: "Missing fields", description: "Name, type and start date are required.", variant: "destructive" });
+    if (!form.name || !form.event_type || !form.start_date || !form.venue_id) {
+      toast({ title: "Missing fields", description: "Name, type, venue and start date are required.", variant: "destructive" });
       return;
     }
 
