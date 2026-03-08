@@ -36,7 +36,7 @@ const EditEvent = () => {
     genre: "",
     images: [] as string[],
   });
-  const [newImageUrl, setNewImageUrl] = useState("");
+  
 
   useEffect(() => {
     const load = async () => {
