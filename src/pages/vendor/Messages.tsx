@@ -55,7 +55,7 @@ const VendorMessages = () => {
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("conversations")
         .select("*")
         .eq("vendor_id", user.id)
