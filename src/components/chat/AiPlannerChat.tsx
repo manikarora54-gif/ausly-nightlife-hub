@@ -282,8 +282,8 @@ export default function AiPlannerChat() {
         {messages.length === 0 ? (
           <div className="space-y-4">
             <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center shrink-0 mt-0.5">
-                <Bot className="w-3.5 h-3.5 text-primary" />
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                <span className="font-heading font-black text-[10px] text-primary-foreground">A</span>
               </div>
               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
                 <p>Hey! 👋 I'm your AI nightlife planner. I can help you discover venues, plan itineraries, and even <strong>book directly</strong> — just tell me what you're in the mood for!</p>
