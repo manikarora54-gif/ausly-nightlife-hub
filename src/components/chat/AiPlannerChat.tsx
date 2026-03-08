@@ -334,10 +334,10 @@ export default function AiPlannerChat() {
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-lg overflow-hidden shadow-[0_0_24px_hsl(var(--primary)/0.4),0_0_48px_hsl(var(--secondary)/0.2)] hover:scale-110 active:scale-95 transition-all duration-200 animate-fade-in group"
         aria-label="Open AI Planner"
       >
-        <span className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary to-secondary opacity-40 animate-ping" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+        <span className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary to-secondary opacity-40 animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90 animate-spin" style={{ animationDuration: "4s" }} />
         <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
-          <span className="text-xl font-heading font-extrabold gradient-text leading-none">A</span>
+          <span className="text-xl font-heading font-extrabold gradient-text leading-none animate-bounce" style={{ animationDuration: "2s" }}>A</span>
         </div>
       </button>
     );
