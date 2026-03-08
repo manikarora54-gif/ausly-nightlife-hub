@@ -117,7 +117,7 @@ const VendorMessages = () => {
   useEffect(() => {
     if (!selectedConv) return;
     const load = async () => {
-      const { data } = await supabase
+      const { data } = await (supabase as any)
         .from("messages")
         .select("*")
         .eq("conversation_id", selectedConv.id)
@@ -125,7 +125,7 @@ const VendorMessages = () => {
       setMessages((data || []) as MessageRow[]);
 
       // Mark as read
-      await supabase
+      await (supabase as any)
         .from("messages")
         .update({ is_read: true })
         .eq("conversation_id", selectedConv.id)
