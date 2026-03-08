@@ -170,7 +170,7 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
                       {item.price && <span className="font-bold text-primary">{item.price}</span>}
                       {!item.price && <span />}
                       <Button size="sm" variant="neon" className="text-xs">
-                        {getCTAText(item.type)}
+                        {getCTAText()}
                       </Button>
                     </div>
                   </div>
