@@ -91,7 +91,9 @@ Deno.serve(async (req) => {
         }),
       });
 
-      const aiData = await aiRes.json();
+      const aiText = await aiRes.text();
+      let aiData: any;
+      try { aiData = JSON.parse(aiText); } catch { console.error('AI non-JSON:', aiText.substring(0, 200)); continue; }
       const aiContent = aiData?.choices?.[0]?.message?.content || '[]';
 
       let tours: any[] = [];
