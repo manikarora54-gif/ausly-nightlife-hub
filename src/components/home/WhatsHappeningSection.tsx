@@ -61,7 +61,7 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
       location: event.venues?.name || "Various locations",
       city: event.venues?.city || selectedCity,
       image: event.images?.[0] || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop",
-      price: event.ticket_price ? `€${event.ticket_price}` : "Free",
+      price: event.ticket_price ? `€${event.ticket_price.toFixed(0)}` : null,
       link: `/event/${event.slug || event.id}`,
     })),
     ...venues.slice(0, 4).map((venue) => ({
@@ -73,7 +73,7 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
       location: venue.address,
       city: venue.city,
       image: venue.images?.[0] || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop",
-      price: venue.price_range ? "€".repeat(venue.price_range) : "€€",
+      price: venue.price_range && venue.price_range > 0 ? "€".repeat(venue.price_range) : null,
       link: `/venue/${venue.slug || venue.id}`,
     })),
   ].slice(0, 8);
@@ -175,7 +175,8 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
                     </p>
                     
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-primary">{item.price}</span>
+                      {item.price && <span className="font-bold text-primary">{item.price}</span>}
+                      {!item.price && <span />}
                       <Button size="sm" variant="neon" className="text-xs">
                         {getCTAText(item.type)}
                       </Button>
