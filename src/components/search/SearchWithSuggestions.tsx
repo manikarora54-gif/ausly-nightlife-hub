@@ -285,23 +285,16 @@ export default function SearchWithSuggestions({
       const shouldSearchVenues = parsed.category !== "events";
       const shouldSearchEvents = !parsed.venueType || parsed.category === "events";
 
-      const promises: Promise<any>[] = [];
-      if (shouldSearchVenues) promises.push(venueQuery.then());
-      if (shouldSearchEvents) promises.push(eventQuery.then());
-
-      const queryResults = await Promise.all(promises);
-      
       let venueResults: any[] = [];
       let eventResults: any[] = [];
 
-      if (shouldSearchVenues && shouldSearchEvents) {
-        venueResults = results[0]?.data || [];
-        eventResults = results[1]?.data || [];
-      } else if (shouldSearchVenues) {
-        venueResults = results[0]?.data || [];
-      } else {
-        eventResults = results[0]?.data || [];
-      }
+      const [venueRes, eventRes] = await Promise.all([
+        shouldSearchVenues ? venueQuery : Promise.resolve({ data: [] }),
+        shouldSearchEvents ? eventQuery : Promise.resolve({ data: [] }),
+      ]);
+
+      venueResults = (venueRes as any)?.data || [];
+      eventResults = (eventRes as any)?.data || [];
 
       // Score and sort results by relevance
       const scoredVenues: SearchResult[] = venueResults.map((v: any) => {
