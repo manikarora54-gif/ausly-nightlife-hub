@@ -1,6 +1,7 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { FileText, Scale, AlertCircle, CheckCircle } from "lucide-react";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Terms = () => {
   return (
