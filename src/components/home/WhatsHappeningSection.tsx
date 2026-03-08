@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
 import { useVenues } from "@/hooks/useVenues";
 import { format } from "date-fns";
+import berlinBg from "@/assets/berlin-nightlife-bg.jpg";
 
 const getIcon = (type: string) => {
   switch (type) {
