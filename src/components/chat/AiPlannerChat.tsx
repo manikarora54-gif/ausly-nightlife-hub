@@ -48,7 +48,7 @@ async function streamChat({
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers,
-    body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content })) }),
+    body: JSON.stringify({ messages: messages.map(m => ({ role: m.role, content: m.content || "Here are your plans!" })) }),
   });
 
   if (!resp.ok) {
