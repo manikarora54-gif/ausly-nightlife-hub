@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { lovable } from "@/integrations/lovable/index";
+import SEOHead from "@/components/seo/SEOHead";
 
 const signUpSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
