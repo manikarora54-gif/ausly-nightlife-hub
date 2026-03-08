@@ -122,9 +122,9 @@ const NewEvent = () => {
                 <Input value={form.genre} onChange={(e) => handleChange("genre", e.target.value)} placeholder="e.g. Techno, Jazz, Hip-Hop" />
               </div>
             </div>
-            {venues.length > 0 && (
+            {venues.length > 0 ? (
               <div className="space-y-2">
-                <Label>Venue (optional)</Label>
+                <Label>Venue *</Label>
                 <Select value={form.venue_id} onValueChange={(v) => handleChange("venue_id", v)}>
                   <SelectTrigger><SelectValue placeholder="Select venue" /></SelectTrigger>
                   <SelectContent>
@@ -132,6 +132,8 @@ const NewEvent = () => {
                   </SelectContent>
                 </Select>
               </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">You need to create a venue listing first before creating events.</p>
             )}
           </CardContent>
         </Card>
