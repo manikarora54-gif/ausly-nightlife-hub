@@ -13,6 +13,7 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
