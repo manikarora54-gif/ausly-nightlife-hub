@@ -56,9 +56,11 @@ const VendorAnalytics = () => {
       const venueIds = venues?.map(v => v.id) || [];
 
       // Fetch bookings for vendor's venues
-      const { data: bookings } = venueIds.length > 0
-        ? await supabase.from("bookings").select("*").in("venue_id", venueIds).order("created_at", { ascending: true }).limit(100)
-        : { data: [] };
+      let bookings: any[] = [];
+      if (venueIds.length > 0) {
+        const { data } = await supabase.from("bookings").select("*").in("venue_id", venueIds).order("created_at", { ascending: true }).limit(100);
+        bookings = data || [];
+      }
 
       // Calculate stats
       const totalRevenue = bookings?.reduce((sum, b) => sum + (Number(b.total_amount) || 0), 0) || 0;

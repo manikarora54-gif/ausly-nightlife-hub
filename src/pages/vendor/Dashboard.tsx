@@ -55,14 +55,18 @@ const VendorDashboard = () => {
       const venueIds = venues?.map(v => v.id) || [];
 
       // Fetch events linked to vendor's venues
-      const { data: events } = venueIds.length > 0
-        ? await supabase.from("events").select("id, name").in("venue_id", venueIds)
-        : { data: [] };
+      let events: any[] = [];
+      if (venueIds.length > 0) {
+        const { data } = await supabase.from("events").select("id, name").in("venue_id", venueIds);
+        events = data || [];
+      }
 
       // Fetch bookings for vendor's venues
-      const { data: bookings } = venueIds.length > 0
-        ? await supabase.from("bookings").select("*").in("venue_id", venueIds).order("booking_date", { ascending: false }).limit(50)
-        : { data: [] };
+      let bookings: any[] = [];
+      if (venueIds.length > 0) {
+        const { data } = await supabase.from("bookings").select("*").in("venue_id", venueIds).order("booking_date", { ascending: false }).limit(50);
+        bookings = data || [];
+      }
 
       const totalListings = (venues?.length || 0) + (events?.length || 0);
       const totalBookings = bookings?.length || 0;
