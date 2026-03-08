@@ -100,6 +100,9 @@ const Profile = () => {
             <TabsTrigger value="itineraries" className="rounded-lg gap-2">
               <Sparkles className="w-4 h-4" /> Itineraries
             </TabsTrigger>
+            <TabsTrigger value="grievances" className="rounded-lg gap-2">
+              <AlertTriangle className="w-4 h-4" /> Grievances
+            </TabsTrigger>
             <TabsTrigger value="settings" className="rounded-lg gap-2">
               <User className="w-4 h-4" /> Settings
             </TabsTrigger>
