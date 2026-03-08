@@ -383,8 +383,8 @@ export default function AiPlannerChat() {
                 </div>
               </div>
               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
-                <p className="mb-1">Hey! 👋 I'll create <strong>visual itinerary cards</strong> with venues you can tap to explore.</p>
-                <p className="text-xs text-muted-foreground">Tell me your city & vibe — I'll do the rest!</p>
+                <p className="mb-1">Hey hey! 👋 I'm your go-to for finding the <strong>best spots</strong> in Germany.</p>
+                <p className="text-xs text-muted-foreground">Tell me what you're feeling — I'll put together a plan you'll actually love ✨</p>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 pl-9">
