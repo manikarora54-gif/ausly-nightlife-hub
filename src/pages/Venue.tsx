@@ -16,6 +16,7 @@ import {
   Star, MapPin, Clock, Phone, Globe, Heart, Share2, Calendar, Users,
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
 } from "lucide-react";
+import SEOHead from "@/components/seo/SEOHead";
 
 const priceLabel = (range: number | null) => {
   if (!range) return "Contact venue";
