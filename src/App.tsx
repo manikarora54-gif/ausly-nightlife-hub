@@ -98,6 +98,8 @@ const App = () => (
               <Route path="settings" element={<VendorSettings />} />
               <Route path="grievances" element={<VendorGrievances />} />
             </Route>
+            {/* Admin Login */}
+            <Route path="/admin/login" element={<AdminLogin />} />
             {/* Protected Admin Routes */}
             <Route path="/admin" element={<RoleProtectedRoute requiredRole="admin"><AdminLayout /></RoleProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
