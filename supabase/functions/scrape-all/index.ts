@@ -15,6 +15,7 @@ Deno.serve(async (req) => {
     const scrapers = ['scrape-ra-events', 'scrape-google-movies', 'scrape-google-tours'];
     const results: Record<string, any> = {};
 
+    // Step 1: Run all scrapers
     for (const scraper of scrapers) {
       console.log(`Running ${scraper}...`);
       try {
@@ -32,6 +33,24 @@ Deno.serve(async (req) => {
         console.error(`${scraper} failed:`, e);
         results[scraper] = { success: false, error: e instanceof Error ? e.message : 'Unknown error' };
       }
+    }
+
+    // Step 2: Run image enrichment to fill missing/generic images
+    console.log('Running image enrichment...');
+    try {
+      const enrichRes = await fetch(`${baseUrl}/functions/v1/enrich-images`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${anonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ batchSize: 20, table: 'both' }),
+      });
+      results['enrich-images'] = await enrichRes.json();
+      console.log('Image enrichment completed:', results['enrich-images']?.count || 0, 'items enriched');
+    } catch (e) {
+      console.error('Image enrichment failed:', e);
+      results['enrich-images'] = { success: false, error: e instanceof Error ? e.message : 'Unknown error' };
     }
 
     return new Response(
