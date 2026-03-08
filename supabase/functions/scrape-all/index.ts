@@ -12,7 +12,7 @@ Deno.serve(async (req) => {
     const baseUrl = Deno.env.get('SUPABASE_URL')!;
     const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
-    const scrapers = ['scrape-ra-events', 'scrape-google-movies', 'scrape-google-tours', 'scrape-getyourguide'];
+    const scrapers = ['scrape-ra-events', 'scrape-google-movies', 'scrape-google-tours', 'scrape-getyourguide', 'scrape-wolt'];
     const results: Record<string, any> = {};
 
     // Step 1: Run all scrapers
