@@ -97,6 +97,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/our-story" element={<OurStory />} />
             <Route path="/grievances" element={<CustomerGrievances />} />
+            <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
             {/* Protected Vendor Routes */}
             <Route path="/vendor" element={<RoleProtectedRoute requiredRole="vendor"><VendorLayout /></RoleProtectedRoute>}>
               <Route index element={<VendorDashboard />} />
