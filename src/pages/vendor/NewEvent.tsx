@@ -65,7 +65,7 @@ const NewEvent = () => {
         name: form.name,
         slug,
         event_type: form.event_type,
-        venue_id: form.venue_id || null,
+        venue_id: form.venue_id,
         start_date: new Date(form.start_date).toISOString(),
         end_date: form.end_date ? new Date(form.end_date).toISOString() : null,
         short_description: form.short_description || null,
