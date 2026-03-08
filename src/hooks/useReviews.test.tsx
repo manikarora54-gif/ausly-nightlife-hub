@@ -97,11 +97,14 @@ describe("useCreateReview", () => {
 
     const { result } = renderHook(() => useCreateReview(), { wrapper: createWrapper() });
 
+    // Wait for auth to settle before mutating
+    await waitFor(() => expect(result.current.mutateAsync).toBeDefined());
+
     await act(async () => {
       await result.current.mutateAsync({ venue_id: "v1", rating: 4 });
     });
 
-    expect(result.current.isSuccess).toBe(true);
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(mockSupabase.from).toHaveBeenCalledWith("reviews");
   });
 });
