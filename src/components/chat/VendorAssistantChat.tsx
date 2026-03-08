@@ -27,10 +27,10 @@ function saveChatHistory(messages: Msg[]) {
 }
 
 const quickStarters = [
-  "How are my listings performing? 📊",
-  "Tips to improve my ratings ⭐",
-  "How to get more bookings? 📈",
-  "Help me plan a new event 🎉",
+  "How's my business doing? 📊",
+  "Any tips for better reviews? ⭐",
+  "Help me get more bookings 📈",
+  "I want to create an event 🎉",
 ];
 
 async function streamChat({
