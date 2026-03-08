@@ -353,8 +353,8 @@ export default function AiPlannerChat() {
         )}
         {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
           <div className="flex gap-2">
-            <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center shrink-0">
-              <Bot className="w-3.5 h-3.5 text-primary" />
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-sm">
+              <span className="font-heading font-black text-[10px] text-primary-foreground">A</span>
             </div>
             <div className="glass-card p-3 rounded-2xl rounded-tl-sm">
               <Loader2 className="w-4 h-4 animate-spin text-primary" />
