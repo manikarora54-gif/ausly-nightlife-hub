@@ -71,16 +71,29 @@ const VendorSettings = () => {
   const saveSettings = async () => {
     setLoading(true);
     try {
-      // Here we would save to vendor_profiles table when it exists
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          display_name: settings.businessName,
+          email: settings.businessEmail,
+          phone: settings.businessPhone,
+        })
+        .eq("id", user.id);
+
+      if (error) throw error;
+
       toast({
         title: "Settings saved",
         description: "Your settings have been updated successfully.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving settings:", error);
       toast({
         title: "Error",
-        description: "Failed to save settings. Please try again.",
+        description: error.message || "Failed to save settings.",
         variant: "destructive",
       });
     } finally {
