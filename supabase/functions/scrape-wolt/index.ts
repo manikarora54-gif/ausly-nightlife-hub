@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
 
     const results: any[] = [];
 
-    for (const city of CITIES) {
+    for (const city of citiesToScrape) {
       console.log(`Scraping Wolt restaurants for ${city.name}...`);
 
       // Scrape Wolt restaurant listing page
