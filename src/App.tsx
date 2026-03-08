@@ -41,6 +41,9 @@ import AdminSupport from "./pages/admin/Support";
 import AdminContent from "./pages/admin/Content";
 import AdminSettings from "./pages/admin/Settings";
 import AdminGrievances from "./pages/admin/Grievances";
+import AdminAnalytics from "./pages/admin/Analytics";
+import AdminUsers from "./pages/admin/Users";
+import AdminApprovals from "./pages/admin/Approvals";
 import VendorLayout from "./components/vendor/VendorLayout";
 import VendorDashboard from "./pages/vendor/Dashboard";
 import VendorListings from "./pages/vendor/Listings";
@@ -103,6 +106,9 @@ const App = () => (
             {/* Protected Admin Routes */}
             <Route path="/admin" element={<RoleProtectedRoute requiredRole="admin"><AdminLayout /></RoleProtectedRoute>}>
               <Route index element={<AdminDashboard />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="approvals" element={<AdminApprovals />} />
               <Route path="bookings" element={<AdminBookings />} />
               <Route path="payments" element={<AdminPayments />} />
               <Route path="refunds" element={<AdminRefunds />} />
