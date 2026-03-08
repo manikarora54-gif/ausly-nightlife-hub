@@ -245,9 +245,13 @@ export default function VendorAssistantChat() {
               <BriefcaseBusiness className="w-3 h-3 text-white" />
             </div>
             <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm">
-              <div className="flex items-center gap-2">
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-500" />
-                <span className="text-xs text-muted-foreground">Analyzing your business...</span>
+              <div className="flex items-center gap-1.5">
+                <span className="flex gap-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "300ms" }} />
+                </span>
+                <span className="text-xs text-muted-foreground ml-1">looking at your data...</span>
               </div>
             </div>
           </div>
