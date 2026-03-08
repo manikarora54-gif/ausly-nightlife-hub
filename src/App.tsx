@@ -95,6 +95,7 @@ const App = () => (
               <Route path="analytics" element={<VendorAnalytics />} />
               <Route path="messages" element={<VendorMessages />} />
               <Route path="settings" element={<VendorSettings />} />
+              <Route path="grievances" element={<VendorGrievances />} />
             </Route>
             {/* Protected Admin Routes */}
             <Route path="/admin" element={<RoleProtectedRoute requiredRole="admin"><AdminLayout /></RoleProtectedRoute>}>
