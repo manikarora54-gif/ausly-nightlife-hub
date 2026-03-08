@@ -22,6 +22,7 @@ import Terms from "./pages/Terms";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import OurStory from "./pages/OurStory";
+import AdminLogin from "./pages/AdminLogin";
 import AdminLayout from "./components/admin/AdminLayout";
 import Movies from "./pages/Movies";
 import Movie from "./pages/Movie";
