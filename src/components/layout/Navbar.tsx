@@ -17,6 +17,8 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading, signOut, isVendor } = useAuth();
+  const { data: unreadCount } = useUnreadCount();
+  useNotificationRealtime();
 
   useEffect(() => {
     const handleScroll = () => {
