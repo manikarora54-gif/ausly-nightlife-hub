@@ -58,6 +58,14 @@ const Discover = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
+  const { user } = useAuth();
+  const { data: favorites = [] } = useFavorites();
+  const toggleFavorite = useToggleFavorite();
+  const { toast } = useToast();
+
+  const favoriteVenueIds = useMemo(() => new Set(favorites.map((f: any) => f.venue_id).filter(Boolean)), [favorites]);
+  const favoriteEventIds = useMemo(() => new Set(favorites.map((f: any) => f.event_id).filter(Boolean)), [favorites]);
+
   // Sync URL params
   useEffect(() => {
     const params: Record<string, string> = {};
