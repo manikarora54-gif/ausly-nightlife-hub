@@ -16,6 +16,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 import { GrievanceList } from "@/components/grievance/GrievanceComponents";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Profile = () => {
   const [searchParams] = useSearchParams();
