@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 const VendorSettings = () => {
-  const { vendorProfile } = useOutletContext<{ vendorProfile: any }>();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const [settings, setSettings] = useState({
