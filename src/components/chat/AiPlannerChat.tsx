@@ -311,11 +311,14 @@ export default function AiPlannerChat() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-br from-primary via-secondary to-primary text-primary-foreground shadow-[0_0_24px_hsl(var(--primary)/0.4),0_0_48px_hsl(var(--secondary)/0.2)] flex items-center justify-center hover:scale-110 active:scale-95 transition-all duration-200 animate-fade-in group"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-lg overflow-hidden shadow-[0_0_24px_hsl(var(--primary)/0.4),0_0_48px_hsl(var(--secondary)/0.2)] hover:scale-110 active:scale-95 transition-all duration-200 animate-fade-in group"
         aria-label="Open AI Planner"
       >
-        <span className="absolute inset-0 rounded-full bg-gradient-to-br from-primary to-secondary opacity-40 animate-ping" />
-        <span className="relative font-heading font-black text-lg tracking-tight">A</span>
+        <span className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary to-secondary opacity-40 animate-ping" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+        <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
+          <span className="text-xl font-heading font-extrabold gradient-text leading-none">A</span>
+        </div>
       </button>
     );
   }
@@ -326,8 +329,11 @@ export default function AiPlannerChat() {
     <div className="fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] h-[580px] max-h-[calc(100vh-4rem)] flex flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-primary/10 animate-fade-in overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-gradient-to-r from-card to-card/80">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[0_0_12px_hsl(var(--primary)/0.3)]">
-          <span className="font-heading font-black text-sm text-primary-foreground">A</span>
+        <div className="relative w-9 h-9 rounded-lg overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+          <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
+            <span className="text-sm font-heading font-extrabold gradient-text leading-none">A</span>
+          </div>
         </div>
         <div className="flex-1">
           <h3 className="font-heading font-semibold text-sm">Ausly AI Planner</h3>
@@ -350,8 +356,11 @@ export default function AiPlannerChat() {
         {messages.length === 0 ? (
           <div className="space-y-3">
             <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
-                <span className="font-heading font-black text-[10px] text-primary-foreground">A</span>
+              <div className="relative w-7 h-7 rounded-lg overflow-hidden shrink-0 mt-0.5">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+                <div className="absolute inset-[1.5px] rounded-[5px] bg-background flex items-center justify-center">
+                  <span className="text-[10px] font-heading font-extrabold gradient-text leading-none">A</span>
+                </div>
               </div>
               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
                 <p className="mb-1">Hey! 👋 I'll create <strong>visual itinerary cards</strong> with venues you can tap to explore.</p>
@@ -391,11 +400,18 @@ export default function AiPlannerChat() {
           <>
             {messages.map((msg, i) => (
               <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                  msg.role === "user" ? "bg-secondary/20" : "bg-gradient-to-br from-primary to-secondary rounded-lg shadow-sm"
-                }`}>
-                  {msg.role === "user" ? <User className="w-3 h-3 text-secondary" /> : <span className="font-heading font-black text-[9px] text-primary-foreground">A</span>}
-                </div>
+                {msg.role === "user" ? (
+                  <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-3 h-3 text-secondary" />
+                  </div>
+                ) : (
+                  <div className="relative w-6 h-6 rounded-md overflow-hidden shrink-0 mt-0.5">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+                    <div className="absolute inset-[1.5px] rounded-[3px] bg-background flex items-center justify-center">
+                      <span className="text-[8px] font-heading font-extrabold gradient-text leading-none">A</span>
+                    </div>
+                  </div>
+                )}
                 <div className={`max-w-[90%] ${msg.role === "user" ? "" : ""}`}>
                   {msg.role === "user" ? (
                     <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm p-2.5 text-sm">
@@ -434,8 +450,11 @@ export default function AiPlannerChat() {
         )}
         {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
           <div className="flex gap-2">
-            <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shrink-0 shadow-sm">
-              <span className="font-heading font-black text-[9px] text-primary-foreground">A</span>
+            <div className="relative w-6 h-6 rounded-md overflow-hidden shrink-0">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
+              <div className="absolute inset-[1.5px] rounded-[3px] bg-background flex items-center justify-center">
+                <span className="text-[8px] font-heading font-extrabold gradient-text leading-none">A</span>
+              </div>
             </div>
             <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm">
               <div className="flex items-center gap-2">
