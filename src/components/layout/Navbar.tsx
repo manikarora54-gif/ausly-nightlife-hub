@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu, Search, User, LogOut, Settings, Calendar, MapPin, Sparkles, AlertTriangle, Bell } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import SearchWithSuggestions from "@/components/search/SearchWithSuggestions";
+import { useUnreadCount, useNotificationRealtime } from "@/hooks/useNotifications";
 
 const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
