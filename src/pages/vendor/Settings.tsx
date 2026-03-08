@@ -36,7 +36,7 @@ const VendorSettings = () => {
 
   useEffect(() => {
     loadSettings();
-  }, [vendorProfile]);
+  }, [user]);
 
   const loadSettings = async () => {
     try {
