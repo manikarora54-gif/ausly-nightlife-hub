@@ -95,6 +95,7 @@ export type Database = {
           description: string | null
           end_date: string | null
           event_type: string
+          genre: string | null
           id: string
           images: string[] | null
           is_active: boolean | null
@@ -117,6 +118,7 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           event_type: string
+          genre?: string | null
           id?: string
           images?: string[] | null
           is_active?: boolean | null
@@ -139,6 +141,7 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           event_type?: string
+          genre?: string | null
           id?: string
           images?: string[] | null
           is_active?: boolean | null
