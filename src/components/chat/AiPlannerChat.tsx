@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sparkles, Send, X, Loader2, Bot, User, Save } from "lucide-react";
+import { Sparkles, Send, X, Loader2, Bot, User, Save, ExternalLink, Trash2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import { useSaveItinerary } from "@/hooks/useItineraries";
+import { useSaveItinerary, useItineraries } from "@/hooks/useItineraries";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import ChatActionButton from "./ChatActionButton";
@@ -73,7 +74,6 @@ async function streamChat({
   onDone();
 }
 
-// Parse action markers from AI response and split into text segments and action buttons
 const ACTION_REGEX = /\{\{ACTION:([A-Z_]+):([^:]*):([^:]*):?([^}]*)\}\}/g;
 
 function renderMessageWithActions(content: string) {
@@ -147,10 +147,13 @@ export default function AiPlannerChat() {
   const [messages, setMessages] = useState<Msg[]>(loadChatHistory);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [lastSavedId, setLastSavedId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const saveItinerary = useSaveItinerary();
   const { user } = useAuth();
+  const { data: itineraries } = useItineraries();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSave = async () => {
     const lastAssistant = [...messages].reverse().find(m => m.role === "assistant");
@@ -160,19 +163,19 @@ export default function AiPlannerChat() {
       const city = cityMatch ? cityMatch[0] : "Germany";
       const titleMatch = lastAssistant.content.match(/^#\s*(.+)/m);
       const title = titleMatch ? titleMatch[1].slice(0, 80) : `Itinerary - ${city}`;
-      await saveItinerary.mutateAsync({
+      const saved = await saveItinerary.mutateAsync({
         title,
         city,
         content: lastAssistant.content.replace(ACTION_REGEX, ""),
         stops: [],
       });
+      setLastSavedId(saved.id);
       toast({ title: "Itinerary saved! ✨", description: "View it in your profile." });
     } catch {
       toast({ title: "Error saving", description: "Please try again.", variant: "destructive" });
     }
   };
 
-  // Persist chat history to sessionStorage
   useEffect(() => {
     saveChatHistory(messages);
   }, [messages]);
@@ -183,6 +186,12 @@ export default function AiPlannerChat() {
     }
   }, [messages, isLoading]);
 
+  const handleClearChat = () => {
+    setMessages([]);
+    setLastSavedId(null);
+    sessionStorage.removeItem(CHAT_STORAGE_KEY);
+  };
+
   const send = useCallback(async (text: string) => {
     if (!text.trim() || isLoading) return;
     const userMsg: Msg = { role: "user", content: text.trim() };
@@ -190,6 +199,7 @@ export default function AiPlannerChat() {
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
+    setLastSavedId(null);
 
     let assistantSoFar = "";
     const upsert = (chunk: string) => {
@@ -204,7 +214,6 @@ export default function AiPlannerChat() {
     };
 
     try {
-      // Get the user's session token for proper server-side auth
       const { data: { session } } = await (await import("@/integrations/supabase/client")).supabase.auth.getSession();
       const accessToken = session?.access_token || null;
 
@@ -236,6 +245,8 @@ export default function AiPlannerChat() {
     );
   }
 
+  const recentItineraries = itineraries?.slice(0, 3) || [];
+
   return (
     <div className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-4rem)] flex flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-primary/10 animate-fade-in overflow-hidden">
       {/* Header */}
@@ -247,14 +258,21 @@ export default function AiPlannerChat() {
           <h3 className="font-heading font-semibold text-sm">Ausly AI Planner</h3>
           <p className="text-xs text-muted-foreground">Plan, discover & book instantly</p>
         </div>
-        {messages.length > 0 && user && (
-          <button onClick={handleSave} className="p-1.5 rounded-lg hover:bg-muted transition-colors" title="Save itinerary">
-            <Save className="w-4 h-4 text-primary" />
+        <div className="flex items-center gap-1">
+          {messages.length > 0 && user && (
+            <button onClick={handleSave} className="p-1.5 rounded-lg hover:bg-muted transition-colors" title="Save itinerary">
+              <Save className="w-4 h-4 text-primary" />
+            </button>
+          )}
+          {messages.length > 0 && (
+            <button onClick={handleClearChat} className="p-1.5 rounded-lg hover:bg-muted transition-colors" title="Clear chat">
+              <Trash2 className="w-4 h-4 text-muted-foreground" />
+            </button>
+          )}
+          <button onClick={() => setIsOpen(false)} className="p-1 rounded-lg hover:bg-muted transition-colors">
+            <X className="w-4 h-4" />
           </button>
-        )}
-        <button onClick={() => setIsOpen(false)} className="p-1 rounded-lg hover:bg-muted transition-colors">
-          <X className="w-4 h-4" />
-        </button>
+        </div>
       </div>
 
       {/* Messages */}
@@ -280,24 +298,56 @@ export default function AiPlannerChat() {
                 </button>
               ))}
             </div>
+
+            {/* Recent saved itineraries */}
+            {recentItineraries.length > 0 && (
+              <div className="space-y-2 pt-2">
+                <p className="text-xs font-medium text-muted-foreground pl-9">📋 Your recent plans:</p>
+                {recentItineraries.map((it) => (
+                  <button
+                    key={it.id}
+                    onClick={() => { setIsOpen(false); navigate(`/itinerary/${it.id}`); }}
+                    className="block w-full text-left text-xs px-3 py-2 rounded-xl border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors ml-9 mr-0"
+                    style={{ maxWidth: "calc(100% - 2.25rem)" }}
+                  >
+                    <span className="font-medium">{it.title}</span>
+                    <span className="text-muted-foreground ml-2">• {it.city}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ) : (
-          messages.map((msg, i) => (
-            <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                msg.role === "user" ? "bg-secondary/20" : "bg-primary/20"
-              }`}>
-                {msg.role === "user" ? <User className="w-3.5 h-3.5 text-secondary" /> : <Bot className="w-3.5 h-3.5 text-primary" />}
+          <>
+            {messages.map((msg, i) => (
+              <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                  msg.role === "user" ? "bg-secondary/20" : "bg-primary/20"
+                }`}>
+                  {msg.role === "user" ? <User className="w-3.5 h-3.5 text-secondary" /> : <Bot className="w-3.5 h-3.5 text-primary" />}
+                </div>
+                <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
+                  msg.role === "user"
+                    ? "bg-primary text-primary-foreground rounded-tr-sm"
+                    : "glass-card rounded-tl-sm"
+                }`}>
+                  {msg.role === "assistant" ? renderMessageWithActions(msg.content) : <p>{msg.content}</p>}
+                </div>
               </div>
-              <div className={`max-w-[85%] p-3 rounded-2xl text-sm ${
-                msg.role === "user"
-                  ? "bg-primary text-primary-foreground rounded-tr-sm"
-                  : "glass-card rounded-tl-sm"
-              }`}>
-                {msg.role === "assistant" ? renderMessageWithActions(msg.content) : <p>{msg.content}</p>}
+            ))}
+
+            {/* Show "View saved" link after saving */}
+            {lastSavedId && !isLoading && (
+              <div className="pl-9">
+                <button
+                  onClick={() => { setIsOpen(false); navigate(`/itinerary/${lastSavedId}`); }}
+                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+                >
+                  <ExternalLink className="w-3 h-3" /> View saved itinerary
+                </button>
               </div>
-            </div>
-          ))
+            )}
+          </>
         )}
         {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
           <div className="flex gap-2">
