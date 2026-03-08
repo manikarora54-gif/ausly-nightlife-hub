@@ -57,7 +57,14 @@ Deno.serve(async (req) => {
         }),
       });
 
-      const scrapeData = await scrapeRes.json();
+      const scrapeText = await scrapeRes.text();
+      let scrapeData: any;
+      try {
+        scrapeData = JSON.parse(scrapeText);
+      } catch {
+        console.error(`Non-JSON response for ${city.name}:`, scrapeText.substring(0, 200));
+        continue;
+      }
       
       if (!scrapeRes.ok) {
         console.error(`Failed to scrape RA for ${city.name}:`, scrapeData);
