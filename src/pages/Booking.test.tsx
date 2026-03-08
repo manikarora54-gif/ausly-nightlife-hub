@@ -141,7 +141,7 @@ describe("Booking Page", () => {
       expect(screen.getByText("Booking Summary")).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /confirm/i }));
+    fireEvent.click(screen.getByRole("button", { name: /pay/i }));
 
     await waitFor(() => {
       expect(screen.getByText("Booking Confirmed!")).toBeInTheDocument();
