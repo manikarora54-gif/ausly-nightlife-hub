@@ -51,6 +51,8 @@ const EventPage = () => {
     );
   }
 
+  const isMovie = event.event_type === "movie";
+  const hasPrice = event.ticket_price != null && event.ticket_price > 0;
   const images = event.images?.length
     ? event.images
     : ["https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&h=500&fit=crop"];
