@@ -62,7 +62,7 @@ const EventPage = () => {
   const handleBook = () => {
     if (!user) {
       toast({ title: "Sign in required", description: "Please sign in to book tickets.", variant: "destructive" });
-      navigate("/sign-in", { state: { from: window.location.pathname } });
+      navigate("/signin", { state: { from: window.location.pathname } });
       return;
     }
     const params = new URLSearchParams({
