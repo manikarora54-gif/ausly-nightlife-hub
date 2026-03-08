@@ -150,6 +150,12 @@ const Navbar = () => {
                       My Itineraries
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
+                    <Link to="/grievances" className="flex items-center gap-3">
+                      <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                      My Grievances
+                    </Link>
+                  </DropdownMenuItem>
                   {isVendor() &&
                 <DropdownMenuItem asChild className="rounded-lg cursor-pointer">
                       <Link to="/vendor" className="flex items-center gap-3">
