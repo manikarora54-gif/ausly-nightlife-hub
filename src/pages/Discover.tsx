@@ -127,7 +127,7 @@ const Discover = () => {
     } else {
       const filtered = activeCategory === "all"
         ? venues
-        : venues.filter(v => currentCat.types.some(t => t.toLowerCase() === v.type.toLowerCase()));
+        : venues.filter(v => (currentCat.types as readonly string[]).some(t => t.toLowerCase() === v.type.toLowerCase()));
 
       results = filtered.map(v => ({
         id: v.id,
