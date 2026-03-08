@@ -89,7 +89,7 @@ const VendorMessages = () => {
       const counts: Record<string, number> = {};
       const lasts: Record<string, string> = {};
       for (const conv of convs) {
-        const { count } = await supabase
+        const { count } = await (supabase as any)
           .from("messages")
           .select("*", { count: "exact", head: true })
           .eq("conversation_id", conv.id)
@@ -97,7 +97,7 @@ const VendorMessages = () => {
           .neq("sender_id", user.id);
         counts[conv.id] = count || 0;
 
-        const { data: lastMsg } = await supabase
+        const { data: lastMsg } = await (supabase as any)
           .from("messages")
           .select("content")
           .eq("conversation_id", conv.id)
