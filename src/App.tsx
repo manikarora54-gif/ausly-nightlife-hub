@@ -8,6 +8,8 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import RoleProtectedRoute from "@/components/auth/RoleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import AiPlannerChat from "@/components/chat/AiPlannerChat";
+import VendorAssistantChat from "@/components/chat/VendorAssistantChat";
+import { useLocation } from "react-router-dom";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Venue from "./pages/Venue";
@@ -58,6 +60,15 @@ import VendorAnalytics from "./pages/vendor/Analytics";
 import VendorMessages from "./pages/vendor/Messages";
 import VendorSettings from "./pages/vendor/Settings";
 import VendorGrievances from "./pages/vendor/Grievances";
+
+function ChatRouter() {
+  const location = useLocation();
+  const isVendorRoute = location.pathname.startsWith("/vendor");
+  const isAdminRoute = location.pathname.startsWith("/admin");
+  if (isAdminRoute) return null;
+  if (isVendorRoute) return <VendorAssistantChat />;
+  return <AiPlannerChat />;
+}
 
 const queryClient = new QueryClient();
 
@@ -130,7 +141,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <AiPlannerChat />
+          <ChatRouter />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
