@@ -323,13 +323,8 @@ const Venue = () => {
                   Reservations will be available soon
                 </p>
 
-                <div className="flex gap-2 mt-4">
-                  <Button variant="outline" className="flex-1" onClick={() => {
-                    if (navigator.share) { navigator.share({ title: venue.name, url: window.location.href }); }
-                    else { navigator.clipboard.writeText(window.location.href); toast({ title: "Link copied!" }); }
-                  }}>
-                    <Share2 className="w-4 h-4 mr-2" /> Share
-                  </Button>
+                <div className="flex justify-center gap-2 mt-4">
+                  <SocialShareButtons title={venue.name} description={venue.short_description || `Check out ${venue.name} on Ausly!`} />
                 </div>
               </div>
 

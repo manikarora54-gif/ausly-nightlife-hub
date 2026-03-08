@@ -272,16 +272,9 @@ const EventPage = () => {
                   <span>Booking will be available soon</span>
                 </div>
 
-                <Button
-                  variant="outline"
-                  className="w-full mt-4"
-                  onClick={() => {
-                    if (navigator.share) { navigator.share({ title: event.name, url: window.location.href }); }
-                    else { navigator.clipboard.writeText(window.location.href); toast({ title: "Link copied!" }); }
-                  }}
-                >
-                  <Share2 className="w-4 h-4 mr-2" /> Share Event
-                </Button>
+                <div className="flex justify-center gap-2 mt-4">
+                  <SocialShareButtons title={event.name} description={event.short_description || `Check out ${event.name} on Ausly!`} />
+                </div>
               </div>
             </div>
           </div>
