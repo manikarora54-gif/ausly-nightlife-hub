@@ -153,7 +153,7 @@ const VendorDashboard = () => {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-heading font-bold">
-          Welcome back{vendorProfile?.business_name ? `, ${vendorProfile.business_name}` : ""}!
+          Welcome back!
         </h1>
         <p className="text-muted-foreground mt-2">
           Here's an overview of your business performance
