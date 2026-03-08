@@ -14,6 +14,7 @@ import {
   MapPin, Clock, Calendar, Users, Ticket, Share2, ArrowRight, Minus, Plus, Shield,
 } from "lucide-react";
 import { format } from "date-fns";
+import SEOHead from "@/components/seo/SEOHead";
 
 const EventPage = () => {
   const { id } = useParams();
