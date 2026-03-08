@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useEvents } from "@/hooks/useEvents";
 import { useVenues } from "@/hooks/useVenues";
 import { format } from "date-fns";
+import berlinBg from "@/assets/berlin-nightlife-bg.jpg";
 
 const getIcon = (type: string) => {
   switch (type) {
@@ -74,7 +75,18 @@ const WhatsHappeningSection = ({ selectedCity }: WhatsHappeningSectionProps) => 
 
   return (
     <section className="py-20 relative overflow-hidden">
-      <div className="container mx-auto px-4">
+      {/* Background image — lightly visible */}
+      <div className="absolute inset-0 -top-20">
+        <img
+          src={berlinBg}
+          alt=""
+          className="w-full h-full object-cover opacity-[0.07]"
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-12">
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
