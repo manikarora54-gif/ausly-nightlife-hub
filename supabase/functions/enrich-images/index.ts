@@ -26,24 +26,13 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // Generic unsplash images that get repeated everywhere
-    const GENERIC_IMAGES = [
-      'photo-1514525253161-7a46d19cd819',
-      'photo-1545128485-c400e7702796',
-      'photo-1493225457124-a3eb161ffa5f',
-      'photo-1470337458703-46ad1756a187',
-      'photo-1414235077428-338989a2e8c0',
-      'photo-1517248135467-4c7edcad34c4',
-      'photo-1559339352-11d035aa65de',
-      'photo-1550966871-3ed3cdb5ed0c',
-      'photo-1501281668745-f7f57925c3b4',
-      'photo-1534809027769-b00d750a6bac',
-      'photo-1440404653325-ab127d49abc1',
-    ];
-
     const isGenericImage = (url: string) => {
       if (!url) return true;
-      return GENERIC_IMAGES.some(id => url.includes(id));
+      // Any unsplash image is considered generic/stock
+      if (url.includes('unsplash.com')) return true;
+      // Very small thumbnails (e.g. Amazon 90px thumbs)
+      if (url.includes('UX90') || url.includes('_QL75_')) return true;
+      return false;
     };
 
     const body = await req.json().catch(() => ({}));
