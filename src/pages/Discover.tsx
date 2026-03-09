@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useState, useEffect, useMemo, useRef } from "react";
+import { useSearchParams, useLocation, Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
