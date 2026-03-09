@@ -84,6 +84,14 @@ const Discover = () => {
     if (urlType) setActiveCategory(urlType);
   }, [searchParams]);
 
+  const { user } = useAuth();
+  const { data: favorites = [] } = useFavorites();
+  const toggleFavorite = useToggleFavorite();
+  const { toast } = useToast();
+
+  const favoriteVenueIds = useMemo(() => new Set(favorites.map((f: any) => f.venue_id).filter(Boolean)), [favorites]);
+  const favoriteEventIds = useMemo(() => new Set(favorites.map((f: any) => f.event_id).filter(Boolean)), [favorites]);
+
   const cityFilter = selectedCity !== "All Cities" ? selectedCity : undefined;
   const isMoviesCategory = activeCategory === "movies";
 
