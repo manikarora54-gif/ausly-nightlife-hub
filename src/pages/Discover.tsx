@@ -202,7 +202,7 @@ const Discover = () => {
 
       <main className="pt-20 pb-16">
         {/* Decorative hero background for discover */}
-        <div className="absolute top-0 left-0 right-0 h-[400px] overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-[400px] overflow-hidden pointer-events-none z-0">
           <div className="absolute top-[-50%] left-[20%] w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]" />
           <div className="absolute top-[-30%] right-[10%] w-[400px] h-[400px] rounded-full bg-secondary/5 blur-[120px]" />
           <div
