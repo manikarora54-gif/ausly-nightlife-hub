@@ -55,35 +55,34 @@ const Discover = () => {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [selectedCity, setSelectedCity] = useState(initialCity ? initialCity.charAt(0).toUpperCase() + initialCity.slice(1) : "All Cities");
   const [search, setSearch] = useState(initialSearch);
-
-  // Sync search from URL when navigating here (e.g. navbar search)
-  useEffect(() => {
-    const urlQ = searchParams.get("q") || "";
-    const urlType = searchParams.get("type");
-    setSearch(urlQ);
-    // Only update category if URL explicitly includes a type param
-    if (urlType) setActiveCategory(urlType);
-  }, [searchParams]);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
-  const { user } = useAuth();
-  const { data: favorites = [] } = useFavorites();
-  const toggleFavorite = useToggleFavorite();
-  const { toast } = useToast();
+  // Use a ref to prevent the URL-read effect from re-triggering when we write URL params
+  const internalUpdate = useRef(false);
 
-  const favoriteVenueIds = useMemo(() => new Set(favorites.map((f: any) => f.venue_id).filter(Boolean)), [favorites]);
-  const favoriteEventIds = useMemo(() => new Set(favorites.map((f: any) => f.event_id).filter(Boolean)), [favorites]);
-
-  // Sync URL params
+  // Write state → URL
   useEffect(() => {
+    internalUpdate.current = true;
     const params: Record<string, string> = {};
     if (activeCategory !== "all") params.type = activeCategory;
     if (selectedCity !== "All Cities") params.city = selectedCity.toLowerCase();
     if (search) params.q = search;
     setSearchParams(params, { replace: true });
   }, [activeCategory, selectedCity, search, setSearchParams]);
+
+  // Read URL → state (only for external navigations, e.g. navbar search)
+  useEffect(() => {
+    if (internalUpdate.current) {
+      internalUpdate.current = false;
+      return;
+    }
+    const urlQ = searchParams.get("q") || "";
+    const urlType = searchParams.get("type");
+    setSearch(urlQ);
+    if (urlType) setActiveCategory(urlType);
+  }, [searchParams]);
 
   const cityFilter = selectedCity !== "All Cities" ? selectedCity : undefined;
   const isMoviesCategory = activeCategory === "movies";
