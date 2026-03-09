@@ -48,41 +48,56 @@ const SORT_OPTIONS = [
 /* ─── Component ─── */
 const Discover = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialCategory = searchParams.get("type") || "all";
-  const initialCity = searchParams.get("city") || "";
-  const initialSearch = searchParams.get("q") || "";
+  const location = useLocation();
 
-  const [activeCategory, setActiveCategory] = useState(initialCategory);
-  const [selectedCity, setSelectedCity] = useState(initialCity ? initialCity.charAt(0).toUpperCase() + initialCity.slice(1) : "All Cities");
-  const [search, setSearch] = useState(initialSearch);
+  // Read initial values from URL
+  const urlType = searchParams.get("type") || "all";
+  const urlCity = searchParams.get("city") || "";
+  const urlQ = searchParams.get("q") || "";
+
+  const [activeCategory, setActiveCategory] = useState(urlType);
+  const [selectedCity, setSelectedCity] = useState(urlCity ? urlCity.charAt(0).toUpperCase() + urlCity.slice(1) : "All Cities");
+  const [search, setSearch] = useState(urlQ);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
 
-  // Use a ref to prevent the URL-read effect from re-triggering when we write URL params
-  const internalUpdate = useRef(false);
+  // Track whether we caused the URL change ourselves
+  const skipNextSync = useRef(false);
 
-  // Write state → URL
+  // Sync state → URL (user interacts with filters on the page)
   useEffect(() => {
-    internalUpdate.current = true;
     const params: Record<string, string> = {};
     if (activeCategory !== "all") params.type = activeCategory;
     if (selectedCity !== "All Cities") params.city = selectedCity.toLowerCase();
     if (search) params.q = search;
-    setSearchParams(params, { replace: true });
-  }, [activeCategory, selectedCity, search, setSearchParams]);
 
-  // Read URL → state (only for external navigations, e.g. navbar search)
-  useEffect(() => {
-    if (internalUpdate.current) {
-      internalUpdate.current = false;
+    // Check if URL already matches to avoid unnecessary update
+    const currentType = searchParams.get("type") || "all";
+    const currentCity = searchParams.get("city") || "";
+    const currentQ = searchParams.get("q") || "";
+    if (currentType === activeCategory && currentCity === (selectedCity !== "All Cities" ? selectedCity.toLowerCase() : "") && currentQ === search) {
       return;
     }
-    const urlQ = searchParams.get("q") || "";
-    const urlType = searchParams.get("type");
-    setSearch(urlQ);
-    if (urlType) setActiveCategory(urlType);
-  }, [searchParams]);
+
+    skipNextSync.current = true;
+    setSearchParams(params, { replace: true });
+  }, [activeCategory, selectedCity, search]);
+
+  // Sync URL → state (navbar link clicked, external navigation)
+  useEffect(() => {
+    if (skipNextSync.current) {
+      skipNextSync.current = false;
+      return;
+    }
+    const newType = searchParams.get("type") || "all";
+    const newQ = searchParams.get("q") || "";
+    const newCity = searchParams.get("city") || "";
+    setActiveCategory(newType);
+    setSearch(newQ);
+    setSelectedCity(newCity ? newCity.charAt(0).toUpperCase() + newCity.slice(1) : "All Cities");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   const { user } = useAuth();
   const { data: favorites = [] } = useFavorites();
