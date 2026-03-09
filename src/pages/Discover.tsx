@@ -55,6 +55,15 @@ const Discover = () => {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [selectedCity, setSelectedCity] = useState(initialCity ? initialCity.charAt(0).toUpperCase() + initialCity.slice(1) : "All Cities");
   const [search, setSearch] = useState(initialSearch);
+
+  // Sync search from URL when navigating here (e.g. navbar search)
+  useEffect(() => {
+    const urlQ = searchParams.get("q") || "";
+    const urlType = searchParams.get("type");
+    setSearch(urlQ);
+    // Only update category if URL explicitly includes a type param
+    if (urlType) setActiveCategory(urlType);
+  }, [searchParams]);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
@@ -202,7 +211,7 @@ const Discover = () => {
 
       <main className="pt-20 pb-16">
         {/* Decorative hero background for discover */}
-        <div className="absolute top-0 left-0 right-0 h-[400px] overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 right-0 h-[400px] overflow-hidden pointer-events-none z-0">
           <div className="absolute top-[-50%] left-[20%] w-[500px] h-[500px] rounded-full bg-primary/5 blur-[150px]" />
           <div className="absolute top-[-30%] right-[10%] w-[400px] h-[400px] rounded-full bg-secondary/5 blur-[120px]" />
           <div
