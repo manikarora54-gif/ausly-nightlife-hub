@@ -55,6 +55,29 @@ const Discover = () => {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [selectedCity, setSelectedCity] = useState(initialCity ? initialCity.charAt(0).toUpperCase() + initialCity.slice(1) : "All Cities");
   const [search, setSearch] = useState(initialSearch);
+
+  // Sync state from URL when navigating to this page (e.g. from navbar search)
+  useEffect(() => {
+    const urlType = searchParams.get("type");
+    const urlCity = searchParams.get("city");
+    const urlQ = searchParams.get("q");
+    // Only update category if URL explicitly has a type param
+    if (urlType && urlType !== activeCategory) {
+      setActiveCategory(urlType);
+    } else if (!urlType && activeCategory !== "all" && !urlQ) {
+      // Don't reset category when a search query arrives without a type
+    } else if (!urlType && !urlQ) {
+      setActiveCategory("all");
+    }
+    if (urlQ !== null && urlQ !== search) {
+      setSearch(urlQ);
+    }
+    if (urlCity) {
+      const city = urlCity.charAt(0).toUpperCase() + urlCity.slice(1);
+      if (city !== selectedCity) setSelectedCity(city);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
