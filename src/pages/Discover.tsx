@@ -56,13 +56,14 @@ const Discover = () => {
   const [selectedCity, setSelectedCity] = useState(initialCity ? initialCity.charAt(0).toUpperCase() + initialCity.slice(1) : "All Cities");
   const [search, setSearch] = useState(initialSearch);
 
-  // When navigating here from navbar search, pick up the new query without resetting category
-  const currentQ = searchParams.get("q") || "";
-  const currentType = searchParams.get("type") || "all";
+  // Sync search from URL when navigating here (e.g. navbar search)
   useEffect(() => {
-    setSearch(currentQ);
-    setActiveCategory(currentType);
-  }, [currentQ, currentType]);
+    const urlQ = searchParams.get("q") || "";
+    const urlType = searchParams.get("type");
+    setSearch(urlQ);
+    // Only update category if URL explicitly includes a type param
+    if (urlType) setActiveCategory(urlType);
+  }, [searchParams]);
   const [sortBy, setSortBy] = useState("featured");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
