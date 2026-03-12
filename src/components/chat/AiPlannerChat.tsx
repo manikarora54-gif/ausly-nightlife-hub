@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, X, Loader2, User, Save, ExternalLink, Trash2 } from "lucide-react";
+import { Send, X, User, Save, ExternalLink, Trash2, Sparkles, Zap } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useSaveItinerary, useItineraries } from "@/hooks/useItineraries";
 import { useAuth } from "@/hooks/useAuth";
@@ -62,8 +62,6 @@ async function streamChat({
   const reader = resp.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
-
-  // Track tool call arguments being streamed
   let toolCallArgs = "";
   let hasToolCall = false;
 
@@ -80,26 +78,19 @@ async function streamChat({
       if (!line.startsWith("data: ")) continue;
       const json = line.slice(6).trim();
       if (json === "[DONE]") {
-        // If we accumulated a tool call, parse and emit it
         if (hasToolCall && toolCallArgs) {
           try {
             const parsed = JSON.parse(toolCallArgs);
-            // Validate the parsed data has required structure
             if (parsed.city && Array.isArray(parsed.itineraries) && parsed.itineraries.length > 0) {
-              // Validate each itinerary has required fields
-              const validItineraries = parsed.itineraries.filter((it: any) => 
+              const validItineraries = parsed.itineraries.filter((it: any) =>
                 it.title && Array.isArray(it.stops) && it.stops.length > 0
               );
               if (validItineraries.length > 0) {
                 onToolCall({ ...parsed, itineraries: validItineraries });
-              } else {
-                console.warn("No valid itineraries in tool call data");
               }
-            } else {
-              console.warn("Invalid tool call structure:", Object.keys(parsed));
             }
           } catch (e) {
-            console.error("Failed to parse tool call args:", e, toolCallArgs.slice(0, 200));
+            console.error("Failed to parse tool call args:", e);
           }
         }
         onDone();
@@ -108,8 +99,6 @@ async function streamChat({
       try {
         const parsed = JSON.parse(json);
         const choice = parsed.choices?.[0];
-
-        // Check for tool call in delta
         if (choice?.delta?.tool_calls?.[0]) {
           const tc = choice.delta.tool_calls[0];
           if (tc.function?.arguments) {
@@ -117,20 +106,17 @@ async function streamChat({
             toolCallArgs += tc.function.arguments;
           }
         }
-
-        // Regular text content
         const content = choice?.delta?.content;
         if (content) onDelta(content);
       } catch { /* partial json, skip */ }
     }
   }
 
-  // Final flush
   if (hasToolCall && toolCallArgs) {
     try {
       const parsed = JSON.parse(toolCallArgs);
       if (parsed.city && Array.isArray(parsed.itineraries) && parsed.itineraries.length > 0) {
-        const validItineraries = parsed.itineraries.filter((it: any) => 
+        const validItineraries = parsed.itineraries.filter((it: any) =>
           it.title && Array.isArray(it.stops) && it.stops.length > 0
         );
         if (validItineraries.length > 0) {
@@ -296,7 +282,6 @@ export default function AiPlannerChat() {
 
     const setToolData = (data: ItineraryData) => {
       itineraryData = data;
-      // Update the current assistant message with the itinerary data
       setMessages(prev => {
         const last = prev[prev.length - 1];
         if (last?.role === "assistant") {
@@ -331,14 +316,15 @@ export default function AiPlannerChat() {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-lg overflow-hidden shadow-[0_0_24px_hsl(var(--primary)/0.4),0_0_48px_hsl(var(--secondary)/0.2)] hover:scale-110 active:scale-95 transition-all duration-200 animate-fade-in group"
+        className="fixed bottom-6 right-6 z-50 group"
         aria-label="Open AI Planner"
       >
-        <span className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary to-secondary opacity-40 animate-pulse" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90 animate-spin" style={{ animationDuration: "4s" }} />
-        <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
-          <span className="text-xl font-heading font-extrabold gradient-text leading-none animate-bounce" style={{ animationDuration: "2s" }}>A</span>
-        </div>
+        {/* Outer glow ring */}
+        <span className="absolute inset-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-secondary to-accent opacity-50 blur-lg group-hover:opacity-80 transition-opacity duration-500 animate-pulse" />
+        {/* Glass body */}
+        <span className="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-card/80 backdrop-blur-xl border border-primary/30 shadow-[0_0_30px_hsl(var(--primary)/0.25)] group-hover:shadow-[0_0_40px_hsl(var(--primary)/0.45)] group-hover:border-primary/60 transition-all duration-300 group-hover:scale-105 active:scale-95">
+          <Sparkles className="w-6 h-6 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" />
+        </span>
       </button>
     );
   }
@@ -346,68 +332,86 @@ export default function AiPlannerChat() {
   const recentItineraries = itineraries?.slice(0, 3) || [];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] h-[580px] max-h-[calc(100vh-4rem)] flex flex-col rounded-2xl border border-border bg-card shadow-2xl shadow-primary/10 animate-fade-in overflow-hidden">
-      {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-gradient-to-r from-card to-card/80">
-        <div className="relative w-9 h-9 rounded-lg overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
-          <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
-            <span className="text-sm font-heading font-extrabold gradient-text leading-none">A</span>
+    <div className="fixed bottom-6 right-6 z-50 w-[420px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-4rem)] flex flex-col rounded-3xl overflow-hidden animate-scale-in
+      bg-card/90 backdrop-blur-2xl
+      border border-primary/20
+      shadow-[0_0_60px_hsl(var(--primary)/0.12),0_8px_32px_hsl(var(--background)/0.8)]">
+
+      {/* Header - Futuristic glassmorphism */}
+      <div className="relative px-5 py-4 border-b border-primary/10">
+        {/* Subtle gradient line at top */}
+        <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+        <div className="flex items-center gap-3">
+          {/* Avatar with animated ring */}
+          <div className="relative">
+            <span className="absolute -inset-1 rounded-xl bg-gradient-to-br from-primary via-secondary to-accent opacity-40 blur-sm animate-pulse" />
+            <div className="relative w-10 h-10 rounded-xl bg-card border border-primary/30 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-primary" />
+            </div>
           </div>
-        </div>
-        <div className="flex-1">
-          <h3 className="font-heading font-semibold text-sm">Ausly AI Planner</h3>
-          <p className="text-[10px] text-muted-foreground">Visual plans for your perfect night</p>
-        </div>
-        <div className="flex items-center gap-1">
-          {messages.length > 0 && (
-            <button onClick={handleClearChat} className="p-1.5 rounded-lg hover:bg-muted transition-colors" title="Clear chat">
-              <Trash2 className="w-4 h-4 text-muted-foreground" />
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading font-bold text-sm tracking-wide text-foreground">Ausly AI</h3>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_hsl(var(--accent)/0.8)]" />
+              <p className="text-[10px] text-muted-foreground">Ready to plan your night</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-0.5">
+            {messages.length > 0 && (
+              <button onClick={handleClearChat} className="p-2 rounded-xl hover:bg-muted/50 transition-colors" title="Clear chat">
+                <Trash2 className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors" />
+              </button>
+            )}
+            <button onClick={() => setIsOpen(false)} className="p-2 rounded-xl hover:bg-muted/50 transition-colors">
+              <X className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors" />
             </button>
-          )}
-          <button onClick={() => setIsOpen(false)} className="p-1 rounded-lg hover:bg-muted transition-colors">
-            <X className="w-4 h-4" />
-          </button>
+          </div>
         </div>
       </div>
 
-      {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3">
+      {/* Messages Area */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
         {messages.length === 0 ? (
-          <div className="space-y-3">
-            <div className="flex gap-2">
-              <div className="relative w-7 h-7 rounded-lg overflow-hidden shrink-0 mt-0.5">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
-                <div className="absolute inset-[1.5px] rounded-[5px] bg-background flex items-center justify-center">
-                  <span className="text-[10px] font-heading font-extrabold gradient-text leading-none">A</span>
+          <div className="space-y-4 pt-2">
+            {/* Welcome message */}
+            <div className="flex gap-3">
+              <div className="relative shrink-0 mt-0.5">
+                <div className="w-7 h-7 rounded-lg bg-card border border-primary/20 flex items-center justify-center">
+                  <Sparkles className="w-3.5 h-3.5 text-primary" />
                 </div>
               </div>
-              <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
-                <p className="mb-1">Hey hey! 👋 I'm your go-to for finding the <strong>best spots</strong> in Germany.</p>
-                <p className="text-xs text-muted-foreground">Tell me what you're feeling — I'll put together a plan you'll actually love ✨</p>
+              <div className="rounded-2xl rounded-tl-md p-4 bg-muted/40 border border-border/50 backdrop-blur-sm">
+                <p className="text-sm mb-1.5">Hey! 👋 I'm your AI nightlife guide for <strong className="text-primary">Germany</strong>.</p>
+                <p className="text-xs text-muted-foreground">Tell me what you're in the mood for — I'll craft a plan you'll love ✨</p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 pl-9">
+
+            {/* Quick starters - futuristic cards */}
+            <div className="grid grid-cols-2 gap-2 pl-10">
               {quickStarters.map((q) => (
                 <button
                   key={q}
                   onClick={() => send(q)}
-                  className="text-left text-[11px] px-3 py-2.5 rounded-xl border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors leading-tight"
+                  className="group/qs text-left text-[11px] px-3 py-3 rounded-xl
+                    bg-muted/30 border border-border/50
+                    hover:border-primary/40 hover:bg-primary/5 hover:shadow-[0_0_15px_hsl(var(--primary)/0.1)]
+                    transition-all duration-300 leading-tight"
                 >
-                  {q}
+                  <span className="group-hover/qs:text-primary transition-colors">{q}</span>
                 </button>
               ))}
             </div>
 
             {recentItineraries.length > 0 && (
-              <div className="space-y-1.5 pt-2">
-                <p className="text-[10px] font-medium text-muted-foreground pl-9">📋 Recent plans:</p>
+              <div className="space-y-1.5 pt-1">
+                <p className="text-[10px] font-medium text-muted-foreground pl-10 uppercase tracking-wider">Recent plans</p>
                 {recentItineraries.map((it) => (
                   <button
                     key={it.id}
                     onClick={() => { setIsOpen(false); navigate(`/itinerary/${it.id}`); }}
-                    className="block w-full text-left text-[11px] px-3 py-2 rounded-xl border border-border hover:border-primary/50 hover:bg-primary/5 transition-colors ml-9"
-                    style={{ maxWidth: "calc(100% - 2.25rem)" }}
+                    className="block w-full text-left text-[11px] px-3 py-2 rounded-xl bg-muted/20 border border-border/30 hover:border-primary/30 hover:bg-primary/5 transition-all ml-10"
+                    style={{ maxWidth: "calc(100% - 2.5rem)" }}
                   >
                     <span className="font-medium">{it.title}</span>
                     <span className="text-muted-foreground ml-1.5">• {it.city}</span>
@@ -419,28 +423,28 @@ export default function AiPlannerChat() {
         ) : (
           <>
             {messages.map((msg, i) => (
-              <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+              <div key={i} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
                 {msg.role === "user" ? (
-                  <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <User className="w-3 h-3 text-secondary" />
+                  <div className="w-7 h-7 rounded-lg bg-secondary/15 border border-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <User className="w-3.5 h-3.5 text-secondary" />
                   </div>
                 ) : (
-                  <div className="relative w-6 h-6 rounded-md overflow-hidden shrink-0 mt-0.5">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
-                    <div className="absolute inset-[1.5px] rounded-[3px] bg-background flex items-center justify-center">
-                      <span className="text-[8px] font-heading font-extrabold gradient-text leading-none">A</span>
-                    </div>
+                  <div className="w-7 h-7 rounded-lg bg-card border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
+                    <Sparkles className="w-3.5 h-3.5 text-primary" />
                   </div>
                 )}
-                <div className={`max-w-[90%] ${msg.role === "user" ? "" : ""}`}>
+                <div className="max-w-[85%]">
                   {msg.role === "user" ? (
-                    <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm p-2.5 text-sm">
+                    <div className="rounded-2xl rounded-tr-md px-4 py-2.5 text-sm
+                      bg-gradient-to-br from-primary/90 to-primary text-primary-foreground
+                      shadow-[0_2px_12px_hsl(var(--primary)/0.2)]">
                       <p>{msg.content}</p>
                     </div>
                   ) : (
                     <div className="space-y-2">
                       {msg.content && (
-                        <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm text-sm">
+                        <div className="rounded-2xl rounded-tl-md p-3 text-sm
+                          bg-muted/40 border border-border/50 backdrop-blur-sm">
                           {renderMessageContent(msg.content)}
                         </div>
                       )}
@@ -457,10 +461,10 @@ export default function AiPlannerChat() {
             ))}
 
             {lastSavedId && !isLoading && (
-              <div className="pl-8">
+              <div className="pl-10">
                 <button
                   onClick={() => { setIsOpen(false); navigate(`/itinerary/${lastSavedId}`); }}
-                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:text-primary/80 transition-colors"
                 >
                   <ExternalLink className="w-3 h-3" /> View saved itinerary
                 </button>
@@ -468,30 +472,31 @@ export default function AiPlannerChat() {
             )}
           </>
         )}
+
+        {/* Loading indicator */}
         {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-          <div className="flex gap-2">
-            <div className="relative w-6 h-6 rounded-md overflow-hidden shrink-0">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-primary opacity-90" />
-              <div className="absolute inset-[1.5px] rounded-[3px] bg-background flex items-center justify-center">
-                <span className="text-[8px] font-heading font-extrabold gradient-text leading-none">A</span>
-              </div>
+          <div className="flex gap-3">
+            <div className="w-7 h-7 rounded-lg bg-card border border-primary/20 flex items-center justify-center shrink-0">
+              <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
             </div>
-            <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm">
-              <div className="flex items-center gap-1.5">
-                <span className="flex gap-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
+            <div className="rounded-2xl rounded-tl-md p-3 bg-muted/40 border border-border/50 backdrop-blur-sm">
+              <div className="flex items-center gap-2">
+                <span className="flex gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/80 animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/80 animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/80 animate-bounce" style={{ animationDelay: "300ms" }} />
                 </span>
-                <span className="text-xs text-muted-foreground ml-1">thinking...</span>
+                <span className="text-xs text-muted-foreground">crafting your plan...</span>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Input */}
-      <div className="p-3 border-t border-border">
+      {/* Input Area - Futuristic */}
+      <div className="p-3 border-t border-primary/10">
+        {/* Gradient line */}
+        <div className="absolute left-4 right-4 -top-[1px] h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
         <form
           onSubmit={(e) => { e.preventDefault(); send(input); }}
           className="flex gap-2"
@@ -500,10 +505,15 @@ export default function AiPlannerChat() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="What are you in the mood for?"
-            className="flex-1 text-sm bg-muted/50 border-none h-9"
+            className="flex-1 text-sm h-10 rounded-xl bg-muted/30 border-border/50 focus:border-primary/50 focus:shadow-[0_0_12px_hsl(var(--primary)/0.1)] transition-all placeholder:text-muted-foreground/60"
             disabled={isLoading}
           />
-          <Button type="submit" size="icon" variant="default" disabled={!input.trim() || isLoading} className="shrink-0 h-9 w-9">
+          <Button
+            type="submit"
+            size="icon"
+            disabled={!input.trim() || isLoading}
+            className="shrink-0 h-10 w-10 rounded-xl bg-primary/90 hover:bg-primary text-primary-foreground shadow-[0_0_15px_hsl(var(--primary)/0.3)] hover:shadow-[0_0_25px_hsl(var(--primary)/0.5)] transition-all disabled:shadow-none"
+          >
             <Send className="w-4 h-4" />
           </Button>
         </form>

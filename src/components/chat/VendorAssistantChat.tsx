@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, X, Loader2, User, Trash2, BriefcaseBusiness } from "lucide-react";
+import { Send, X, User, Trash2, BriefcaseBusiness, Zap } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -148,88 +148,108 @@ export default function VendorAssistantChat() {
     }
   }, [messages, isLoading]);
 
+  // --- FUTURISTIC FAB ---
   if (!isOpen) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-lg overflow-hidden shadow-[0_0_24px_hsl(var(--primary)/0.4)] hover:scale-110 active:scale-95 transition-all duration-200 animate-fade-in group"
+        className="fixed bottom-6 right-6 z-50 group"
         aria-label="Open Vendor Assistant"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-amber-500 to-orange-600 opacity-90" />
-        <div className="absolute inset-[2px] rounded-[6px] bg-background flex items-center justify-center">
-          <BriefcaseBusiness className="w-6 h-6 text-amber-500" />
-        </div>
+        <span className="absolute inset-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-secondary via-accent to-primary opacity-40 blur-lg group-hover:opacity-70 transition-opacity duration-500 animate-pulse" />
+        <span className="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-card/80 backdrop-blur-xl border border-secondary/30 shadow-[0_0_30px_hsl(var(--secondary)/0.2)] group-hover:shadow-[0_0_40px_hsl(var(--secondary)/0.4)] group-hover:border-secondary/60 transition-all duration-300 group-hover:scale-105 active:scale-95">
+          <BriefcaseBusiness className="w-6 h-6 text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary)/0.5)]" />
+        </span>
       </button>
     );
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] h-[580px] max-h-[calc(100vh-4rem)] flex flex-col rounded-2xl border border-border bg-card shadow-2xl animate-fade-in overflow-hidden">
+    <div className="fixed bottom-6 right-6 z-50 w-[420px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-4rem)] flex flex-col rounded-3xl overflow-hidden animate-scale-in
+      bg-card/90 backdrop-blur-2xl
+      border border-secondary/20
+      shadow-[0_0_60px_hsl(var(--secondary)/0.1),0_8px_32px_hsl(var(--background)/0.8)]">
+
       {/* Header */}
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-gradient-to-r from-amber-500/10 to-orange-500/5">
-        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-          <BriefcaseBusiness className="w-5 h-5 text-white" />
-        </div>
-        <div className="flex-1">
-          <h3 className="font-heading font-semibold text-sm">Vendor Assistant</h3>
-          <p className="text-[10px] text-muted-foreground">Your AI business advisor</p>
-        </div>
-        <div className="flex items-center gap-1">
-          {messages.length > 0 && (
-            <button onClick={handleClearChat} className="p-1.5 rounded-lg hover:bg-muted transition-colors" title="Clear chat">
-              <Trash2 className="w-4 h-4 text-muted-foreground" />
+      <div className="relative px-5 py-4 border-b border-secondary/10">
+        <div className="absolute top-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-secondary/50 to-transparent" />
+
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <span className="absolute -inset-1 rounded-xl bg-gradient-to-br from-secondary to-accent opacity-30 blur-sm animate-pulse" />
+            <div className="relative w-10 h-10 rounded-xl bg-card border border-secondary/30 flex items-center justify-center">
+              <BriefcaseBusiness className="w-5 h-5 text-secondary" />
+            </div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-heading font-bold text-sm tracking-wide text-foreground">Vendor Assistant</h3>
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-accent shadow-[0_0_6px_hsl(var(--accent)/0.8)]" />
+              <p className="text-[10px] text-muted-foreground">Your AI business advisor</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-0.5">
+            {messages.length > 0 && (
+              <button onClick={handleClearChat} className="p-2 rounded-xl hover:bg-muted/50 transition-colors" title="Clear chat">
+                <Trash2 className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors" />
+              </button>
+            )}
+            <button onClick={() => setIsOpen(false)} className="p-2 rounded-xl hover:bg-muted/50 transition-colors">
+              <X className="w-4 h-4 text-muted-foreground hover:text-foreground transition-colors" />
             </button>
-          )}
-          <button onClick={() => setIsOpen(false)} className="p-1 rounded-lg hover:bg-muted transition-colors">
-            <X className="w-4 h-4" />
-          </button>
+          </div>
         </div>
       </div>
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
         {messages.length === 0 ? (
-          <div className="space-y-3">
-            <div className="flex gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0 mt-0.5">
-                <BriefcaseBusiness className="w-4 h-4 text-white" />
+          <div className="space-y-4 pt-2">
+            <div className="flex gap-3">
+              <div className="w-7 h-7 rounded-lg bg-card border border-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
+                <BriefcaseBusiness className="w-3.5 h-3.5 text-secondary" />
               </div>
-               <div className="glass-card p-3 rounded-2xl rounded-tl-sm text-sm">
-                 <p className="mb-1">Hey there! 👋 I'm your <strong>business buddy</strong> — I've got all your stats, reviews, and bookings right here.</p>
-                 <p className="text-xs text-muted-foreground">Ask me anything — let's grow your business together 🚀</p>
-               </div>
+              <div className="rounded-2xl rounded-tl-md p-4 bg-muted/40 border border-border/50 backdrop-blur-sm">
+                <p className="text-sm mb-1.5">Hey! 👋 I'm your <strong className="text-secondary">business buddy</strong> — stats, reviews, and bookings at my fingertips.</p>
+                <p className="text-xs text-muted-foreground">Ask me anything — let's grow together 🚀</p>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 pl-9">
+            <div className="grid grid-cols-2 gap-2 pl-10">
               {quickStarters.map((q) => (
                 <button
                   key={q}
                   onClick={() => send(q)}
-                  className="text-left text-[11px] px-3 py-2.5 rounded-xl border border-border hover:border-amber-500/50 hover:bg-amber-500/5 transition-colors leading-tight"
+                  className="group/qs text-left text-[11px] px-3 py-3 rounded-xl
+                    bg-muted/30 border border-border/50
+                    hover:border-secondary/40 hover:bg-secondary/5 hover:shadow-[0_0_15px_hsl(var(--secondary)/0.1)]
+                    transition-all duration-300 leading-tight"
                 >
-                  {q}
+                  <span className="group-hover/qs:text-secondary transition-colors">{q}</span>
                 </button>
               ))}
             </div>
           </div>
         ) : (
           messages.map((msg, i) => (
-            <div key={i} className={`flex gap-2 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+            <div key={i} className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
               {msg.role === "user" ? (
-                <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <User className="w-3 h-3 text-secondary" />
+                <div className="w-7 h-7 rounded-lg bg-secondary/15 border border-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <User className="w-3.5 h-3.5 text-secondary" />
                 </div>
               ) : (
-                <div className="w-6 h-6 rounded-md bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <BriefcaseBusiness className="w-3 h-3 text-white" />
+                <div className="w-7 h-7 rounded-lg bg-card border border-secondary/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <BriefcaseBusiness className="w-3.5 h-3.5 text-secondary" />
                 </div>
               )}
-              <div className="max-w-[90%]">
+              <div className="max-w-[85%]">
                 {msg.role === "user" ? (
-                  <div className="bg-primary text-primary-foreground rounded-2xl rounded-tr-sm p-2.5 text-sm">
+                  <div className="rounded-2xl rounded-tr-md px-4 py-2.5 text-sm
+                    bg-gradient-to-br from-secondary/90 to-secondary text-secondary-foreground
+                    shadow-[0_2px_12px_hsl(var(--secondary)/0.2)]">
                     <p>{msg.content}</p>
                   </div>
                 ) : (
-                  <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm text-sm">
+                  <div className="rounded-2xl rounded-tl-md p-3 text-sm bg-muted/40 border border-border/50 backdrop-blur-sm">
                     <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-1.5 [&_ul]:mb-1.5 [&_ol]:mb-1.5 [&_li]:text-xs [&_h1]:text-sm [&_h2]:text-xs [&_h3]:text-xs">
                       <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
@@ -240,18 +260,18 @@ export default function VendorAssistantChat() {
           ))
         )}
         {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-          <div className="flex gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shrink-0">
-              <BriefcaseBusiness className="w-3 h-3 text-white" />
+          <div className="flex gap-3">
+            <div className="w-7 h-7 rounded-lg bg-card border border-secondary/20 flex items-center justify-center shrink-0">
+              <BriefcaseBusiness className="w-3.5 h-3.5 text-secondary animate-pulse" />
             </div>
-            <div className="glass-card p-2.5 rounded-2xl rounded-tl-sm">
-              <div className="flex items-center gap-1.5">
-                <span className="flex gap-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "0ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "150ms" }} />
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: "300ms" }} />
+            <div className="rounded-2xl rounded-tl-md p-3 bg-muted/40 border border-border/50 backdrop-blur-sm">
+              <div className="flex items-center gap-2">
+                <span className="flex gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/80 animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/80 animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 rounded-full bg-secondary/80 animate-bounce" style={{ animationDelay: "300ms" }} />
                 </span>
-                <span className="text-xs text-muted-foreground ml-1">looking at your data...</span>
+                <span className="text-xs text-muted-foreground">analyzing your data...</span>
               </div>
             </div>
           </div>
@@ -259,16 +279,21 @@ export default function VendorAssistantChat() {
       </div>
 
       {/* Input */}
-      <div className="p-3 border-t border-border">
+      <div className="p-3 border-t border-secondary/10">
         <form onSubmit={(e) => { e.preventDefault(); send(input); }} className="flex gap-2">
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about your business..."
-            className="flex-1 text-sm bg-muted/50 border-none h-9"
+            className="flex-1 text-sm h-10 rounded-xl bg-muted/30 border-border/50 focus:border-secondary/50 focus:shadow-[0_0_12px_hsl(var(--secondary)/0.1)] transition-all placeholder:text-muted-foreground/60"
             disabled={isLoading}
           />
-          <Button type="submit" size="icon" variant="default" disabled={!input.trim() || isLoading} className="shrink-0 h-9 w-9 bg-amber-500 hover:bg-amber-600">
+          <Button
+            type="submit"
+            size="icon"
+            disabled={!input.trim() || isLoading}
+            className="shrink-0 h-10 w-10 rounded-xl bg-secondary/90 hover:bg-secondary text-secondary-foreground shadow-[0_0_15px_hsl(var(--secondary)/0.25)] hover:shadow-[0_0_25px_hsl(var(--secondary)/0.45)] transition-all disabled:shadow-none"
+          >
             <Send className="w-4 h-4" />
           </Button>
         </form>
