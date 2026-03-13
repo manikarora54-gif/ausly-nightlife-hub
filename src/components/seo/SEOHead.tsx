@@ -67,7 +67,7 @@ export default function SEOHead({
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: "Ausly",
-      url: "https://ausly.lovable.app",
+      url: "https://ausly.de",
       description: "Discover restaurants, bars, events, and nightlife across Germany.",
       potentialAction: {
         "@type": "SearchAction",
