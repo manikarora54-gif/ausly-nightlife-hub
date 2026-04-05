@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useSearchParams, useLocation, Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -107,17 +107,24 @@ const Discover = () => {
   const favoriteVenueIds = useMemo(() => new Set(favorites.map((f: any) => f.venue_id).filter(Boolean)), [favorites]);
   const favoriteEventIds = useMemo(() => new Set(favorites.map((f: any) => f.event_id).filter(Boolean)), [favorites]);
 
+  // Debounce search so queries aren't fired on every keystroke (300ms)
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(id);
+  }, [search]);
+
   const cityFilter = selectedCity !== "All Cities" ? selectedCity : undefined;
   const isMoviesCategory = activeCategory === "movies";
 
   const { data: venues = [], isLoading: venuesLoading } = useVenues({
-    search: search || undefined,
+    search: debouncedSearch || undefined,
     city: cityFilter,
   });
 
   // Don't filter by upcoming for movies — they use scrape date, not a future event date
   const { data: events = [], isLoading: eventsLoading } = useEvents({
-    search: search || undefined,
+    search: debouncedSearch || undefined,
     city: cityFilter,
     upcoming: !isMoviesCategory,
   });

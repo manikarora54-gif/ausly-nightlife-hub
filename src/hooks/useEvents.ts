@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import { prepareSearchTokens, buildOrFilter, normalizeSearch } from "@/lib/searchUtils";
 
 export type Event = Tables<"events">;
 export type EventInsert = TablesInsert<"events">;
@@ -38,7 +39,8 @@ export const useEvents = (filters?: {
   }, [queryClient]);
 
   return useQuery({
-    queryKey: ["events", filters],
+    // Normalize search in queryKey so " foo " and "foo" share cache
+    queryKey: ["events", { ...filters, search: normalizeSearch(filters?.search) }],
     queryFn: async () => {
       let query = supabase
         .from("events")
@@ -62,10 +64,17 @@ export const useEvents = (filters?: {
         query = query.gte("start_date", new Date().toISOString());
       }
 
-      if (filters?.search) {
-        query = query.or(
-          `name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
-        );
+      // Multi-token AND search: each token must match at least one searchable column.
+      // Searchable columns: name, description.
+      // Note: filtering on joined venues.name / venues.city via PostgREST embedded
+      // resources would require `!inner` joins which change result semantics for
+      // events without a venue. Kept to event-own columns for safety.
+      const tokens = prepareSearchTokens(filters?.search);
+      if (tokens) {
+        const EVENT_SEARCH_COLS = ["name", "description"];
+        for (const token of tokens) {
+          query = query.or(buildOrFilter(token, EVENT_SEARCH_COLS));
+        }
       }
 
       if (filters?.city) {
