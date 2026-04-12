@@ -110,7 +110,7 @@ const ForYouSection = ({ selectedCity }: ForYouSectionProps) => {
                   {/* Rating badge */}
                   {item.rating && item.rating > 0 && (
                     <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-background/80 backdrop-blur-sm text-xs font-semibold">
-                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                      <Star className="w-3 h-3 text-accent fill-accent" />
                       {Number(item.rating).toFixed(1)}
                     </div>
                   )}
