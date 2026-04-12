@@ -540,5 +540,6 @@ export default function AiPlannerChat() {
         </form>
       </div>
     </div>
+    </>
   );
 }
