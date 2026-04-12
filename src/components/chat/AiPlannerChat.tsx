@@ -312,6 +312,8 @@ export default function AiPlannerChat() {
     }
   }, [messages, isLoading]);
 
+  const recentItineraries = itineraries?.slice(0, 3) || [];
+
   return (
     <>
       {/* Copilot toggle button - fixed to right edge */}
