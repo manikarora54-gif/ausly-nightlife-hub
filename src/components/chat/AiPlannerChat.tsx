@@ -312,30 +312,53 @@ export default function AiPlannerChat() {
     }
   }, [messages, isLoading]);
 
-  if (!isOpen) {
-    return (
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 group"
-        aria-label="Open AI Planner"
-      >
-        {/* Outer glow ring */}
-        <span className="absolute inset-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-primary via-secondary to-accent opacity-50 blur-lg group-hover:opacity-80 transition-opacity duration-500 animate-pulse" />
-        {/* Glass body */}
-        <span className="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-card/80 backdrop-blur-xl border border-primary/30 shadow-[0_0_30px_hsl(var(--primary)/0.25)] group-hover:shadow-[0_0_40px_hsl(var(--primary)/0.45)] group-hover:border-primary/60 transition-all duration-300 group-hover:scale-105 active:scale-95">
-          <Sparkles className="w-6 h-6 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)]" />
-        </span>
-      </button>
-    );
-  }
-
   const recentItineraries = itineraries?.slice(0, 3) || [];
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[420px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-4rem)] flex flex-col rounded-3xl overflow-hidden animate-scale-in
-      bg-card/90 backdrop-blur-2xl
-      border border-primary/20
-      shadow-[0_0_60px_hsl(var(--primary)/0.12),0_8px_32px_hsl(var(--background)/0.8)]">
+    <>
+      {/* Copilot toggle button - fixed to right edge */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className={`fixed top-1/2 -translate-y-1/2 z-50 group transition-all duration-500 ${
+          isOpen ? "right-[400px] md:right-[420px]" : "right-0"
+        }`}
+        aria-label={isOpen ? "Close AI Planner" : "Open AI Planner"}
+      >
+        <span className={`relative flex items-center justify-center w-10 h-20 rounded-l-2xl
+          bg-card/90 backdrop-blur-xl border border-r-0 border-primary/30
+          shadow-[0_0_30px_hsl(var(--primary)/0.15)]
+          group-hover:shadow-[0_0_40px_hsl(var(--primary)/0.35)]
+          group-hover:border-primary/60 transition-all duration-300
+          ${isOpen ? "bg-muted/80" : ""}`}
+        >
+          {isOpen ? (
+            <X className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+          ) : (
+            <>
+              <span className="absolute inset-0 rounded-l-2xl bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <Sparkles className="w-5 h-5 text-primary drop-shadow-[0_0_8px_hsl(var(--primary)/0.6)] relative z-10" />
+            </>
+          )}
+        </span>
+      </button>
+
+      {/* Backdrop overlay for mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Copilot side panel */}
+      <div
+        className={`fixed top-0 right-0 z-50 h-full w-[400px] md:w-[420px] max-w-[calc(100vw-3rem)] flex flex-col
+          bg-card/95 backdrop-blur-2xl
+          border-l border-primary/20
+          shadow-[-8px_0_60px_hsl(var(--primary)/0.08),0_0_40px_hsl(var(--background)/0.6)]
+          transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
 
       {/* Header - Futuristic glassmorphism */}
       <div className="relative px-5 py-4 border-b border-primary/10">
@@ -519,5 +542,6 @@ export default function AiPlannerChat() {
         </form>
       </div>
     </div>
+    </>
   );
 }
