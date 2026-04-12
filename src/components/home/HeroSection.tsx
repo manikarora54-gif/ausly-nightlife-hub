@@ -25,18 +25,25 @@ const HeroSection = ({ selectedCity, onCityChange }: HeroSectionProps) => {
 
   return (
     <section className="relative min-h-[90vh] flex flex-col justify-center overflow-hidden pt-24 pb-16">
-      {/* Animated background orbs */}
+      {/* Background video */}
       <div className="absolute inset-0 overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+          poster="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&h=1080&fit=crop"
+        >
+          <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+        </video>
+        {/* Dark overlay for readability */}
+        <div className="absolute inset-0 bg-background/80" />
+        {/* Gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/40 to-background" />
+        {/* Animated color orbs on top */}
         <div className="absolute top-[15%] left-[10%] w-[600px] h-[600px] rounded-full bg-primary/5 blur-[160px] animate-float" />
         <div className="absolute bottom-[10%] right-[5%] w-[500px] h-[500px] rounded-full bg-secondary/6 blur-[180px] animate-float" style={{ animationDelay: "-3s" }} />
-        <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full bg-accent/3 blur-[120px] animate-pulse-glow" />
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: "linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)",
-            backgroundSize: "80px 80px",
-          }}
-        />
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
