@@ -5,6 +5,7 @@ import HeroSection from "@/components/home/HeroSection";
 import SEOHead from "@/components/seo/SEOHead";
 import CategoriesSection from "@/components/home/CategoriesSection";
 import WhatsHappeningSection from "@/components/home/WhatsHappeningSection";
+import ForYouSection from "@/components/home/ForYouSection";
 import HowItWorksSection from "@/components/home/HowItWorksSection";
 import WhyAuslySection from "@/components/home/WhyAuslySection";
 import ForBusinessSection from "@/components/home/ForBusinessSection";
@@ -23,6 +24,8 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection selectedCity={selectedCity} onCityChange={setSelectedCity} />
+        <GradientDivider />
+        <ForYouSection selectedCity={selectedCity} />
         <GradientDivider />
         <CategoriesSection selectedCity={selectedCity} />
         <GradientDivider />
