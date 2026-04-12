@@ -148,27 +148,51 @@ export default function VendorAssistantChat() {
     }
   }, [messages, isLoading]);
 
-  // --- FUTURISTIC FAB ---
-  if (!isOpen) {
-    return (
+  return (
+    <>
+      {/* Copilot toggle button - fixed to right edge */}
       <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 group"
-        aria-label="Open Vendor Assistant"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`fixed top-1/2 -translate-y-1/2 z-50 group transition-all duration-500 ${
+          isOpen ? "right-[400px] md:right-[420px]" : "right-0"
+        }`}
+        aria-label={isOpen ? "Close Vendor Assistant" : "Open Vendor Assistant"}
       >
-        <span className="absolute inset-0 w-14 h-14 rounded-2xl bg-gradient-to-br from-secondary via-accent to-primary opacity-40 blur-lg group-hover:opacity-70 transition-opacity duration-500 animate-pulse" />
-        <span className="relative flex items-center justify-center w-14 h-14 rounded-2xl bg-card/80 backdrop-blur-xl border border-secondary/30 shadow-[0_0_30px_hsl(var(--secondary)/0.2)] group-hover:shadow-[0_0_40px_hsl(var(--secondary)/0.4)] group-hover:border-secondary/60 transition-all duration-300 group-hover:scale-105 active:scale-95">
-          <BriefcaseBusiness className="w-6 h-6 text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary)/0.5)]" />
+        <span className={`relative flex items-center justify-center w-10 h-20 rounded-l-2xl
+          bg-card/90 backdrop-blur-xl border border-r-0 border-secondary/30
+          shadow-[0_0_30px_hsl(var(--secondary)/0.15)]
+          group-hover:shadow-[0_0_40px_hsl(var(--secondary)/0.35)]
+          group-hover:border-secondary/60 transition-all duration-300
+          ${isOpen ? "bg-muted/80" : ""}`}
+        >
+          {isOpen ? (
+            <X className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+          ) : (
+            <>
+              <span className="absolute inset-0 rounded-l-2xl bg-gradient-to-br from-secondary/20 via-accent/10 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <BriefcaseBusiness className="w-5 h-5 text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary)/0.5)] relative z-10" />
+            </>
+          )}
         </span>
       </button>
-    );
-  }
 
-  return (
-    <div className="fixed bottom-6 right-6 z-50 w-[420px] max-w-[calc(100vw-2rem)] h-[600px] max-h-[calc(100vh-4rem)] flex flex-col rounded-3xl overflow-hidden animate-scale-in
-      bg-card/90 backdrop-blur-2xl
-      border border-secondary/20
-      shadow-[0_0_60px_hsl(var(--secondary)/0.1),0_8px_32px_hsl(var(--background)/0.8)]">
+      {/* Backdrop overlay for mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Copilot side panel */}
+      <div
+        className={`fixed top-0 right-0 z-50 h-full w-[400px] md:w-[420px] max-w-[calc(100vw-3rem)] flex flex-col
+          bg-card/95 backdrop-blur-2xl
+          border-l border-secondary/20
+          shadow-[-8px_0_60px_hsl(var(--secondary)/0.08),0_0_40px_hsl(var(--background)/0.6)]
+          transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
+          ${isOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
 
       {/* Header */}
       <div className="relative px-5 py-4 border-b border-secondary/10">
@@ -298,6 +322,7 @@ export default function VendorAssistantChat() {
           </Button>
         </form>
       </div>
-    </div>
+      </div>
+    </>
   );
 }
