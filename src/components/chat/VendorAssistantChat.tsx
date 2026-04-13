@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Send, X, User, Trash2, BriefcaseBusiness, Zap } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/hooks/useAuth";
+import { useCopilot } from "@/contexts/CopilotContext";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -91,7 +92,7 @@ async function streamChat({
 }
 
 export default function VendorAssistantChat() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen, toggle } = useCopilot();
   const [messages, setMessages] = useState<Msg[]>(loadChatHistory);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
