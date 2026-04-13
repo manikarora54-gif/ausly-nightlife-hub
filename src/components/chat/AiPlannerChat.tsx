@@ -6,6 +6,7 @@ import { Send, X, User, Save, ExternalLink, Trash2, Sparkles, Zap } from "lucide
 import ReactMarkdown from "react-markdown";
 import { useSaveItinerary, useItineraries } from "@/hooks/useItineraries";
 import { useAuth } from "@/hooks/useAuth";
+import { useCopilot } from "@/contexts/CopilotContext";
 import { useToast } from "@/hooks/use-toast";
 import ChatActionButton from "./ChatActionButton";
 import ChatItineraryCards, { type ItineraryData, type ItineraryOption } from "./ChatItineraryCards";
@@ -199,7 +200,7 @@ const quickStarters = [
 ];
 
 export default function AiPlannerChat() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen, toggle } = useCopilot();
   const [messages, setMessages] = useState<Msg[]>(loadChatHistory);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -318,7 +319,7 @@ export default function AiPlannerChat() {
     <>
       {/* Copilot toggle button - fixed to right edge */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className={`fixed top-1/2 -translate-y-1/2 z-50 group transition-all duration-500 ${
           isOpen ? "right-[400px] md:right-[420px]" : "right-0"
         }`}

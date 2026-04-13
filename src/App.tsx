@@ -10,6 +10,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import AiPlannerChat from "@/components/chat/AiPlannerChat";
 import VendorAssistantChat from "@/components/chat/VendorAssistantChat";
 import { useLocation } from "react-router-dom";
+import { CopilotProvider, useCopilot } from "@/contexts/CopilotContext";
 import Index from "./pages/Index";
 import Discover from "./pages/Discover";
 import Venue from "./pages/Venue";
@@ -71,6 +72,81 @@ function ChatRouter() {
   return <AiPlannerChat />;
 }
 
+function AppContent() {
+  const { isOpen } = useCopilot();
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  return (
+    <>
+      {/* Main content area that collapses when copilot is open */}
+      <div
+        className={`min-h-screen transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isOpen && !isAdminRoute ? "md:mr-[420px]" : "mr-0"
+        }`}
+      >
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/discover" element={<Discover />} />
+          <Route path="/venue/:id" element={<Venue />} />
+          <Route path="/event/:id" element={<Event />} />
+          <Route path="/plan" element={<Plan />} />
+          <Route path="/map" element={<Map />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/help" element={<HelpCenter />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/our-story" element={<OurStory />} />
+          <Route path="/grievances" element={<CustomerGrievances />} />
+          <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path="/vendor" element={<RoleProtectedRoute requiredRole="vendor"><VendorLayout /></RoleProtectedRoute>}>
+            <Route index element={<VendorDashboard />} />
+            <Route path="listings" element={<VendorListings />} />
+            <Route path="listings/new" element={<NewListing />} />
+            <Route path="listings/:id/edit" element={<EditListing />} />
+            <Route path="bookings" element={<VendorBookings />} />
+            <Route path="events" element={<VendorEvents />} />
+            <Route path="events/new" element={<NewEvent />} />
+            <Route path="events/:id/edit" element={<EditEvent />} />
+            <Route path="reviews" element={<VendorReviews />} />
+            <Route path="analytics" element={<VendorAnalytics />} />
+            <Route path="messages" element={<VendorMessages />} />
+            <Route path="settings" element={<VendorSettings />} />
+            <Route path="grievances" element={<VendorGrievances />} />
+          </Route>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<RoleProtectedRoute requiredRole="admin"><AdminLayout /></RoleProtectedRoute>}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="approvals" element={<AdminApprovals />} />
+            <Route path="bookings" element={<AdminBookings />} />
+            <Route path="payments" element={<AdminPayments />} />
+            <Route path="refunds" element={<AdminRefunds />} />
+            <Route path="support" element={<AdminSupport />} />
+            <Route path="content" element={<AdminContent />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="grievances" element={<AdminGrievances />} />
+          </Route>
+          <Route path="/movies" element={<Movies />} />
+          <Route path="/movies/search" element={<MovieSearch />} />
+          <Route path="/cinemas" element={<Cinemas />} />
+          <Route path="/movie/:id" element={<Movie />} />
+          <Route path="/booking/:showtimeId" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
+          <Route path="/booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/itinerary/:id" element={<ProtectedRoute><Itinerary /></ProtectedRoute>} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+      <ChatRouter />
+    </>
+  );
+}
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -81,69 +157,9 @@ const App = () => (
       <BrowserRouter>
         <ScrollToTop />
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/discover" element={<Discover />} />
-            <Route path="/venue/:id" element={<Venue />} />
-            <Route path="/event/:id" element={<Event />} />
-            <Route path="/plan" element={<Plan />} />
-            <Route path="/map" element={<Map />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/help" element={<HelpCenter />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/our-story" element={<OurStory />} />
-            <Route path="/grievances" element={<CustomerGrievances />} />
-            <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-            {/* Protected Vendor Routes */}
-            <Route path="/vendor" element={<RoleProtectedRoute requiredRole="vendor"><VendorLayout /></RoleProtectedRoute>}>
-              <Route index element={<VendorDashboard />} />
-              <Route path="listings" element={<VendorListings />} />
-              <Route path="listings/new" element={<NewListing />} />
-              <Route path="listings/:id/edit" element={<EditListing />} />
-              <Route path="bookings" element={<VendorBookings />} />
-              <Route path="events" element={<VendorEvents />} />
-              <Route path="events/new" element={<NewEvent />} />
-              <Route path="events/:id/edit" element={<EditEvent />} />
-              <Route path="reviews" element={<VendorReviews />} />
-              <Route path="analytics" element={<VendorAnalytics />} />
-              <Route path="messages" element={<VendorMessages />} />
-              <Route path="settings" element={<VendorSettings />} />
-              <Route path="grievances" element={<VendorGrievances />} />
-            </Route>
-            {/* Admin Login */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            {/* Protected Admin Routes */}
-            <Route path="/admin" element={<RoleProtectedRoute requiredRole="admin"><AdminLayout /></RoleProtectedRoute>}>
-              <Route index element={<AdminDashboard />} />
-              <Route path="analytics" element={<AdminAnalytics />} />
-              <Route path="users" element={<AdminUsers />} />
-              <Route path="approvals" element={<AdminApprovals />} />
-              <Route path="bookings" element={<AdminBookings />} />
-              <Route path="payments" element={<AdminPayments />} />
-              <Route path="refunds" element={<AdminRefunds />} />
-              <Route path="support" element={<AdminSupport />} />
-              <Route path="content" element={<AdminContent />} />
-              <Route path="settings" element={<AdminSettings />} />
-              <Route path="grievances" element={<AdminGrievances />} />
-            </Route>
-            <Route path="/movies" element={<Movies />} />
-            <Route path="/movies/search" element={<MovieSearch />} />
-            <Route path="/cinemas" element={<Cinemas />} />
-            <Route path="/movie/:id" element={<Movie />} />
-            {/* Protected Booking Route */}
-            <Route path="/booking/:showtimeId" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
-            <Route path="/booking" element={<ProtectedRoute><Booking /></ProtectedRoute>} />
-            {/* Protected Profile & Itinerary Routes */}
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/itinerary/:id" element={<ProtectedRoute><Itinerary /></ProtectedRoute>} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <ChatRouter />
+          <CopilotProvider>
+            <AppContent />
+          </CopilotProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Send, X, User, Trash2, BriefcaseBusiness, Zap } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/hooks/useAuth";
+import { useCopilot } from "@/contexts/CopilotContext";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -91,7 +92,7 @@ async function streamChat({
 }
 
 export default function VendorAssistantChat() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen, toggle } = useCopilot();
   const [messages, setMessages] = useState<Msg[]>(loadChatHistory);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -152,7 +153,7 @@ export default function VendorAssistantChat() {
     <>
       {/* Copilot toggle button - fixed to right edge */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className={`fixed top-1/2 -translate-y-1/2 z-50 group transition-all duration-500 ${
           isOpen ? "right-[400px] md:right-[420px]" : "right-0"
         }`}
