@@ -81,7 +81,7 @@ function AppContent() {
     <>
       {/* Main content area that collapses when copilot is open */}
       <div
-        className={`min-h-screen transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        className={`min-h-screen overflow-x-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isOpen && !isAdminRoute ? "md:mr-[420px]" : "mr-0"
         }`}
       >

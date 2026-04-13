@@ -151,31 +151,24 @@ export default function VendorAssistantChat() {
 
   return (
     <>
-      {/* Copilot toggle button - fixed to right edge */}
-      <button
-        onClick={toggle}
-        className={`fixed top-1/2 -translate-y-1/2 z-50 group transition-all duration-500 ${
-          isOpen ? "right-[400px] md:right-[420px]" : "right-0"
-        }`}
-        aria-label={isOpen ? "Close Vendor Assistant" : "Open Vendor Assistant"}
-      >
-        <span className={`relative flex items-center justify-center w-10 h-20 rounded-l-2xl
-          bg-card/90 backdrop-blur-xl border border-r-0 border-secondary/30
-          shadow-[0_0_30px_hsl(var(--secondary)/0.15)]
-          group-hover:shadow-[0_0_40px_hsl(var(--secondary)/0.35)]
-          group-hover:border-secondary/60 transition-all duration-300
-          ${isOpen ? "bg-muted/80" : ""}`}
+      {/* Copilot toggle button */}
+      {!isOpen && (
+        <button
+          onClick={toggle}
+          className="fixed top-1/2 -translate-y-1/2 right-0 z-50 group transition-all duration-300"
+          aria-label="Open Vendor Assistant"
         >
-          {isOpen ? (
-            <X className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-          ) : (
-            <>
-              <span className="absolute inset-0 rounded-l-2xl bg-gradient-to-br from-secondary/20 via-accent/10 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <BriefcaseBusiness className="w-5 h-5 text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary)/0.5)] relative z-10" />
-            </>
-          )}
-        </span>
-      </button>
+          <span className="relative flex items-center justify-center w-10 h-20 rounded-l-2xl
+            bg-card/90 backdrop-blur-xl border border-r-0 border-secondary/30
+            shadow-[0_0_30px_hsl(var(--secondary)/0.15)]
+            group-hover:shadow-[0_0_40px_hsl(var(--secondary)/0.35)]
+            group-hover:border-secondary/60 transition-all duration-300"
+          >
+            <span className="absolute inset-0 rounded-l-2xl bg-gradient-to-br from-secondary/20 via-accent/10 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <BriefcaseBusiness className="w-5 h-5 text-secondary drop-shadow-[0_0_8px_hsl(var(--secondary)/0.5)] relative z-10" />
+          </span>
+        </button>
+      )}
 
       {/* Backdrop overlay for mobile */}
       {isOpen && (
