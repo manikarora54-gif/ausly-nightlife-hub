@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUnreadCount, useNotificationRealtime } from "@/hooks/useNotifications";
+import { useCopilot } from "@/contexts/CopilotContext";
 import NavbarLogo from "./navbar/NavbarLogo";
 import DesktopNavLinks from "./navbar/DesktopNavLinks";
 import DesktopActions from "./navbar/DesktopActions";
@@ -25,6 +26,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, loading, signOut, isVendor } = useAuth();
   const { data: unreadCount } = useUnreadCount();
+  const { isOpen: copilotOpen } = useCopilot();
   useNotificationRealtime();
 
   useEffect(() => {
@@ -54,7 +56,9 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 z-50 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        copilotOpen ? "right-[420px]" : "right-0"
+      } ${
         scrolled
           ? "bg-background/80 backdrop-blur-xl border-b border-border/50 shadow-lg shadow-background/5"
           : "bg-transparent"
