@@ -153,7 +153,7 @@ export default function VendorAssistantChat() {
     <>
       {/* Copilot toggle button - fixed to right edge */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggle}
         className={`fixed top-1/2 -translate-y-1/2 z-50 group transition-all duration-500 ${
           isOpen ? "right-[400px] md:right-[420px]" : "right-0"
         }`}
