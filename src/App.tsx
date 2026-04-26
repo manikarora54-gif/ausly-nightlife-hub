@@ -92,7 +92,8 @@ function AppContent() {
           isOpen && !isAdminRoute ? "md:mr-[420px]" : "mr-0"
         }`}
       >
-        <Routes>
+        <div key={location.pathname} className="page-transition">
+        <Routes location={location}>
           <Route path="/" element={<Index />} />
           <Route path="/discover" element={<Discover />} />
           <Route path="/venue/:id" element={<Venue />} />
@@ -148,6 +149,7 @@ function AppContent() {
           <Route path="/itinerary/:id" element={<ProtectedRoute><Itinerary /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </div>
       </div>
       <ChatRouter />
     </>
