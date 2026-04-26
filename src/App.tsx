@@ -72,7 +72,8 @@ function ChatRouter() {
   if (isVendorRoute) return <VendorAssistantChat />;
   return (
     <>
-      <AiPlannerChat />
+      {/* Desktop: side-panel chat. Mobile: holographic Jarvis agent */}
+      <div className="hidden md:block"><AiPlannerChat /></div>
       <JarvisAgent />
     </>
   );
