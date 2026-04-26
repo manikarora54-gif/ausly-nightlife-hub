@@ -1,1 +1,4 @@
 project_id = "dpbsxrqjendnoraasafs"
+
+[functions.jarvis-agent]
+verify_jwt = false

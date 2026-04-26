@@ -9,6 +9,7 @@ import RoleProtectedRoute from "@/components/auth/RoleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import AiPlannerChat from "@/components/chat/AiPlannerChat";
 import VendorAssistantChat from "@/components/chat/VendorAssistantChat";
+import JarvisAgent from "@/components/chat/JarvisAgent";
 import { useLocation } from "react-router-dom";
 import { CopilotProvider, useCopilot } from "@/contexts/CopilotContext";
 import Index from "./pages/Index";
@@ -69,7 +70,13 @@ function ChatRouter() {
   const isAdminRoute = location.pathname.startsWith("/admin");
   if (isAdminRoute) return null;
   if (isVendorRoute) return <VendorAssistantChat />;
-  return <AiPlannerChat />;
+  return (
+    <>
+      {/* Desktop: side-panel chat. Mobile: holographic Jarvis agent */}
+      <div className="hidden md:block"><AiPlannerChat /></div>
+      <JarvisAgent />
+    </>
+  );
 }
 
 function AppContent() {
