@@ -128,8 +128,19 @@ export default function JarvisAgent() {
       const { data, error } = await supabase.functions.invoke("jarvis-agent", {
         body: { query: text, city: "Berlin" },
       });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      // Handle non-2xx returned by the function (supabase wraps these in `error`)
+      const errMsg: string | undefined = (error as any)?.message || data?.error;
+      if (errMsg) {
+        const friendly = /credits?\s*exhausted|402/i.test(errMsg)
+          ? "I'm out of AI energy ⚡ Please top up Lovable AI credits in Settings → Workspace → Usage."
+          : /rate.?limit|429/i.test(errMsg)
+          ? "Too many requests right now — give me a sec and try again."
+          : errMsg;
+        setAgentMessage(friendly);
+        setState("greeting");
+        toast({ title: "Ausly is unavailable", description: friendly, variant: "destructive" });
+        return;
+      }
 
       const rec = data.recommendation as Recommendation;
       const spoken = data.spoken || "Here's what I found.";
@@ -137,7 +148,6 @@ export default function JarvisAgent() {
       setRecommendation(rec);
       setState("speaking");
       speak(spoken, () => setState("results"));
-      // Fallback in case speech doesn't fire
       setTimeout(() => setState("results"), 3000);
     } catch (e: any) {
       const msg = e?.message || "Connection issue. Try again.";
