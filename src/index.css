@@ -216,3 +216,111 @@
     transform: translateY(0);
   }
 }
+
+/* ====== Global interactivity layer ====== */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(8px) scale(0.995); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes shineSweep {
+  0%   { transform: translateX(-150%) skewX(-20deg); }
+  100% { transform: translateX(250%) skewX(-20deg); }
+}
+
+@layer utilities {
+  .page-transition {
+    animation: pageEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    will-change: transform, opacity, filter;
+  }
+
+  /* Smooth, premium feel on every interactive element */
+  a, button, [role="button"], .interactive {
+    transition:
+      transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s ease,
+      background-color 0.25s ease,
+      color 0.25s ease,
+      border-color 0.25s ease,
+      opacity 0.2s ease,
+      filter 0.25s ease;
+  }
+
+  /* Tactile press feedback */
+  button:not(:disabled):active,
+  [role="button"]:not([aria-disabled="true"]):active,
+  a:active {
+    transform: scale(0.96);
+  }
+
+  /* Subtle hover lift for buttons & links */
+  button:not(:disabled):hover,
+  [role="button"]:not([aria-disabled="true"]):hover {
+    transform: translateY(-1px);
+  }
+
+  /* Card lift utility — apply to listing/result/feature cards */
+  .card-lift {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+    will-change: transform;
+  }
+  .card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px hsl(var(--primary) / 0.15), 0 0 24px hsl(var(--primary) / 0.08);
+    border-color: hsl(var(--primary) / 0.35);
+  }
+
+  /* Animated underline for inline links */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -2px;
+    width: 100%; height: 2px;
+    background: var(--gradient-neon);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .link-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  /* Shine sweep effect for hero buttons (add `.btn-shine` to a button) */
+  .btn-shine { position: relative; overflow: hidden; isolation: isolate; }
+  .btn-shine::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 0%, hsl(0 0% 100% / 0.18) 50%, transparent 100%);
+    transform: translateX(-150%) skewX(-20deg);
+    pointer-events: none;
+  }
+  .btn-shine:hover::before {
+    animation: shineSweep 0.9s ease forwards;
+  }
+
+  /* Focus ring polish (a11y first) */
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary) / 0.7);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /* Respect reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .page-transition,
+    .card-lift,
+    .btn-shine::before {
+      animation: none !important;
+      transition: none !important;
+    }
+    a, button, [role="button"] { transition: none !important; }
+  }
+}
+
