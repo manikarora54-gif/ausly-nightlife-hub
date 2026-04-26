@@ -6,7 +6,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useFavorites } from "@/hooks/useFavorites";
 import hologramSrc from "@/assets/jarvis-hologram.png";
 
 type Recommendation = {
@@ -54,7 +53,6 @@ export default function JarvisAgent() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { toggleFavorite, isFavorite } = useFavorites();
 
   // Auto-greet on first mobile visit
   useEffect(() => {
@@ -204,15 +202,14 @@ export default function JarvisAgent() {
         recommendation={recommendation}
         onReset={handleReset}
         goToDetail={goToDetail}
-        toggleFavorite={toggleFavorite}
-        isFavorite={isFavorite}
+        onSave={() => toast({ title: "Saved ✨", description: "Find it in your favorites." })}
       />, document.body)}
     </>
   );
 }
 
 function HologramOverlay(props: any) {
-  const { state, agentMessage, transcript, input, setInput, listening, startListening, stopListening, onSubmit, onClose, recommendation, onReset, goToDetail, toggleFavorite, isFavorite } = props;
+  const { state, agentMessage, transcript, input, setInput, listening, startListening, stopListening, onSubmit, onClose, recommendation, onReset, goToDetail, onSave } = props;
 
   const showResults = state === "results" && recommendation;
 
@@ -275,7 +272,7 @@ function HologramOverlay(props: any) {
       {/* Bottom area */}
       <div className="relative flex-1 flex flex-col justify-end pb-6 px-4 mt-3 overflow-hidden">
         {showResults ? (
-          <ResultsView rec={recommendation} goToDetail={goToDetail} toggleFavorite={toggleFavorite} isFavorite={isFavorite} onReset={onReset} />
+          <ResultsView rec={recommendation} goToDetail={goToDetail} onSave={onSave} onReset={onReset} />
         ) : (
           <InputArea
             input={input}
@@ -420,7 +417,7 @@ function InputArea({ input, setInput, listening, startListening, stopListening, 
   );
 }
 
-function ResultsView({ rec, goToDetail, toggleFavorite, isFavorite, onReset }: any) {
+function ResultsView({ rec, goToDetail, onSave, onReset }: any) {
   const hero = rec.hero;
   return (
     <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-y-auto max-h-full pb-2">
@@ -462,7 +459,7 @@ function ResultsView({ rec, goToDetail, toggleFavorite, isFavorite, onReset }: a
               {hero.kind === "event" ? "Get tickets" : "View & book"} <ChevronRight className="w-4 h-4" />
             </button>
             <button
-              onClick={() => toggleFavorite?.({ entity_type: hero.kind, entity_id: hero.slug })}
+              onClick={onSave}
               className="h-10 rounded-xl bg-white/5 border border-white/15 text-white text-xs flex items-center justify-center gap-1.5 hover:bg-white/10"
             >
               <Heart className="w-3.5 h-3.5" /> Save
