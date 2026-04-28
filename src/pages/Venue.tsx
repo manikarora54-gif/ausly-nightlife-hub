@@ -121,13 +121,70 @@ const Venue = () => {
   const openingHours = venue.opening_hours as Record<string, string> | null;
   const IconComp = config.icon;
 
+  // Map venue.type to schema.org type
+  const schemaTypeMap: Record<string, string> = {
+    restaurant: "Restaurant",
+    bar: "BarOrPub",
+    club: "NightClub",
+    lounge: "BarOrPub",
+    cafe: "CafeOrCoffeeShop",
+  };
+  const schemaType = schemaTypeMap[(venue.type || "").toLowerCase()] || "LocalBusiness";
+
+  const venueJsonLd: Record<string, any> = {
+    "@context": "https://schema.org",
+    "@type": schemaType,
+    name: venue.name,
+    description: venue.description || venue.short_description || undefined,
+    image: images.slice(0, 6),
+    url: `https://ausly.lovable.app/venue/${venue.slug || venue.id}`,
+    telephone: venue.phone || undefined,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: venue.address,
+      addressLocality: venue.city,
+      addressCountry: "DE",
+    },
+    ...(venue.latitude && venue.longitude
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: Number(venue.latitude),
+            longitude: Number(venue.longitude),
+          },
+        }
+      : {}),
+    ...(venue.cuisine ? { servesCuisine: venue.cuisine } : {}),
+    ...(venue.price_range ? { priceRange: "€".repeat(venue.price_range) } : {}),
+    ...(venue.average_rating && (venue.review_count ?? 0) > 0
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: Number(venue.average_rating),
+            reviewCount: venue.review_count,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
+  };
+
   return (
     <div className="min-h-screen bg-background relative">
       <SEOHead
-        title={`${venue.name} – ${venue.city} | Ausly`}
-        description={venue.short_description || venue.description?.slice(0, 155) || `Discover ${venue.name} in ${venue.city}. View menu, reviews, and make a reservation on Ausly.`}
+        title={`${venue.name} – ${venue.type} in ${venue.city} | Ausly`}
+        description={venue.short_description || venue.description?.slice(0, 155) || `Discover ${venue.name} in ${venue.city}. View menu, reviews, and book a table on Ausly.`}
         image={images[0]}
+        imageAlt={`${venue.name} in ${venue.city}`}
         type="place"
+        canonical={`https://ausly.lovable.app/venue/${venue.slug || venue.id}`}
+        keywords={`${venue.name}, ${venue.type}, ${venue.city}, ${venue.cuisine || ""}, restaurants ${venue.city}, ${venue.type} ${venue.city}`}
+        jsonLd={venueJsonLd}
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Discover", url: "/discover" },
+          { name: venue.name, url: `/venue/${venue.slug || venue.id}` },
+        ]}
       />
       {/* Decorative background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
