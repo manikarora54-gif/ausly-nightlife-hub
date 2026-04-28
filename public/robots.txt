@@ -1,16 +1,38 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /vendor
+Disallow: /vendor/
+Disallow: /profile
+Disallow: /booking
+Disallow: /notifications
+Disallow: /reset-password
+Disallow: /sign-in
+Disallow: /signin
+Disallow: /sign-up
+Disallow: /signup
+Disallow: /admin-login
+
+# Major bots — explicit allow with full crawl
+User-agent: Googlebot
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: Twitterbot
+Allow: /
+User-agent: facebookexternalhit
+Allow: /
+User-agent: LinkedInBot
+Allow: /
+
+# Block aggressive AI scrapers (optional — comment out to allow)
+User-agent: GPTBot
+Disallow: /
+User-agent: CCBot
+Disallow: /
 
 Sitemap: https://ausly.lovable.app/sitemap.xml
+Host: https://ausly.lovable.app

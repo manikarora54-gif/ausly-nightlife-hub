@@ -1,0 +1,27 @@
+{
+  "name": "Ausly – Discover Germany",
+  "short_name": "Ausly",
+  "description": "Discover restaurants, bars, clubs and events across Germany.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A0A0F",
+  "theme_color": "#0A0A0F",
+  "lang": "en",
+  "categories": ["food", "lifestyle", "travel", "entertainment"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

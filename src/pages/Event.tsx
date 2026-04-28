@@ -81,13 +81,69 @@ const EventPage = () => {
     navigate(`/booking?${params.toString()}`);
   };
 
+  const eventJsonLd: Record<string, any> = {
+    "@context": "https://schema.org",
+    "@type": event.event_type === "movie" ? "ScreeningEvent" : "Event",
+    name: event.name,
+    description: event.description || event.short_description || undefined,
+    image: images.slice(0, 6),
+    startDate: event.start_date,
+    endDate: event.end_date || undefined,
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    url: `https://ausly.lovable.app/event/${event.slug || event.id}`,
+    ...((event as any).venues
+      ? {
+          location: {
+            "@type": "Place",
+            name: (event as any).venues.name,
+            address: {
+              "@type": "PostalAddress",
+              streetAddress: (event as any).venues.address,
+              addressLocality: (event as any).venues.city,
+              addressCountry: "DE",
+            },
+          },
+        }
+      : {}),
+    ...(hasPrice
+      ? {
+          offers: {
+            "@type": "Offer",
+            price: event.ticket_price,
+            priceCurrency: event.ticket_currency || "EUR",
+            availability:
+              spotsLeft === 0
+                ? "https://schema.org/SoldOut"
+                : "https://schema.org/InStock",
+            url: `https://ausly.lovable.app/event/${event.slug || event.id}`,
+            validFrom: event.start_date,
+          },
+        }
+      : {}),
+    organizer: {
+      "@type": "Organization",
+      name: "Ausly",
+      url: "https://ausly.lovable.app",
+    },
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <SEOHead
         title={`${event.name} – ${event.event_type} | Ausly`}
         description={event.short_description || event.description?.slice(0, 155) || `${event.name} – ${event.event_type} event. Get tickets and details on Ausly.`}
         image={images[0]}
+        imageAlt={event.name}
         type="event"
+        canonical={`https://ausly.lovable.app/event/${event.slug || event.id}`}
+        keywords={`${event.name}, ${event.event_type}, events Germany, ${event.genre || ""}`}
+        jsonLd={eventJsonLd}
+        breadcrumbs={[
+          { name: "Home", url: "/" },
+          { name: "Events", url: "/discover?type=events" },
+          { name: event.name, url: `/event/${event.slug || event.id}` },
+        ]}
       />
       <Navbar />
 

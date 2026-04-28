@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://ausly.lovable.app/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://ausly.lovable.app/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://ausly.lovable.app/" />
   </url>
   <url>
     <loc>https://ausly.lovable.app/discover</loc>
@@ -13,20 +16,65 @@
   <url>
     <loc>https://ausly.lovable.app/discover?type=restaurants</loc>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ausly.lovable.app/discover?type=bars</loc>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?type=clubs</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ausly.lovable.app/discover?type=events</loc>
     <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://ausly.lovable.app/discover?type=experiences</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=Berlin</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=Hamburg</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=München</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=Köln</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=Frankfurt</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=Stuttgart</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=Düsseldorf</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/discover?city=Leipzig</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
@@ -41,9 +89,19 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://ausly.lovable.app/cinemas</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://ausly.lovable.app/plan</loc>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/our-story</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://ausly.lovable.app/help</loc>
@@ -56,6 +114,11 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://ausly.lovable.app/grievances</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
     <loc>https://ausly.lovable.app/privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
@@ -64,5 +127,10 @@
     <loc>https://ausly.lovable.app/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://ausly.lovable.app/sitemap-dynamic</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
   </url>
 </urlset>
