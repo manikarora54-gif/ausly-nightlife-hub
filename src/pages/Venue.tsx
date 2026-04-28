@@ -8,10 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useVenue } from "@/hooks/useVenues";
 import { useVenueReviews } from "@/hooks/useReviews";
+import { useEvents } from "@/hooks/useEvents";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import ReviewForm from "@/components/venue/ReviewForm";
+import MenuSection from "@/components/venue/MenuSection";
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
 import {
   Star, MapPin, Clock, Phone, Globe, Heart, Calendar, Users,
   DollarSign, Loader2, Utensils, Wine, Music, ArrowRight,
