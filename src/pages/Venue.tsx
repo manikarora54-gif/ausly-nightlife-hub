@@ -47,6 +47,7 @@ const Venue = () => {
   const navigate = useNavigate();
   const { data: venue, isLoading, error } = useVenue(id || "");
   const { data: reviews } = useVenueReviews(venue?.id || "");
+  const { data: venueEvents } = useEvents({ venueId: venue?.id, upcoming: true, limit: 6 });
   const { user } = useAuth();
   const { toast } = useToast();
 
