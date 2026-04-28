@@ -92,15 +92,15 @@ const EventPage = () => {
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     url: `https://ausly.lovable.app/event/${event.slug || event.id}`,
-    ...(event.venues
+    ...((event as any).venues
       ? {
           location: {
             "@type": "Place",
-            name: (event.venues as any).name,
+            name: (event as any).venues.name,
             address: {
               "@type": "PostalAddress",
-              streetAddress: (event.venues as any).address,
-              addressLocality: (event.venues as any).city,
+              streetAddress: (event as any).venues.address,
+              addressLocality: (event as any).venues.city,
               addressCountry: "DE",
             },
           },
