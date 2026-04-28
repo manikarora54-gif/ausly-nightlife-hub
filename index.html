@@ -2,32 +2,99 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0A0A0F" />
+    <meta name="color-scheme" content="dark light" />
+
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/og-image.png" />
-    <!-- TODO: Set the document title to the name of your application -->
-    <title>Ausly – Discover Restaurants, Events & Nightlife in Germany</title>
-    <meta name="description" content="Find the best restaurants, bars, clubs, and events in Berlin, Hamburg, München, and more. Plan your perfect night out with Ausly.">
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Performance: preconnect to backend + image CDNs -->
+    <link rel="preconnect" href="https://dpbsxrqjendnoraasafs.supabase.co" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <!-- Primary SEO -->
+    <title>Ausly – Discover Restaurants, Bars, Clubs & Events in Germany</title>
+    <meta name="description" content="Discover the best restaurants, bars, clubs, events and nightlife across Berlin, Hamburg, München, Köln and more. Curated for expats and locals — book your perfect night out with Ausly." />
+    <meta name="keywords" content="restaurants Germany, bars Berlin, nightlife Munich, events Hamburg, clubs Köln, expats Germany, Ausly, things to do Berlin, restaurant reservation Germany, German nightlife guide" />
     <meta name="author" content="Ausly" />
-    <meta name="keywords" content="restaurants Germany, bars Berlin, nightlife Munich, events Hamburg, clubs Köln, nightlife Germany, Ausly" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
 
-    <!-- TODO: Update og:title to match your application name -->
-    
-    
+    <!-- Canonical & alt languages -->
+    <link rel="canonical" href="https://ausly.lovable.app/" />
+    <link rel="alternate" hreflang="en" href="https://ausly.lovable.app/" />
+    <link rel="alternate" hreflang="de" href="https://ausly.lovable.app/" />
+    <link rel="alternate" hreflang="x-default" href="https://ausly.lovable.app/" />
+
+    <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ausly" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="de_DE" />
+    <meta property="og:title" content="Ausly – Discover Restaurants, Bars & Events in Germany" />
+    <meta property="og:description" content="Curated nightlife, dining and events across Germany's top cities. Built for expats and locals." />
+    <meta property="og:url" content="https://ausly.lovable.app/" />
     <meta property="og:image" content="https://ausly.lovable.app/og-image.png" />
+    <meta property="og:image:width" content="1024" />
+    <meta property="og:image:height" content="1024" />
+    <meta property="og:image:alt" content="Ausly — Deine Stadt, dein Abend" />
 
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@Ausly" />
+    <meta name="twitter:creator" content="@Ausly" />
+    <meta name="twitter:title" content="Ausly – Discover Germany's Best Spots" />
+    <meta name="twitter:description" content="Restaurants, bars, clubs and events across Germany. Deine Stadt, dein Abend." />
     <meta name="twitter:image" content="https://ausly.lovable.app/og-image.png" />
-    <meta property="og:title" content="Ausly">
-  <meta name="twitter:title" content="Ausly">
-  <meta property="og:description" content="Deine Stadt">
-  <meta name="twitter:description" content="Deine Stadt">
-</head>
+    <meta name="twitter:image:alt" content="Ausly logo" />
+
+    <!-- Baseline organization + website JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://ausly.lovable.app/#organization",
+          "name": "Ausly",
+          "url": "https://ausly.lovable.app/",
+          "logo": "https://ausly.lovable.app/og-image.png",
+          "sameAs": [
+            "https://twitter.com/Ausly"
+          ],
+          "areaServed": {
+            "@type": "Country",
+            "name": "Germany"
+          }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://ausly.lovable.app/#website",
+          "url": "https://ausly.lovable.app/",
+          "name": "Ausly",
+          "description": "Discover restaurants, bars, clubs and events across Germany.",
+          "publisher": { "@id": "https://ausly.lovable.app/#organization" },
+          "inLanguage": ["en", "de"],
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://ausly.lovable.app/discover?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        }
+      ]
+    }
+    </script>
+  </head>
 
   <body>
     <div id="root"></div>
+    <noscript>You need to enable JavaScript to use Ausly.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
