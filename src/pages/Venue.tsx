@@ -210,6 +210,44 @@ const Venue = () => {
                 </div>
               )}
 
+              {/* Menu / Drinks */}
+              <MenuSection venueId={venue.id} venueType={venue.type} />
+
+              {/* Upcoming events at this venue */}
+              {venueEvents && venueEvents.length > 0 && (
+                <div className="glass-card p-6">
+                  <h2 className="font-heading font-semibold text-xl mb-4 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-primary" /> Upcoming at {venue.name}
+                  </h2>
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {venueEvents.map((ev) => (
+                      <Link
+                        key={ev.id}
+                        to={`/event/${ev.slug || ev.id}`}
+                        className="group flex gap-3 p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors card-lift"
+                      >
+                        <img
+                          src={ev.images?.[0] || "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop"}
+                          alt={ev.name}
+                          loading="lazy"
+                          className="w-20 h-20 rounded-lg object-cover shrink-0"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <Badge variant="outline" className="text-[10px] mb-1">{ev.event_type}</Badge>
+                          <h4 className="font-medium text-sm truncate group-hover:text-primary transition-colors">{ev.name}</h4>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            {format(new Date(ev.start_date), "EEE, MMM d • HH:mm")}
+                          </p>
+                          {ev.ticket_price != null && ev.ticket_price > 0 && (
+                            <p className="text-xs font-semibold text-primary mt-1">€{ev.ticket_price}</p>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Reviews */}
               <div className="glass-card p-6">
                 <h2 className="font-heading font-semibold text-xl mb-6">Reviews</h2>
