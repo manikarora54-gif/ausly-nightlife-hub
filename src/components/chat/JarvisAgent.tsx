@@ -132,7 +132,7 @@ export default function JarvisAgent() {
       const errMsg: string | undefined = (error as any)?.message || data?.error;
       if (errMsg) {
         const friendly = /credits?\s*exhausted|402/i.test(errMsg)
-          ? "I'm out of AI energy ⚡ Please top up Lovable AI credits in Settings → Workspace → Usage."
+          ? "I'm out of AI energy ⚡ Ausly's AI quota has been used up — please try again later."
           : /rate.?limit|429/i.test(errMsg)
           ? "Too many requests right now — give me a sec and try again."
           : errMsg;
