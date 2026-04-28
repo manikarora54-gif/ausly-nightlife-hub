@@ -14,7 +14,7 @@ export default function SEOHead({
   description = "Find the best restaurants, bars, clubs, and events in Berlin, Hamburg, München, and more. Plan your perfect night out with Ausly.",
   canonical,
   type = "website",
-  image = "https://ausly.lovable.app/lovable-uploads/543a5916-7c50-45ff-aca7-9c29e172bd58.png",
+  image = "https://ausly.lovable.app/og-image.png",
   noindex = false,
 }: SEOHeadProps) {
   useEffect(() => {
