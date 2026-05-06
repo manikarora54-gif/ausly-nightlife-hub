@@ -63,6 +63,7 @@ import VendorAnalytics from "./pages/vendor/Analytics";
 import VendorMessages from "./pages/vendor/Messages";
 import VendorSettings from "./pages/vendor/Settings";
 import VendorGrievances from "./pages/vendor/Grievances";
+import CityCategory from "./pages/CityCategory";
 
 function ChatRouter() {
   const location = useLocation();
@@ -96,6 +97,7 @@ function AppContent() {
         <Routes location={location}>
           <Route path="/" element={<Index />} />
           <Route path="/discover" element={<Discover />} />
+          <Route path="/:city/:category" element={<CityCategory />} />
           <Route path="/venue/:id" element={<Venue />} />
           <Route path="/event/:id" element={<Event />} />
           <Route path="/plan" element={<Plan />} />
