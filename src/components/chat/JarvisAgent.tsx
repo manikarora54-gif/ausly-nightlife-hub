@@ -54,21 +54,7 @@ export default function JarvisAgent() {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  // Auto-greet on first mobile visit
-  useEffect(() => {
-    if (!isMobile) return;
-    const seen = sessionStorage.getItem(SEEN_KEY);
-    if (seen) return;
-    const t = setTimeout(() => {
-      setOpen(true);
-      sessionStorage.setItem(SEEN_KEY, "1");
-      const greeting = "Hi, I'm Ausly. Tell me what you're in the mood for tonight.";
-      setAgentMessage(greeting);
-      // Wait for voices to load
-      setTimeout(() => speak(greeting), 400);
-    }, 1500);
-    return () => clearTimeout(t);
-  }, [isMobile]);
+  // Note: Do not auto-launch on mobile. User must tap the agent button to open.
 
   // Setup voice recognition
   useEffect(() => {
