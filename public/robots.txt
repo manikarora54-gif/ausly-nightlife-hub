@@ -35,4 +35,5 @@ User-agent: CCBot
 Disallow: /
 
 Sitemap: https://ausly.lovable.app/sitemap.xml
+Sitemap: https://dpbsxrqjendnoraasafs.supabase.co/functions/v1/sitemap
 Host: https://ausly.lovable.app
