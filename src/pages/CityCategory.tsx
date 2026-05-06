@@ -128,10 +128,10 @@ export default function CityCategory() {
       "@type": "FAQPage",
       mainEntity: category.faqs.map(({ q, a }) => ({
         "@type": "Question",
-        name: q.replaceAll("{city}", cityName),
+        name: q.split("{city}").join(cityName),
         acceptedAnswer: {
           "@type": "Answer",
-          text: a.replaceAll("{city}", cityName),
+          text: a.split("{city}").join(cityName),
         },
       })),
     };
@@ -256,11 +256,11 @@ export default function CityCategory() {
               {category.faqs.map(({ q, a }, i) => (
                 <details key={i} className="group rounded-xl border border-border bg-card/50 backdrop-blur-sm p-5">
                   <summary className="cursor-pointer font-medium flex items-center justify-between">
-                    <span>{q.replaceAll("{city}", cityName)}</span>
+                    <span>{q.split("{city}").join(cityName)}</span>
                     <span className="text-muted-foreground group-open:rotate-180 transition-transform">▾</span>
                   </summary>
                   <p className="mt-3 text-muted-foreground leading-relaxed">
-                    {a.replaceAll("{city}", cityName)}
+                    {a.split("{city}").join(cityName)}
                   </p>
                 </details>
               ))}
