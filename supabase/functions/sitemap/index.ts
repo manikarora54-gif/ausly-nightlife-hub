@@ -64,6 +64,18 @@ Deno.serve(async (req) => {
       );
     }
 
+    // City × category landing pages (high SEO value)
+    const CITIES = ["berlin", "hamburg", "munich", "cologne", "frankfurt", "stuttgart", "duesseldorf", "leipzig"];
+    const CATS = ["restaurants", "bars", "clubs", "nightlife", "events", "experiences"];
+    for (const c of CITIES) {
+      urls.push(`<url><loc>${SITE}/${c}</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>`);
+      for (const k of CATS) {
+        urls.push(
+          `<url><loc>${SITE}/${c}/${k}</loc><changefreq>daily</changefreq><priority>0.85</priority></url>`
+        );
+      }
+    }
+
     // Venues
     for (const v of venues || []) {
       const slug = v.slug || v.id;
