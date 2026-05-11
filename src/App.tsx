@@ -74,15 +74,19 @@ const ChatRouter = memo(function ChatRouter() {
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   if (isAdminRoute) return null;
-  if (isVendorRoute) return <VendorAssistantChat />;
+  if (isVendorRoute) return (
+    <Suspense fallback={null}>
+      <VendorAssistantChat />
+    </Suspense>
+  );
 
   return (
-    <>
+    <Suspense fallback={null}>
       <div className="hidden md:block">
         <AiPlannerChat />
       </div>
       <JarvisAgent />
-    </>
+    </Suspense>
   );
 });
 
