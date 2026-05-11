@@ -8,12 +8,14 @@ import { AuthProvider } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import RoleProtectedRoute from "@/components/auth/RoleProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
-import AiPlannerChat from "@/components/chat/AiPlannerChat";
-import VendorAssistantChat from "@/components/chat/VendorAssistantChat";
-import JarvisAgent from "@/components/chat/JarvisAgent";
 import { CopilotProvider, useCopilot } from "@/contexts/CopilotContext";
 import AdminLayout from "./components/admin/AdminLayout";
 import VendorLayout from "./components/vendor/VendorLayout";
+
+// Lazy-loaded chat widgets — keep heavy deps (react-markdown) off the initial bundle
+const AiPlannerChat = lazy(() => import("@/components/chat/AiPlannerChat"));
+const VendorAssistantChat = lazy(() => import("@/components/chat/VendorAssistantChat"));
+const JarvisAgent = lazy(() => import("@/components/chat/JarvisAgent"));
 
 const Index = lazy(() => import("./pages/Index"));
 const Discover = lazy(() => import("./pages/Discover"));
