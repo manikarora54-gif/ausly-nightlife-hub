@@ -1,0 +1,40 @@
+# Ausly
+
+> Curated city discovery for expats and newcomers in Germany — restaurants, bars, clubs, events, and cinema showtimes.
+
+Ausly helps people who are new to Germany find the best places to eat, drink, and go out. We cover eight major cities and update listings daily. Every venue and event includes practical details like hours, pricing, and location so you can plan without guesswork.
+
+## Pages
+
+- [/](/): Homepage and city discovery hub.
+- [/discover](/discover): Browse restaurants, bars, clubs, and events with filters.
+- [/plan](/plan): AI-powered itinerary planner to build your night out.
+- [/map](/map): Interactive map of venues across covered cities.
+- [/movies](/movies): Currently playing movies and showtimes in German cinemas.
+- [/cinemas](/cinemas): Cinema listings with location and showtime details.
+- [/our-story](/our-story): About Ausly and the team behind it.
+- [/help](/help): Help center and frequently asked questions.
+- [/contact](/contact): Contact form and support information.
+- [/berlin/restaurants](/berlin/restaurants): Top restaurants in Berlin.
+- [/berlin/bars](/berlin/bars): Best bars in Berlin.
+- [/berlin/clubs](/berlin/clubs): Nightclubs and dance venues in Berlin.
+- [/berlin/nightlife](/berlin/nightlife): Nightlife guide for Berlin.
+- [/berlin/events](/berlin/events): Upcoming events in Berlin.
+- [/berlin/experiences](/berlin/experiences): Experiences and activities in Berlin.
+- [/hamburg/nightlife](/hamburg/nightlife): Nightlife guide for Hamburg.
+- [/munich/restaurants](/munich/restaurants): Top restaurants in Munich.
+- [/cologne/events](/cologne/events): Upcoming events in Cologne.
+- [/frankfurt/bars](/frankfurt/bars): Best bars in Frankfurt.
+- [/stuttgart/clubs](/stuttgart/clubs): Nightclubs in Stuttgart.
+- [/duesseldorf/experiences](/duesseldorf/experiences): Experiences in Dusseldorf.
+- [/leipzig/restaurants](/leipzig/restaurants): Top restaurants in Leipzig.
+- [/venue/:id](/venue/sample-venue): Venue detail page with hours, menu, reviews, and booking.
+- [/event/:id](/event/sample-event): Event detail page with tickets, date, and venue info.
+- [/movie/:id](/movie/sample-movie): Movie detail page with synopsis, ratings, and showtimes.
+- [/privacy](/privacy): Privacy policy and data handling practices.
+- [/terms](/terms): Terms of service and usage conditions.
+
+## Optional
+
+- [/privacy](/privacy): Legal privacy policy.
+- [/terms](/terms): Legal terms of service.
