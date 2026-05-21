@@ -23,8 +23,8 @@ interface SEOHeadProps {
 const SITE_ORIGIN = "https://ausly.lovable.app";
 
 export default function SEOHead({
-  title = "Ausly – Discover Restaurants, Bars, Clubs & Events in Germany",
-  description = "Discover the best restaurants, bars, clubs, events and nightlife across Germany's top cities. Curated for expats and locals.",
+  title = "Ausly – Restaurants, Bars & Events in Germany",
+  description = "Discover top restaurants, bars, clubs and events across Berlin, Hamburg, Munich and beyond. Curated nightlife for expats and locals.",
   canonical,
   type = "website",
   image = `${SITE_ORIGIN}/og-image.png`,
