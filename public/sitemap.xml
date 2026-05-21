@@ -1,6 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>https://dpbsxrqjendnoraasafs.supabase.co/functions/v1/sitemap</loc>
-  </sitemap>
-</sitemapindex>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://ausly.lovable.app/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ausly.lovable.app/discover</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ausly.lovable.app/map</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ausly.lovable.app/movies</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ausly.lovable.app/cinemas</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ausly.lovable.app/plan</loc><changefreq>weekly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ausly.lovable.app/our-story</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://ausly.lovable.app/help</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://ausly.lovable.app/contact</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>
+
+  <url><loc>https://ausly.lovable.app/berlin</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/berlin/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/berlin/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/berlin/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/berlin/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/berlin/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/berlin/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+
+  <url><loc>https://ausly.lovable.app/hamburg</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/hamburg/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/hamburg/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/hamburg/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/hamburg/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/hamburg/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/hamburg/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+
+  <url><loc>https://ausly.lovable.app/munich</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/munich/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/munich/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/munich/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/munich/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/munich/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/munich/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+
+  <url><loc>https://ausly.lovable.app/cologne</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/cologne/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/cologne/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/cologne/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/cologne/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/cologne/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/cologne/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+
+  <url><loc>https://ausly.lovable.app/frankfurt</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/frankfurt/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/frankfurt/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/frankfurt/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/frankfurt/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/frankfurt/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/frankfurt/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+
+  <url><loc>https://ausly.lovable.app/stuttgart</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/stuttgart/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/stuttgart/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/stuttgart/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/stuttgart/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/stuttgart/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/stuttgart/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+
+  <url><loc>https://ausly.lovable.app/duesseldorf</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/duesseldorf/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/duesseldorf/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/duesseldorf/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/duesseldorf/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/duesseldorf/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/duesseldorf/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+
+  <url><loc>https://ausly.lovable.app/leipzig</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ausly.lovable.app/leipzig/restaurants</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/leipzig/bars</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/leipzig/clubs</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/leipzig/nightlife</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/leipzig/events</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+  <url><loc>https://ausly.lovable.app/leipzig/experiences</loc><changefreq>daily</changefreq><priority>0.85</priority></url>
+</urlset>
